@@ -1,0 +1,82 @@
+/* LoginPage.css */
+body{
+    background-color: rgba(172, 170, 170, 0.8); /* Semi-transparent white background */
+    backdrop-filter: blur(8px); 
+    background-image: url('../assets/backg.png');
+   
+}
+.login-container {
+    width: 400px;
+    margin: 0 auto;
+    margin-bottom: 10%;
+    padding: 20px;
+    border: 1px solid #ccc;
+    border-radius: 10px;
+    background-color: #f9f9f9;
+    margin-top: 50px;
+    display: flex;
+    flex-direction: column; /* Align children vertically */
+    align-items: center; /* Center horizontally */
+}
+
+.login-container h2 {
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+.login-container label {
+    display: block;
+    margin-bottom: 5px;
+}
+
+.login-container input[type="text"],
+.login-container input[type="password"] {
+    width: 340px;
+    padding: 8px;
+    margin-bottom: 10px;
+    border: 1px solid #ccc;
+        border-radius: 3px;
+}
+
+.login-container .form-group {
+    display: flex;
+    align-items: center; /* Align children vertically */
+}
+
+.login-container input[type="checkbox"] {
+    margin-right: 5px;
+}
+
+.login-container .forgot-password {
+    text-align: right;
+    margin-bottom: 10px;
+}
+
+.register-link {
+    text-align: center;
+    margin-top: 20px;
+}
+
+.register-link a {
+    color: blue;
+    text-decoration: none;
+
+}
+
+.register-link a:hover {
+    text-decoration: underline;
+}
+
+.login-submit {
+    width: 335px;
+    margin: 10px;
+    padding: 10px 20px;
+    background-color: #007bff;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;   
+}
+.login-form:hover .login-submit{
+    background-color: #2bf724;
+}

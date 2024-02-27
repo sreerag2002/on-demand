@@ -1,0 +1,29 @@
+/* homepage.css */
+
+/* Navbar styles */
+.navbar {
+    padding: 1rem 0;
+  }
+  
+  .navbar-brand {
+    font-size: 1.5rem;
+    font-weight: bold;
+  }
+  
+  .navbar-nav .nav-item {
+    margin-left: 1rem;
+  }
+  
+  /* Blurry box styles */
+  .blurry-box {
+    background-color: rgba(255, 255, 255, 0.5);
+    border-radius: 10px;
+    padding: 2rem;
+    margin-top: 2rem;
+  }
+  
+  .blurry-box h1 {
+    font-size: 2rem;
+    text-align: center;
+  }
+  
