@@ -1,8 +1,12 @@
+// RegistrationPage.js
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
-import './Registration.css'; // Import the external CSS file
+import axios from 'axios';
+import './Registration.css';
 
 const RegistrationPage = () => {
+    const apiUrl = process.env.REACT_APP_API_URL;
+
     const [formData, setFormData] = useState({
         firstName: '',
         lastName: '',
@@ -13,6 +17,7 @@ const RegistrationPage = () => {
         agree: false
     });
     const [contactError, setContactError] = useState('');
+    const [error, setError] = useState('');
 
     const handleChange = (e) => {
         const { name, value, type, checked } = e.target;
@@ -22,33 +27,48 @@ const RegistrationPage = () => {
         }));
     };
 
-    const handleSubmit = (e) => {
+    const handleSubmit = async (e) => {
         e.preventDefault();
 
-        // Check if the contact number has exactly 10 digits
         if (formData.contactNumber.length !== 10) {
             setContactError('Contact number must be 10 digits');
-            return; // Stop form submission
+            return;
         }
 
-        // Clear contact error message if it was previously set
         setContactError('');
 
-        // Here you can handle form submission, like sending data to the server
-        console.log(formData);
+        try {
+            const response = await axios.post(`${apiUrl}/register`, formData);
 
-        // Show alert for successful registration
-        alert('Registered successfully');
-
-        // Redirect to the login page
-        window.location.href = '/login';
+            if (response.data) {
+                console.log(response.data);
+                alert('Registered successfully');
+                window.location.href = '/login';
+            } else {
+                throw new Error('No data received from the server');
+            }
+        } catch (error) {
+            if (error.response) {
+                console.error('Registration error:', error.response.data);
+                setError('Registration failed. Please try again.');
+            } else if (error.request) {
+                console.error('No response received:', error.request);
+                setError('Registration failed due to network issues.');
+            } else {
+                console.error('Error setting up request:', error.message);
+                setError('Registration failed due to an unexpected error.');
+            }
+        }
     };
 
     return (
         <div className="registration-container">
             <h2>REGISTRATION</h2>
             <form onSubmit={handleSubmit}>
-                <label htmlFor="firstName">First Name:</label>
+                {/* Input fields */}
+                
+
+            <label htmlFor="firstName">First Name:</label>
                 <input type="text" id="firstName" name="firstName" value={formData.firstName} onChange={handleChange} required /><br />
                 <label htmlFor="lastName">Last Name:</label>
                 <input type="text" id="lastName" name="lastName" value={formData.lastName} onChange={handleChange} required /><br />
@@ -60,8 +80,10 @@ const RegistrationPage = () => {
                 <input type="text" id="contactNumber" name="contactNumber" value={formData.contactNumber} onChange={handleChange} /><br />
                 {contactError && <div className="error-message">{contactError}</div>}
                 <input type="checkbox" id="agree" name="agree" checked={formData.agree} onChange={handleChange} required />
-                <label htmlFor="agree">I agree to all statements</label><br />
+                <label htmlFor="agree">I agree to all statements</label><br />                
                 <button className='login-submit' type="submit">Register</button>
+                {contactError && <div className="error-message">{contactError}</div>}
+                {error && <div className="error-message">{error}</div>}
             </form>
             <div className="login-link">
                 <p>Already have an account? <Link to="/login">Login here</Link></p>
