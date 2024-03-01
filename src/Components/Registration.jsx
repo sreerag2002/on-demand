@@ -5,40 +5,37 @@ import axios from 'axios';
 import './Registration.css';
 
 const RegistrationPage = () => {
-    const apiUrl = process.env.REACT_APP_API_URL;
-
+    // console.log(process.env.REACT_APP_API_URL);
+    const apiUrl = process.env.REACT_APP_API_URL
+    // console.log(apiUrl)
     const [formData, setFormData] = useState({
-        firstName: '',
-        lastName: '',
-        email: '',
-        password: '',
-        contactNumber: '',
-        location: '',
-        agree: false
+        username: "",
+        email: "",
+        password: "",
+
     });
-    const [contactError, setContactError] = useState('');
     const [error, setError] = useState('');
+    console.log('form data' , formData);
 
     const handleChange = (e) => {
-        const { name, value, type, checked } = e.target;
+        const { name, value } = e.target;
         setFormData(prevState => ({
             ...prevState,
-            [name]: type === 'checkbox' ? checked : value
-        }));
+            [name]: value
+                }));
     };
 
     const handleSubmit = async (e) => {
         e.preventDefault();
 
-        if (formData.contactNumber.length !== 10) {
-            setContactError('Contact number must be 10 digits');
-            return;
-        }
 
-        setContactError('');
+
+
 
         try {
-            const response = await axios.post(`${apiUrl}/register`, formData);
+            // console.log(`${apiUrl}/register/`); // Check the value of apiUrl
+            const response = await axios.post(`${apiUrl}/register/`, formData);
+
 
             if (response.data) {
                 console.log(response.data);
@@ -59,6 +56,8 @@ const RegistrationPage = () => {
                 setError('Registration failed due to an unexpected error.');
             }
         }
+        console.log('form data' + formData);
+
     };
 
     return (
@@ -66,23 +65,20 @@ const RegistrationPage = () => {
             <h2>REGISTRATION</h2>
             <form onSubmit={handleSubmit}>
                 {/* Input fields */}
-                
 
-            <label htmlFor="firstName">First Name:</label>
-                <input type="text" id="firstName" name="firstName" value={formData.firstName} onChange={handleChange} required /><br />
-                <label htmlFor="lastName">Last Name:</label>
-                <input type="text" id="lastName" name="lastName" value={formData.lastName} onChange={handleChange} required /><br />
+
+                <label htmlFor="Username">First Name:</label>
+                <input type="text" id="firstName" name="username" value={formData.username} onChange={handleChange} required /><br />
+
                 <label htmlFor="email">Email:</label>
                 <input className='reg-mail' type="email" id="email" name="email" value={formData.email} onChange={handleChange} required /><br />
                 <label htmlFor="password">Password:</label>
                 <input type="password" id="password" name="password" value={formData.password} onChange={handleChange} required /><br />
-                <label htmlFor="contactNumber">Contact Number:</label>
-                <input type="text" id="contactNumber" name="contactNumber" value={formData.contactNumber} onChange={handleChange} /><br />
-                {contactError && <div className="error-message">{contactError}</div>}
-                <input type="checkbox" id="agree" name="agree" checked={formData.agree} onChange={handleChange} required />
-                <label htmlFor="agree">I agree to all statements</label><br />                
+
+
+
                 <button className='login-submit' type="submit">Register</button>
-                {contactError && <div className="error-message">{contactError}</div>}
+
                 {error && <div className="error-message">{error}</div>}
             </form>
             <div className="login-link">

@@ -132,17 +132,9 @@ function Service() {
         </Modal.Header>
         <Modal.Body>
           <div className='row'>
-            <div className='col-lg-6'>
-              <label>
-                <input type='file' style={{ display: 'none' }} />
-                <img className='img-fluid' src="https://png.pngtree.com/png-vector/20220817/ourmid/pngtree-cartoon-man-avatar-vector-ilustration-png-image_6111064.png" alt="no-img" />
-              </label>
-            </div>
-            <div className='col-lg-6 d-flex justify-content-center align-items-center flex-column'>
-              <div className='mb- w-100'>
-                <input type='text' className='form-control' placeholder='Username' value={username} onChange={(e) => setUsername(e.target.value)} />
-                {validationErrors.username && <small className="text-danger">{validationErrors.username}</small>}
-              </div>
+            
+            <div className='lg-6 '>
+             
               <div className='mb-3 mt-3 w-100'>
                 <input type='text' className='form-control' placeholder='Shop name' value={shopName} onChange={(e) => setShopName(e.target.value)} />
                 {validationErrors.shopName && <small className="text-danger">{validationErrors.shopName}</small>}
