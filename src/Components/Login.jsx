@@ -10,6 +10,8 @@ const LoginPage = () => {
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
   const [data,setData] = useState([]);
+  const apiUrl ="http://10.11.0.95:8002"
+
 
   const navigate = useNavigate();
 
@@ -20,11 +22,16 @@ const LoginPage = () => {
     
 
     try {
-      const response = await axios.post(`${process.env.REACT_APP_API_URL}/Login/`, { username, password });
+      const response = await axios.post(`${apiUrl}/Login/`, { username, password });
       console.log("Login successful:", response.data);
       localStorage.setItem('token',response.data.access)
-      
+      localStorage.setItem('username',username)
+      localStorage.setItem('email',response.data.email)
+      if (response.data.is_staff == true) {
+        navigate('/service')
+      } else{
       navigate('/user'); 
+      }
       // Handle successful login, e.g., redirect to dashboard
     } catch (error) {
       console.error("Login failed:", error);
@@ -52,20 +59,22 @@ const LoginPage = () => {
   };
 
   return (
-    <div className="login-container">
+    <div id='mainDiv'>
+      <div className="login-container rounded" style={{boxShadow:"2px 2px 10px black"}}>
       <h2>LOGIN</h2>
       <form onSubmit={handleSubmit}>
         <label htmlFor="username">Username:</label>
-        <input type="text" id="" name='username' value={username} onChange={(e) => setUsername(e.target.value)} required /><br />
-        <label htmlFor="password">Password:</label>
+        <input className='rounded' type="text" id="" name='username' value={username} onChange={(e) => setUsername(e.target.value)} required /><br />
+        <label className='rounded' htmlFor="password">Password:</label>
         <input type="password" name='password' id="password" value={password} onChange={(e) => setPassword(e.target.value)} required /><br />
         <button className='login-submit' type="submit">Login</button>
-        {error && <div className="error-message">{error}</div>}
+        {error && <div className="error-message text-center text-danger">{error}</div>}
       </form>
       <div className="register-link">
         <p>New user? <Link to="/registration">Register here</Link></p>
         <p><Link to="/">Back to Home</Link></p>
       </div>
+    </div>
     </div>
   );
 };

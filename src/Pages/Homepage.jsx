@@ -1,6 +1,8 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import 'bootstrap/dist/css/bootstrap.min.css';
+import './Home.css'
+import { Col } from 'react-bootstrap';
 
 function Homepage() {
   // Inline styles for sections
@@ -11,13 +13,6 @@ function Homepage() {
     alignItems: 'center',
     flexDirection: 'column',
     padding: '0 10vw',
-  };
-
-  const linkStyle = {
-    color: 'black',
-    fontWeight: 'bold',
-    textDecoration: 'none',
-    marginRight: '1rem'
   };
 
   return (
@@ -54,41 +49,39 @@ function Homepage() {
           }
         `}
       </style>
-      <div className="homepage-container">
-        {/* Navbar Section */}
-        <div className="navbar navbar-light" style={{ backdropFilter: 'blur(1px)', backgroundColor: 'rgba(190, 188, 188, 0.8)', paddingBottom: '5vh' }}>
-          <div className="container-fluid">
-            <span className="navbar-brand h1" style={{ fontWeight: 'bold', marginTop: '2vh' }}>ON-DEMAND</span>
-            <div className="buttons mt-3 ms-5 ps-5 ">
-              <Link to="/login" className="btn btn-outline-success me-3 " role="button">Login</Link>
-              <Link to="/registration" className="btn btn-outline-success" role="button">Sign Up</Link>
-            </div>
-            <div className="navbar-links">
-              <a href="#about" style={linkStyle}>About Us</a>
-              <a href="#contact" style={linkStyle}>Contact </a>
-
-            </div>
-          </div>
-        </div>
+      <div className="container-fluid">
 
         {/* Welcome Section */}
-        <div className="blurry-box d-flex align-items-center justify-content-center" style={{ height: '100vh' }}>
-          <h1 className="d-flex justify-content-center align-items-center">WELCOME TO <span style={{ fontFamily: "sans-serif", fontWeight: 'bold', color: "white" }}> <br />ON-DEMAND SERVICE APP</span> </h1>
+        <div id='welcomeDiv' className="d-flex align-items-center justify-content-center" style={{ height: '70vh' }}>
+          <div>
+            <h1 style={{ fontFamily: "Lilita One", fontSize: "50px", textShadow: "0 0 25px black", color: "rgba(255, 255, 255, 1)" }}>Welcome To <br /><span style={{ fontFamily: "Protest Strike", fontSize: "80px", color: "white" }}>On</span><span style={{ fontFamily: "Pacifico", fontSize: "80px", color: "white" }}>-Demand</span><br /> Service App</h1>
+            <div className="mt-3 d-flex align-items-center justify-content-center">
+              <Link to="/login" className="w-50 btn btn-dark border me-3 " role="button">Login</Link>
+              <Link to="/registration" className="w-50 btn btn-dark border" role="button">Sign Up</Link>
+            </div>
+          </div>
         </div>
 
         {/* About Section */}
-        <section id='about' className="about-section" style={{ ...sectionStyle, backgroundColor: '#f8f9fa' }}>
-          <div>
-            <h2>About Us</h2><br /><br />
-            <p style={{fontFamily:"sans-serif"}}>We are a leading provider of on-demand services, connecting consumers with service providers in a seamless and efficient manner. Our platform offers a wide range of services, ensuring that your needs are met promptly and professionally.</p>
+        <section id='about' className="row p-5 my-5" style={{ backgroundColor: '#f8f9fa' }}>
+          <div className='col-6 px-3'>
+            <h1 className='w-75' style={{ fontFamily: "Protest Strike", fontSize: "50px" }}>About Us</h1><br />
+            <p className='w-100' style={{ fontFamily: "Dosis" }}>We are a leading provider of on-demand services, connecting consumers with service providers in a seamless and efficient manner. Our platform offers a wide range of services, ensuring that your needs are met promptly and professionally. <br /><br />If you want the best online home service providers, then book an appointment with <br /><b style={{fontWeight:"1000"}}>On-Demand</b> and get the professional help at your doorstep.</p>
+            <button className='btn btn-primary w-25'>Know more</button>
           </div>
-          <img style={{marginLeft:"60%"}} src="https://img.freepik.com/free-photo/customer-satisfaction-service-care-problem-solving_53876-120094.jpg" alt="About Us" />
+
+          <div className='col-6 ps-4'>
+            <img className='rounded border border-4' width="400px" height="270px" src="https://hometone.com/wp-content/uploads/2019/08/home-service-providers-2-800x534.jpg" alt="About Us" />
+            <img className='rounded border border-4' style={{ marginLeft: "-70px", marginTop: "-40px" }} width="400px" height="260px" src="https://www.heymarket.com/wp-content/uploads/2019/09/iStock-1080176910.jpg" alt="About Us" />
+            <img className='rounded border border-4' style={{ marginLeft: "300px", marginTop: "-450px" }} width="300px" height="230px" src="https://th.bing.com/th/id/OIP.7lCBzIgJaEoOejTEN4jpNQAAAA?rs=1&pid=ImgDetMain" alt="About Us" />
+            {/* <img className='rounded border border-4' style={{ marginLeft: "150px", marginTop: "-130px" }} width="400px" height="250px" src="https://www.heymarket.com/wp-content/uploads/2019/09/iStock-1080176910.jpg" alt="About Us" /> */}
+          </div>
         </section>
 
         {/* Contact Section */}
         <section id='contact' style={{ ...sectionStyle, backgroundColor: '#e9ecef' }}>
           <h2>Contact Us</h2><br /><br />
-          
+
           <p>Have questions or need to get in touch with our team? Reach out to us through the following channels:</p>
           <ul>
             <li>Email: contact@ondemandservice.com</li>

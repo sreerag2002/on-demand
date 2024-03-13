@@ -6,7 +6,8 @@ import './Registration.css';
 
 const RegistrationPage = () => {
     // console.log(process.env.REACT_APP_API_URL);
-    const apiUrl = process.env.REACT_APP_API_URL
+    // const apiUrl = process.env.REACT_APP_API_URL
+    const apiUrl ="http://10.11.0.95:8002"
     // console.log(apiUrl)
     const [formData, setFormData] = useState({
         username: "",

@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import Button from 'react-bootstrap/Button';
 import Container from 'react-bootstrap/Container';
@@ -6,8 +6,12 @@ import Modal from 'react-bootstrap/Modal';
 import Navbar from 'react-bootstrap/Navbar';
 import Nav from 'react-bootstrap/Nav';
 import Dropdown from 'react-bootstrap/Dropdown';
+import axios from 'axios'
 
 function User() {
+  const username = localStorage.getItem('username');
+  const email = localStorage.getItem('email');
+
   const [show, setShow] = useState(false);
   const [show1, setShow1] = useState(false);
   const [userProfileExists, setUserProfileExists] = useState(false);
@@ -15,14 +19,14 @@ function User() {
     first_name: '',
     last_name: '',
     Ph_no: ''
-   
+
   });
   const [editing, setEditing] = useState(!userProfileExists);
   const [errors, setErrors] = useState({
     first_name: false,
     last_name: false,
     Ph_no: false
-    
+
   });
   const [showAlert, setShowAlert] = useState(false);
 
@@ -30,6 +34,11 @@ function User() {
   const handleShow = () => setShow(true);
   const handleClose1 = () => setShow1(false);
   const handleShow1 = () => setShow1(true);
+  const apiUrl = "http://10.11.0.95:8002"
+  const [locations, setLoctions] = useState([])
+  const [categories, setCategories] = useState([])
+  const [selectedLoc, setSelectedLoc] = useState({})
+  const [selectedCat, setSelectedCat] = useState({})
 
   const handleUpdateOrCreate = () => {
     setEditing(true);
@@ -43,33 +52,33 @@ function User() {
         first_name: '',
         last_name: '',
         Ph_no: ''
-       
+
       });
     }
   };
-  
+
   const handleSaveChanges = async () => {
     console.log("jbscbcjbck")
     const { first_name, last_name, Ph_no } = userDetails;
-    
+
     const token = localStorage.getItem('token');
     const errorsCopy = { ...errors };
     let hasError = false;
-  
+
     if (!first_name) {
       errorsCopy.first_name = true;
       hasError = true;
     } else {
       errorsCopy.first_name = false;
     }
-  
+
     if (!last_name) {
       errorsCopy.last_name = true;
       hasError = true;
     } else {
       errorsCopy.last_name = false;
     }
-  
+
     if (!Ph_no) {
       errorsCopy.Ph_no = true;
       hasError = true;
@@ -82,18 +91,18 @@ function User() {
         errorsCopy.Ph_no = false;
       }
     }
-  
+
     // If there are errors, do not proceed with the API call
     // if (hasError) {
     //   return;
     // }
-  
+
     try {
-      const response = await fetch(`${process.env.REACT_APP_API_URL}/createProfile/`, {
+      const response = await fetch(`${apiUrl}/createProfile/`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
-          'Authorization' :`Bearer ${token}`
+          'Authorization': `Bearer ${token}`
         },
         body: JSON.stringify({
           first_name,
@@ -101,14 +110,14 @@ function User() {
           Ph_no
         }),
       });
-      
+
       if (!response.ok) {
         throw new Error('Network response was not ok');
       }
-  
+
       const data = await response.json();
       console.log('Profile creation successful:', data);
-      
+
       setUserProfileExists(true); // Set userProfileExists to true after creating/updating profile
       setShowAlert(true);
       setTimeout(() => {
@@ -133,29 +142,34 @@ function User() {
     }));
   };
 
-  return (
-    <div>
-      <Navbar expand="lg" className="bg-dark">
-        <Container fluid>
-          <Navbar.Brand href="#" className='text-light'>On Demand</Navbar.Brand>
-          <Navbar.Toggle aria-controls="navbarScroll" />
-          <Navbar.Collapse id="navbarScroll">
-            <Nav className="me-auto my-2 my-lg-0" style={{ maxHeight: '100px' }} navbarScroll>
-            </Nav>
-            <div className="d-flex">
-              <Link to="/myrequest">
-                <Button variant="outline-success me-3">My Requests</Button>
-              </Link>
-              <Button variant="outline-success me-3" onClick={handleShow}><i className="fa-solid fa-user"></i></Button>
-              <Link to={"/"}>
-                <Button variant="outline-danger"> <i className="fa-solid fa-power-off"></i> </Button>
-              </Link>
-            </div>
-          </Navbar.Collapse>
-        </Container>
-      </Navbar>
+  const handleLocations = async () => {
+    const { data } = await axios.get(`${apiUrl}/list_locations`)
+    setLoctions(data)
+  }
 
+  const handleCategories = async () => {
+    const response = await fetch(`${apiUrl}/list_Category`)
+      .then(res => res.json())
+      .then(data => setCategories(data))
+  }
+
+  useEffect(() => {
+    handleLocations()
+    handleCategories()
+  }, [])
+
+  return (
+    <div className='px-5 pb-5'>
       {/* User Profile Modal */}
+      <div className="d-flex px-5 pb-5 w-100 justify-content-end">
+        <Link to="/myrequest">
+          <Button variant="outline-success me-3">My Requests</Button>
+        </Link>
+        <Button variant="outline-success me-3" onClick={handleShow}><i className="fa-solid fa-user"></i></Button>
+        <Link to={"/"}>
+          <Button variant="outline-danger"> <i className="fa-solid fa-power-off"></i> </Button>
+        </Link>
+      </div>
       <Modal show={show} onHide={handleClose}>
         <Modal.Header closeButton>
           <Modal.Title>{userProfileExists ? "User Profile" : "Create Profile"}</Modal.Title>
@@ -165,8 +179,8 @@ function User() {
           <div className='row'>
             <div className='col-lg-6'>
               <label>
-                <input type='file' style={{display:'none'}}/>
-                <img className='img-fluid' src="https://png.pngtree.com/png-vector/20220817/ourmid/pngtree-cartoon-man-avatar-vector-ilustration-png-image_6111064.png" alt="profile-img"/>
+                <input type='file' style={{ display: 'none' }} />
+                <img className='img-fluid' src="https://png.pngtree.com/png-vector/20220817/ourmid/pngtree-cartoon-man-avatar-vector-ilustration-png-image_6111064.png" alt="profile-img" />
               </label>
             </div>
             <div className='col-lg-6 d-flex justify-content-center align-items-center flex-column'>
@@ -182,20 +196,20 @@ function User() {
                 <input type='text' className={`form-control ${errors.Ph_no && 'is-invalid'}`} placeholder='Phone Number' name='Ph_no' value={userDetails.Ph_no} onChange={handleChange} disabled={!editing} />
                 {errors.Ph_no && <div className="invalid-feedback">Valid phone number is required.</div>}
               </div>
-             
+
             </div>
           </div>
         </Modal.Body>
         <Modal.Footer>
-  <Button variant="secondary" onClick={handleClose}>
-    Close
-  </Button>
-  {editing && (
-    <Button variant="primary" onClick={handleSaveChanges}>
-      {userProfileExists ? "Update Profile" : "Create Profile"}
-    </Button>
-  )}
-</Modal.Footer>
+          <Button variant="secondary" onClick={handleClose}>
+            Close
+          </Button>
+          {editing && (
+            <Button variant="primary" onClick={handleSaveChanges}>
+              {userProfileExists ? "Update Profile" : "Create Profile"}
+            </Button>
+          )}
+        </Modal.Footer>
 
       </Modal>
 
@@ -206,15 +220,12 @@ function User() {
         </div>
       )}
 
-
-      <div className="d-flex justify-content-center align-items-center" style={{ marginTop: "35vh" }}>
-        <h1 className="d-flex justify-content-center align-items-center ">WELCOME  <span style={{ fontFamily: "sans-serif", color: "white" }}>  <br />USER...</span> </h1>
+      <div className='d-flex justify-content-center p-5'>
+        <div className='text-center'>
+          <h1 className='mb-5' style={{ fontFamily: "Protest Strike", fontSize: "50px",  color: "black" }}>Welcome {username}</h1>
+          <Button onClick={handleShow1}>Explore More</Button>
+        </div>
       </div>
-      <br />
-      <div className="d-flex justify-content-center align-items-center" style={{ marginBottom: "35vh" }}>
-        <Button onClick={handleShow1}>Explore More</Button>
-      </div>
-
 
 
       {/* Explore More Modal */}
@@ -225,38 +236,44 @@ function User() {
         <Modal.Body>
           {/* Dropdowns for Locations and Categories */}
           <div style={{ display: 'flex', justifyContent: 'space-between' }}>
-            <Dropdown>
-              <Dropdown.Toggle variant="primary" id="dropdown-basic">
-                Locations
-              </Dropdown.Toggle>
-              <Dropdown.Menu>
-                <Dropdown.Item>Location 1</Dropdown.Item>
-                <Dropdown.Item>Location 2</Dropdown.Item>
-                <Dropdown.Item>Location 3</Dropdown.Item>
-                <Dropdown.Item>Location 4</Dropdown.Item>
-                <Dropdown.Item>Location 5</Dropdown.Item>
-              </Dropdown.Menu>
-            </Dropdown>
+            <div>
+              <Dropdown>
+                <Dropdown.Toggle variant="primary" id="dropdown-basic">
+                  Locations
+                </Dropdown.Toggle>
+                <Dropdown.Menu>
+                  {
+                    locations.map(Item => (
+                      <Dropdown.Item onClick={() => setSelectedLoc(Item)}>{Item.location}</Dropdown.Item>
+                    ))
+                  }
+                </Dropdown.Menu>
+              </Dropdown>
+              <p className='text-center my-2'>{selectedLoc.location}</p>
+            </div>
 
-            <Dropdown>
-              <Dropdown.Toggle variant="primary" id="dropdown-basic">
-                Categories
-              </Dropdown.Toggle>
-              <Dropdown.Menu>
-                <Dropdown.Item>Category 1</Dropdown.Item>
-                <Dropdown.Item>Category 2</Dropdown.Item>
-                <Dropdown.Item>Category 3</Dropdown.Item>
-                <Dropdown.Item>Category 4</Dropdown.Item>
-                <Dropdown.Item>Category 5</Dropdown.Item>
-              </Dropdown.Menu>
-            </Dropdown>
+            <div>
+              <Dropdown>
+                <Dropdown.Toggle variant="primary" id="dropdown-basic">
+                  Categories
+                </Dropdown.Toggle>
+                <Dropdown.Menu>
+                  {
+                    categories.map(item => (
+                      <Dropdown.Item onClick={() => setSelectedCat(item)}>{item.name}</Dropdown.Item>
+                    ))
+                  }
+                </Dropdown.Menu>
+              </Dropdown>
+              <p className='text-center my-2'>{selectedCat.name}</p>
+            </div>
           </div>
         </Modal.Body>
         <Modal.Footer>
           <Button variant="secondary" onClick={handleClose1}>
             Close
           </Button>
-          <Link to="/results">
+          <Link to="/results" state={{ "location": selectedLoc, "category": selectedCat }}>
             <Button variant="primary" onClick={handleClose1}>
               Show Results
             </Button>

@@ -114,7 +114,7 @@ function Service() {
           <Navbar.Brand href="#" className="text-light">On Demand</Navbar.Brand>
           <Navbar.Toggle aria-controls="navbarScroll" />
           <Navbar.Collapse id="navbarScroll">
-            <div className="me-auto my-2 my-lg-0" style={{ maxHeight: '100px' }}>
+            <div className="ms-auto my-2 my-lg-0" style={{ maxHeight: '100px' }}>
               <Link to={"/requestpage"}>
                 <Button variant="outline-success me-3">Requests</Button>
               </Link>

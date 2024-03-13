@@ -1,18 +1,12 @@
 /* homepage.css */
 
-/* Navbar styles */
-.navbar {
-    padding: 1rem 0;
-  }
-  
-  .navbar-brand {
-    font-size: 1.5rem;
-    font-weight: bold;
-  }
-  
-  .navbar-nav .nav-item {
-    margin-left: 1rem;
-  }
+#welcomeDiv{
+  /* background-color: rgba(172, 170, 170, 0.8); Semi-transparent white background */
+  backdrop-filter: blur(4px); 
+  background-image: url('E:\Internship Projects\On Demand\on-demand\src\assets\backImgg.jpg');
+  background-repeat: no-repeat;
+  background-size: cover;
+}
   
   /* Blurry box styles */
   .blurry-box {
@@ -25,5 +19,6 @@
   .blurry-box h1 {
     font-size: 2rem;
     text-align: center;
+    /* background-color: rgba(255, 255, 255, 0); */
   }
   
