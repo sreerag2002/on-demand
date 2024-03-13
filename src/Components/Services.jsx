@@ -50,7 +50,7 @@ function Card({ data, categories, onEdit, onDelete }) {
         ) : (
           <div>
             <p className="card-text text-center my-3" style={{ fontSize: "15px" }}>Shop Name:<br /><b style={{ fontSize: "25px" }}>{Shop_name}</b></p>
-            <p className="card-text text-center" style={{ fontSize: "20px" }}><strong>Category:</strong> {catogory_name}</p>
+            <p className="card-text text-center" style={{ fontSize: "20px" }}><strong>Category:</strong> {Category}</p>
             <p className="card-text"><strong>Description:</strong> {Description}</p><br />
           </div>
         )}
