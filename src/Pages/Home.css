@@ -3,7 +3,7 @@
 #welcomeDiv{
   /* background-color: rgba(172, 170, 170, 0.8); Semi-transparent white background */
   backdrop-filter: blur(4px); 
-  background-image: url('E:\Internship Projects\On Demand\on-demand\src\assets\backImgg.jpg');
+  background-image: url('../assets/backImgg.jpg');
   background-repeat: no-repeat;
   background-size: cover;
 }

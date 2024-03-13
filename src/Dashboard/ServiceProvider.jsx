@@ -139,7 +139,10 @@ function Service() {
   const handleLogout = () => {
     
     localStorage.removeItem('token');
-    
+    localStorage.removeItem('username');
+    localStorage.removeItem('email');
+
+
     navigate('/'); 
     };
 
