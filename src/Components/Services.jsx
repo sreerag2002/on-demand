@@ -1,55 +1,63 @@
 import React, { useState, useEffect } from 'react';
+import axios from 'axios';
 import { Link } from 'react-router-dom';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faHome, faSync } from '@fortawesome/free-solid-svg-icons';
-import Button from 'react-bootstrap/Button';
 
-function Card({ data, onDuplicate, onEdit, onDelete }) {
-  const { location, category, shopName, username, description, image } = data;
+function Card({ data, categories, onEdit, onDelete }) {
+  const { place, catogory_name, Shop_name, Description, id } = data;
   const [isEditing, setIsEditing] = useState(false);
-  const [editedData, setEditedData] = useState({ shopName, username, description });
+  const [editedData, setEditedData] = useState({ Shop_name, Description, catogory_name });
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
     setEditedData({ ...editedData, [name]: value });
   };
 
+  // const hn=andleCategoryChange = (e) => {
+  //   const { name, value } = e.target;
+  //   setEditedData({ ...editedData, [name]: value });
+  // };
+  
+console.log(data);
   const handleEdit = () => {
     setIsEditing(true);
   };
 
   const handleSaveChanges = () => {
-    onEdit(editedData);
+    onEdit(id, editedData);
     setIsEditing(false);
+    
   };
 
   return (
-    <div>
-      <div className="container card m-4" style={{ width: '350px', margin: '10px' }}>
-        <div className="card-body">
-          <h5 className="card-title">{location}</h5>
-          {image && <img src={image} className="card-img-top" alt="Card image" style={{ maxWidth: '150px', maxHeight: '150px' }} />}
-          <p className="card-text"><strong>Category:</strong> {category}</p>
-          {isEditing ? (
-            <div>
-              <input type="text" className='form-control' name="shopName" value={editedData.shopName} onChange={handleInputChange} /><br />
-              <input type="text" className='form-control' name="username" value={editedData.username} onChange={handleInputChange} /><br />
-              <textarea name="description" className='form-control' value={editedData.description} onChange={handleInputChange} /><br />
-            </div>
-          ) : (
-            <div>
-              <p className="form-control card-text"><strong>Shop Name:</strong> {shopName}</p>
-              <p className=" form-control card-text"><strong>Username:</strong> {username}</p>
-              <p className="form-control card-text"><strong>Description:</strong> {description}</p><br />
-            </div>
-          )}
-          {isEditing ? (
-            <button className="btn btn-primary mr-2" onClick={handleSaveChanges}>Save Changes</button>
-          ) : (
-            <button className="btn btn-success mr-2" onClick={handleEdit}>Edit</button>
-          )}
-          <button className="btn btn-danger" onClick={onDelete}>Delete</button>
-        </div>
+    <div className="container card m-4" style={{ width: '350px' }}>
+      <div className="card-body">
+        <h5 className="card-title">{place}</h5>
+     {isEditing ? (
+      <div>
+        <select name="Category" className='form-control' selected={editedData.Category} onChange=      {handleInputChange}>
+          {categories.map(category => (
+            <option key={category.id} value={category.id}>{category.name}</option>
+          ))}
+        </select><br />
+        <input type="text" className='form-control' name="Shop_name" value={editedData.Shop_name} onChange={handleInputChange} /><br />
+        <textarea name="Description" className='form-control' value={editedData.Description} onChange={handleInputChange} /><br />
+           </div>
+         ) : (
+          <div>
+            <p className="card-text"><strong>Category:</strong> {catogory_name}</p>
+            <p className="card-text"><strong>Shop Name:</strong> {Shop_name}</p>
+            <p className="card-text"><strong>Description:</strong> {Description}</p><br />
+          </div>
+        )}
+
+        {isEditing ? (
+          <button className="btn btn-primary mr-2" onClick={handleSaveChanges}>Save Changes</button>
+        ) : (
+          <button className="btn btn-success mr-2" onClick={handleEdit}>Edit</button>
+        )}
+        <button className="btn btn-danger" onClick={() => onDelete(id)}>Delete</button>
       </div>
     </div>
   );
@@ -57,71 +65,80 @@ function Card({ data, onDuplicate, onEdit, onDelete }) {
 
 function CardList() {
   const [cards, setCards] = useState([]);
-  const [showEditModal, setShowEditModal] = useState([]);
+  const [categories, setCategories] = useState([]);
+  const token = localStorage.getItem('token');
 
-  // Simulated data fetch from a local mock server
   useEffect(() => {
-    const mockData = [
-      {
-        location: 'Location 1',
-        category: 'Category 1',
-        shopName: 'Shop 1',
-        username: 'User 1',
-        description: 'Description 1',
-        image: 'https://via.placeholder.com/150' // Example image URL
-      },
+    const fetchServices = async () => {
+      try {
+        const response = await axios.get(`http://10.11.0.95:8002/ListService/`, {
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization' :`Bearer ${token}`
+          }
+        });
+        setCards(response.data); 
+      } catch (error) {
+        console.error("Error fetching services:", error);
+      }
+    };
 
-      {
-        location: 'Location 2',
-        category: 'Category 2',
-        shopName: 'Shop 2',
-        username: 'User 2',
-        description: 'Description 2',
-        image: 'https://via.placeholder.com/150' // Example image URL
-      },
-      {
-        location: 'Location 3',
-        category: 'Category 3',
-        shopName: 'Shop 3',
-        username: 'User 3',
-        description: 'Description 3',
-        image: 'https://via.placeholder.com/150' // Example image URL
-      },
+    const fetchCategories = async () => {
+      try {
+        const response = await axios.get(`http://10.11.0.95:8002/list_Category/`, {
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization' :`Bearer ${token}`
+          }
+        });
+        setCategories(response.data); 
+      } catch (error) {
+        console.error("Error fetching categories:", error);
+      }
+    };
 
-
-      {
-        location: 'Location 4',
-        category: 'Category 4',
-        shopName: 'Shop 4',
-        username: 'User 4',
-        description: 'Description 4',
-        image: 'https://via.placeholder.com/150' // Example image URL
-      },
-      // Add more mock data as needed
-    ];
-    setCards(mockData);
-    setShowEditModal(Array(mockData.length).fill(false));
+    fetchServices();
+    fetchCategories();
   }, []);
 
-  // Duplicate card
-  function duplicateCard(cardToDuplicate) {
-    setCards(prevCards => [...prevCards, cardToDuplicate]);
-    setShowEditModal(prevState => [...prevState, false]);
+  function editCard(id, editedData) {
+    
+    axios.put(`http://10.11.0.95:8002/UpdateService/${id}/`, editedData, 
+    {
+      headers: {
+        'Authorization': `Bearer ${token}`,
+        'Content-Type': 'application/json'
+      },
+    })
+    .then(() => {
+      
+      setCards(prevCards => {
+        return prevCards.map(card => {
+          if (card.id === id) {
+            return { ...card, ...editedData };
+          } else {
+            return card;
+          }
+        });
+      });
+    })
+    
+    .catch(error => console.error("Failed to update service:", error));
   }
 
-  // Edit card
-  function editCard(index, newData) {
-    setCards(prevCards => {
-      const updatedCards = [...prevCards];
-      updatedCards[index] = { ...updatedCards[index], ...newData };
-      return updatedCards;
-    });
-  }
 
-  // Delete card
-  function deleteCard(index) {
-    setCards(prevCards => prevCards.filter((_, i) => i !== index));
-    setShowEditModal(prevState => prevState.filter((_, i) => i !== index));
+  function deleteCard(id) {
+    // DELETE request to backend to delete the service by ID
+    axios.delete(`http://10.11.0.95:8002/DeleteService/${id}`, {
+      headers: {
+        'Authorization': `Bearer ${token}`,
+      },
+    })
+    .then(() => {
+      // Remove the deleted card from state
+      setCards(prevCards => prevCards.filter(card => card.id !== id));
+    })
+    .catch(error => console.error("Failed to delete service:", error));
   }
 
   return (
@@ -129,7 +146,6 @@ function CardList() {
       <Link to="/service" style={{ textDecoration: 'none', color: 'black' }}>
         <FontAwesomeIcon icon={faHome} size="lg" style={{ margin: '10px' }} />
       </Link>
-      {/* Refresh button */}
       <FontAwesomeIcon icon={faSync} size="lg" style={{ margin: '10px', cursor: 'pointer' }} onClick={() => window.location.reload()} />
 
       <h1 style={{ textAlign: 'center' }}>
@@ -139,18 +155,17 @@ function CardList() {
         <div style={{ display: 'flex', flexWrap: 'wrap' }}>
           {cards.map((card, index) => (
             <Card
-              key={index}
+              key={card.id}
               data={card}
-              onDuplicate={duplicateCard}
-              onEdit={(newData) => editCard(index, newData)}
-              onDelete={() => deleteCard(index)}
+              categories={categories}
+              onEdit={(id, newData) => editCard(id, newData)}
+              onDelete={(id) => deleteCard(id)}
             />
           ))}
         </div>
       )}
-      <br />
     </div>
   );
 }
 
-export default CardList;
+export default CardList;  

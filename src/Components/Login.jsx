@@ -20,7 +20,7 @@ const LoginPage = () => {
     
 
     try {
-      const response = await axios.post(`${process.env.REACT_APP_API_URL}/Login/`, { username, password });
+      const response = await axios.post(`http://10.11.0.95:8002/Login/`, { username, password });
       console.log("Login successful:", response.data);
       localStorage.setItem('token',response.data.access)
       

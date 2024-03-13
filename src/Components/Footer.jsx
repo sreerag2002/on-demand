@@ -18,8 +18,8 @@ const Footer = () => {
         <div className="footer-navigation">
           <h5>RESOURCES</h5>
           <a href="/">Home</a>
-          <a href="http://localhost:3000/gallery">About Us</a>
-          <a href="http://localhost:3000/pricing">Contact</a>
+          <a href="#about">About Us</a>
+          <a href="#contact">Contact</a>
         </div>
 
         <div className="footer-social">

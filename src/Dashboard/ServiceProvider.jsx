@@ -1,5 +1,5 @@
-import React, { useState } from 'react';
-import { Link } from 'react-router-dom';
+import React, { useState, useEffect } from 'react';
+import { Link, useNavigate } from 'react-router-dom';
 import Button from 'react-bootstrap/Button';
 import Container from 'react-bootstrap/Container';
 import Navbar from 'react-bootstrap/Navbar';
@@ -7,105 +7,141 @@ import Modal from 'react-bootstrap/Modal';
 import Form from 'react-bootstrap/Form';
 import Col from 'react-bootstrap/Col';
 import Alert from 'react-bootstrap/Alert';
-import axios from 'axios';
 
 function Service() {
+
   const [show, setShow] = useState(false);
   const [Shop_name, setShopName] = useState('');
-  const [description, setDescription] = useState('');
-  const [Category, setCategory] = useState('Category');
-  const [Location, setLocation] = useState('Location');
+  const [Description , setDescription] = useState('');
+  const [Category, setCategory] = useState('');
+  const [Location, setLocation] = useState('');
   const [username, setUsername] = useState('');
   const [validationErrors, setValidationErrors] = useState({
     Shop_name: '',
-    description: '',
+    Description: '',
     Category: '',
     Location: '',
     username: ''
   });
   const [showAlert, setShowAlert] = useState(false);
   const [serviceList, setServiceList] = useState([]);
+  const [categories, setCategories] = useState([]);
+  const [locations, setLocations] = useState([]);
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    const fetchCategories = () => {
+      fetch(`http://10.11.0.95:8002/list_Category`)
+        .then(response => response.json())
+        .then(data => {
+          setCategories(data);
+        })
+        .catch(error => {
+          console.error('Error fetching categories:', error);
+        });
+    };
+
+    fetchCategories();
+
+    const fetchLocations = () => {
+      fetch(`http://10.11.0.95:8002/list_locations`)
+        .then(response => response.json())
+        .then(data => {
+          setLocations(data);
+        })
+        .catch(error => {
+          console.error('Error fetching locations:', error);
+        });
+    };
+
+    fetchLocations();
+  }, []);
 
   const handleClose = () => {
     setShow(false);
     resetForm();
-  }
+  };
 
   const handleShow = () => setShow(true);
 
   const resetForm = () => {
     setShopName('');
     setDescription('');
-    setCategory('Category');
-    setLocation('Location');
+    setCategory('');
+    setLocation('');
     setUsername('');
     setValidationErrors({
       Shop_name: '',
-      description: '',
+      Description: '',
       Category: '',
       Location: '',
       username: ''
     });
-  }
+  };
 
-  const handleAddService = () => {
+  const handleAddService = (event) => {
+    event.preventDefault();
     const errors = {};
     if (!Shop_name) {
       errors.Shop_name = 'Shop name is required';
     }
-    if (!description) {
-      errors.description = 'Description is required';
+    if (!Description) {
+      // errors.description = 'Description is required';
     }
-    if (Category === 'Category') {
+    if (!Category) {
       errors.Category = 'Category is required';
     }
-    if (Location === 'Location') {
+    if (!Location) {
       errors.Location = 'Location is required';
     }
-    if (!username) {
-      errors.username = 'Username is required';
-    }
-
     if (Object.keys(errors).length > 0) {
       setValidationErrors(errors);
       return;
     }
+    console.log(Description);
 
     const newService = {
       Location,
       Category,
       Shop_name,
-      username,
-      description
+      Description
     };
-    setServiceList(prevList => [...prevList, newService]);
-    setShowAlert(true);
-
-    setTimeout(() => {          
-      setShowAlert(false);
-    }, 5000);
-    
+    const token = localStorage.getItem('token');
 
     // Making POST request to the backend API
-    axios.post(`${process.env.REACT_APP_API_URL}/CreateService/`,
+    fetch(`http://10.11.0.95:8002/CreateService/`,
      {
-      Shop_name,
-      description,
-      Category,
-      Location,
-      username
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${token}`
+      },
+      body: JSON.stringify(newService),
     })
       .then(response => {
-        // Handle success response if needed
-        console.log('Service added successfully:', response.data);
+        if (!response.ok) throw new Error('Failed to add service');
+        return response.json();
+      })
+      .then(data => {
+        console.log('Service added:', data);
+        setShowAlert(true);
+        setTimeout(() => setShowAlert(false), 5000);
+        resetForm();
       })
       .catch(error => {
-        // Handle error response if needed
         console.error('Error adding service:', error);
+        // Implement showing error to the user here
       });
 
     handleClose();
-  }
+  };
+
+  const handleLogout = () => {
+    
+    localStorage.removeItem('token');
+    
+    navigate('/'); 
+    };
 
   return (
     <div>
@@ -116,20 +152,19 @@ function Service() {
           <Navbar.Collapse id="navbarScroll">
             <div className="me-auto my-2 my-lg-0" style={{ maxHeight: '100px' }}>
               <Link to={"/requestpage"}>
-                <Button variant="outline-success me-3">Requests</Button>
+                <Button variant="outline-success me-3" style={{fontWeight:"bold"}}>Requests</Button>
               </Link>
             </div>
             <div className="ms-auto my-2 my-lg-0" style={{ maxHeight: '100px' }}>
               <Link to="/list">
-                <Button variant="outline-success me-3">Services</Button>
+                <Button variant="outline-success me-3" style={{fontWeight:"bold"}}>Services</Button>
               </Link>
             </div>
             <div className="-auto my-2 my-lg-0" style={{ maxHeight: '100px' }}>
-              <Button variant="outline-success me-3" onClick={handleShow}>Add</Button>
+              <Button variant="outline-success me-3" style={{fontWeight:"bold"}} onClick={handleShow}>Add</Button>
             </div>
             <div className="d-flex me-3">
-              <Link to={"/"}> <Button variant="outline-danger">  <i className="fa-solid fa-power-off"></i>  </Button>
-              </Link>
+              <Button variant="outline-danger"  onClick={handleLogout}> <i className="fa-solid fa-power-off"></i> </Button>
             </div>
           </Navbar.Collapse>
         </Container>
@@ -155,30 +190,29 @@ function Service() {
                 {validationErrors.Shop_name && <small className="text-danger">{validationErrors.Shop_name}</small>}
               </div>
               <div className='mb-3 w-100'>
-                <input type='text' className='form-control' placeholder='Description' value={description} onChange={(e) => setDescription(e.target.value)} />
-                {validationErrors.description && <small className="text-danger">{validationErrors.description}</small>}
+                <input type='text' className='form-control' placeholder='Description' value={Description} onChange={(e) => setDescription(e.target.value)} />
+                {validationErrors.Description && <small className="text-danger">{validationErrors.Description}</small>}
+              </div>
+              <div className='mb-3 w-100'>
+              <Form.Group as={Col} controlId="formGridState">
+              <Form.Control as="select" value={Category} onChange={(e) => setCategory(e.target.value)} custom>
+                <option disabled value="">Select Category</option> 
+                      {categories.map(category => (
+                      <option key={category.id} value={category.id}>{category.name}</option>
+                      ))}
+              </Form.Control>
+                {validationErrors.Category && <small className="text-danger">{validationErrors.Category}</small>}
+              </Form.Group>
+
               </div>
               <div className='mb-3 w-100'>
                 <Form.Group as={Col} controlId="formGridState">
-                  <Form.Select value={Category} onChange={(e) => setCategory(e.target.value)}>
-                    <option disabled>Category</option>
-                    <option>Category 1</option>
-                    <option>Category 2</option>
-                    <option>Category 3</option>
-                    <option>Category 4</option>
-                  </Form.Select>
-                  {validationErrors.Category && <small className="text-danger">{validationErrors.Category}</small>}
-                </Form.Group>
-              </div>
-              <div className='mb-3 w-100'>
-                <Form.Group as={Col} controlId="formGridState">
-                  <Form.Select value={Location} onChange={(e) => setLocation(e.target.value)}>
-                    <option disabled>Location</option>
-                    <option>Location 1</option>
-                    <option>Location 2</option>
-                    <option>Location 3</option>
-                    <option>Location 4</option>
-                  </Form.Select>
+                  <Form.Control as="select" value={Location} onChange={(e) => setLocation(e.target.value)} custom>
+                    <option disabled value="">Select Location</option>
+                    {locations.map(location => (
+                      <option key={location.id} value={location.id}>{location.location}</option>
+                    ))}
+                  </Form.Control>
                   {validationErrors.Location && <small className="text-danger">{validationErrors.Location}</small>}
                 </Form.Group>
               </div>
@@ -195,7 +229,7 @@ function Service() {
         </Modal.Footer>
       </Modal>
     </div>
-  )
+  );
 }
 
 export default Service;

@@ -34,7 +34,7 @@ const RegistrationPage = () => {
 
         try {
             // console.log(`${apiUrl}/register/`); // Check the value of apiUrl
-            const response = await axios.post(`${apiUrl}/register/`, formData);
+            const response = await axios.post(`http://10.11.0.95:8002/register/`, formData);
 
 
             if (response.data) {

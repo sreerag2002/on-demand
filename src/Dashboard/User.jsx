@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import Button from 'react-bootstrap/Button';
 import Container from 'react-bootstrap/Container';
 import Modal from 'react-bootstrap/Modal';
@@ -30,6 +30,8 @@ function User() {
   const handleShow = () => setShow(true);
   const handleClose1 = () => setShow1(false);
   const handleShow1 = () => setShow1(true);
+  const navigate = useNavigate();
+
 
   const handleUpdateOrCreate = () => {
     setEditing(true);
@@ -133,6 +135,13 @@ function User() {
     }));
   };
 
+  const handleLogout = () => {
+    
+    localStorage.removeItem('token');
+    
+    navigate('/'); 
+    };
+
   return (
     <div>
       <Navbar expand="lg" className="bg-dark">
@@ -148,7 +157,7 @@ function User() {
               </Link>
               <Button variant="outline-success me-3" onClick={handleShow}><i className="fa-solid fa-user"></i></Button>
               <Link to={"/"}>
-                <Button variant="outline-danger"> <i className="fa-solid fa-power-off"></i> </Button>
+                <Button onClick={handleLogout} variant="outline-danger"> <i className="fa-solid fa-power-off"></i> </Button>
               </Link>
             </div>
           </Navbar.Collapse>

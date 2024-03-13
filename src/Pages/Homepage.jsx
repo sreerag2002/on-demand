@@ -20,6 +20,8 @@ function Homepage() {
     marginRight: '1rem'
   };
 
+  
+
   return (
     <>
       <style>
@@ -58,7 +60,7 @@ function Homepage() {
         {/* Navbar Section */}
         <div className="navbar navbar-light" style={{ backdropFilter: 'blur(1px)', backgroundColor: 'rgba(190, 188, 188, 0.8)', paddingBottom: '5vh' }}>
           <div className="container-fluid">
-            <span className="navbar-brand h1" style={{ fontWeight: 'bold', marginTop: '2vh' }}>ON-DEMAND</span>
+            <span className="navbar-brand h1" style={{ fontWeight: 'bolder', marginTop: '2vh', fontFamily:"monospace" }}>ON-DEMAND</span>
             <div className="buttons mt-3 ms-5 ps-5 ">
               <Link to="/login" className="btn btn-outline-success me-3 " role="button">Login</Link>
               <Link to="/registration" className="btn btn-outline-success" role="button">Sign Up</Link>
@@ -73,8 +75,10 @@ function Homepage() {
 
         {/* Welcome Section */}
         <div className="blurry-box d-flex align-items-center justify-content-center" style={{ height: '100vh' }}>
-          <h1 className="d-flex justify-content-center align-items-center">WELCOME TO <span style={{ fontFamily: "sans-serif", fontWeight: 'bold', color: "white" }}> <br />ON-DEMAND SERVICE APP</span> </h1>
+          <h2 style={{margin:"20vh"}} className="d-flex justify-content-center align-items-center">WELCOME TO <span style={{ fontFamily: "sans-serif", fontWeight: 'bold', color: "white" }}> <br />ON-DEMAND SERVICE APP</span> </h2>
+
         </div>
+        
 
         {/* About Section */}
         <section id='about' className="about-section" style={{ ...sectionStyle, backgroundColor: '#f8f9fa' }}>
