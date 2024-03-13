@@ -7,21 +7,23 @@ import { faHome, faSync } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faCheck, faTimes } from '@fortawesome/free-solid-svg-icons';
 
-function RequestPage() {
+function RequestPage({ id }) {
   const [requests, setRequests] = useState([]);
 
   useEffect(() => {
-    // Fetch service requests when the component mounts
-    fetchServiceRequests();
-  }, []); // Empty dependency array to run effect only once when component mounts
+    
+    if (id) {
+      fetchServiceRequests(id);
+    }
+  }, [id]); 
 
   // Function to fetch service requests from the API
-  const fetchServiceRequests = () => {
-    // Replace 'API_ENDPOINT' with your actual API endpoint URL
-    fetch('API_ENDPOINT')
+  const fetchServiceRequests = (id) => {
+   
+    fetch(`http://10.11.0.95:8002/ListRequests/${id}/`)
       .then(response => response.json())
       .then(data => {
-        setRequests(data); // Update state with fetched data
+        setRequests(data);
       })
       .catch(error => {
         console.error('Error fetching service requests:', error);
@@ -61,9 +63,9 @@ function RequestPage() {
         <tbody>
           {requests.map((request) => (
             <tr key={request.id}>
-              <td>{request.username}</td>
+              <td>{request.user_name}</td>
               <td>{request.description}</td>
-              <td>{request.dateTime}</td>
+              <td>{request.datetime}</td>
               <td>{request.location}</td>
               <td>
                 <Button variant="success" onClick={() => handleAccept(request.id)}>

@@ -5,9 +5,9 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faHome, faSync } from '@fortawesome/free-solid-svg-icons';
 
 function Card({ data, categories, onEdit, onDelete }) {
-  const { place, catogory_name, Shop_name, Description, id } = data;
+  const { place, Category, Shop_name, Description, id } = data;
   const [isEditing, setIsEditing] = useState(false);
-  const [editedData, setEditedData] = useState({ Shop_name, Description, catogory_name });
+  const [editedData, setEditedData] = useState({ Shop_name, Description, Category });
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
@@ -27,7 +27,6 @@ console.log(data);
   const handleSaveChanges = () => {
     onEdit(id, editedData);
     setIsEditing(false);
-    
   };
 
   return (
@@ -36,9 +35,9 @@ console.log(data);
         <h5 className="card-title">{place}</h5>
      {isEditing ? (
       <div>
-        <select name="Category" className='form-control' selected={editedData.Category} onChange=      {handleInputChange}>
+        <select name="Category" className='form-control' selected={editedData.catogory_name} onChange=      {handleInputChange}>
           {categories.map(category => (
-            <option key={category.id} value={category.id}>{category.name}</option>
+            <option key={Category.id} value={Category.id}>{category.name}</option>
           ))}
         </select><br />
         <input type="text" className='form-control' name="Shop_name" value={editedData.Shop_name} onChange={handleInputChange} /><br />
@@ -46,7 +45,7 @@ console.log(data);
            </div>
          ) : (
           <div>
-            <p className="card-text"><strong>Category:</strong> {catogory_name}</p>
+            <p className="card-text"><strong>Category:</strong> {Category}</p>
             <p className="card-text"><strong>Shop Name:</strong> {Shop_name}</p>
             <p className="card-text"><strong>Description:</strong> {Description}</p><br />
           </div>
