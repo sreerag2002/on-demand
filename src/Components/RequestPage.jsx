@@ -18,7 +18,7 @@ function RequestPage() {
   // Function to fetch service requests from the API
   const fetchServiceRequests = () => {
     // Replace 'API_ENDPOINT' with your actual API endpoint URL
-    fetch(`http://10.11.0.95:8002/ListRequests/${id}/`)
+    fetch('API_ENDPOINT')
       .then(response => response.json())
       .then(data => {
         setRequests(data); // Update state with fetched data
@@ -52,11 +52,9 @@ function RequestPage() {
         <thead>
           <tr>
             <th>Username</th>
-            <th>Service</th>
-            <th>Location</th>
-            <th>Shop name</th>
             <th>Description</th>
             <th>Date and Time</th>
+            <th>Location</th>
             <th>Action</th>
           </tr>
         </thead>
