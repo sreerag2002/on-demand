@@ -1,15 +1,23 @@
-import React, { useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { Form, Button } from 'react-bootstrap';
 import 'bootstrap/dist/css/bootstrap.min.css';
-import { faHome, faSync } from '@fortawesome/free-solid-svg-icons';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { TfiReload } from "react-icons/tfi";
+import { TiArrowBack } from "react-icons/ti";
+import { FaSyncAlt } from "react-icons/fa";
+import axios from 'axios';
 
 function UserRequest() {
+
+  const apiUrl = "http://10.11.0.95:8002"
+  const token = localStorage.getItem('token');
+
   const [showForm, setShowForm] = useState(false);
   const [selectedRequest, setSelectedRequest] = useState(null);
   const [showAlert, setShowAlert] = useState(false);
   const [rating, setRating] = useState(0); // Rating state
+  const [allRequests,setAllRequests] = useState([])
+  const payNowRef = useRef(null)
 
   const userRequests = [
     { id: 1, username: 'John', serviceName: 'Plumbing', date: '2024-02-21', time: '10:00 AM', description: 'Leaky faucet', status: 'Pending', rate: 50 },
@@ -74,12 +82,30 @@ function UserRequest() {
     return stars;
   };
 
+  const handleListMyReq = async()=>{
+    const response = await axios.get(`${apiUrl}/ListmyRequests/`,
+    {
+      headers:{
+        "Authorization" : `Bearer ${token}`
+      }
+    })
+    .then((result)=>{
+      setAllRequests(result.data);
+    })
+  }
+
+  useEffect(()=>{
+    handleListMyReq()
+  },[])
+
   return (
-    <div className='container' style={{ height: "100%" }}>
+    <div className='container'>
+      <div>
       <Link to="/user" style={{ textDecoration: 'none', color: 'black' }}>
-        <FontAwesomeIcon icon={faHome} size="lg" style={{ margin: '10px' }} />
+        <button className='btn btn-white border-0' style={{fontSize:"40px"}}><TiArrowBack/></button>
       </Link>
-      <FontAwesomeIcon icon={faSync} size="lg" style={{ margin: '10px', cursor: 'pointer' }} onClick={() => window.location.reload()} />
+      <button className='btn btn-white text-dark border-0 mt-3' style={{fontSize:"30px",float:"right"}} onClick={() => window.location.reload()}><FaSyncAlt /></button>
+      </div>
       <h1 style={{ textAlign: "center" }}>My Requests</h1>
       <table className="table" style={{ marginTop: "10vh", marginBottom: "80vh" }}>
         <thead>
@@ -94,21 +120,21 @@ function UserRequest() {
           </tr>
         </thead>
         <tbody>
-          {userRequests.map(request => (
+          {allRequests.map(request => (
             <tr key={request.id}>
               <td>{request.username}</td>
-              <td>{request.serviceName}</td>
-              <td>{request.date}</td>
-              <td>{request.time}</td>
+              <td>{request.service_name}</td>
+              <td>{(request.datetime).slice(0,10)}</td>
+              <td>{(request.datetime).slice(11,16)}</td>
               <td>{request.description}</td>
-              <td style={{ color: getStatusColor(request.status) }}>{request.status}</td>
+              <td>{
+                request.pending ? 'Pending' : request.accept ? 'Accepted' : 'Declined'
+                }</td>
               <td>
-                {(request.status === 'Paid') && (
-                  <span className="text-success">Paid</span>
-                )}
-                {request.status === 'Completed' && (
-                  <button className="btn btn-primary" onClick={() => handlePayNow(request)}>Pay Now</button>
-                )}
+                {
+                request.accept==true ? <button className='btn btn-success' ref={payNowRef}>Pay now</button> : ''                 
+                }
+                
               </td>
             </tr>
           ))}

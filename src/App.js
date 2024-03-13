@@ -10,12 +10,14 @@ import Service from './Dashboard/ServiceProvider';
 import CardList from './Components/Services';
 import RequestPage from './Components/RequestPage';
 import ServiceCard from './Components/SearchCards';
+import Header from './Components/Header';
 
 
 function App() {
   return (
     <Router>
       <div>
+        <Header/>
         <Routes>
         <Route index element={<Homepage />} />
 

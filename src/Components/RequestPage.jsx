@@ -52,9 +52,11 @@ function RequestPage() {
         <thead>
           <tr>
             <th>Username</th>
+            <th>Service</th>
+            <th>Location</th>
+            <th>Shop name</th>
             <th>Description</th>
             <th>Date and Time</th>
-            <th>Location</th>
             <th>Action</th>
           </tr>
         </thead>
