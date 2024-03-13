@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import Button from 'react-bootstrap/Button';
 import Container from 'react-bootstrap/Container';
 import Modal from 'react-bootstrap/Modal';
@@ -9,6 +9,8 @@ import Dropdown from 'react-bootstrap/Dropdown';
 import axios from 'axios'
 
 function User() {
+
+  const navigate = useNavigate()
   const username = localStorage.getItem('username');
   const email = localStorage.getItem('email');
 
@@ -153,6 +155,13 @@ function User() {
       .then(data => setCategories(data))
   }
 
+  const handleLogout = ()=>{
+    localStorage.removeItem('token')
+    localStorage.removeItem('username')
+    localStorage.removeItem('email')
+    navigate('/')
+  }
+
   useEffect(() => {
     handleLocations()
     handleCategories()
@@ -166,9 +175,7 @@ function User() {
           <Button variant="outline-success me-3">My Requests</Button>
         </Link>
         <Button variant="outline-success me-3" onClick={handleShow}><i className="fa-solid fa-user"></i></Button>
-        <Link to={"/"}>
-          <Button variant="outline-danger"> <i className="fa-solid fa-power-off"></i> </Button>
-        </Link>
+        <Button variant="outline-danger" onClick={handleLogout}> <i className="fa-solid fa-power-off"></i> </Button>
       </div>
       <Modal show={show} onHide={handleClose}>
         <Modal.Header closeButton>

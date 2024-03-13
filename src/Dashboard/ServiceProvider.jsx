@@ -12,7 +12,7 @@ function Service() {
 
   const [show, setShow] = useState(false);
   const [Shop_name, setShopName] = useState('');
-  const [Description , setDescription] = useState('');
+  const [Description, setDescription] = useState('');
   const [Category, setCategory] = useState('');
   const [Location, setLocation] = useState('');
   const [username, setUsername] = useState('');
@@ -110,14 +110,14 @@ function Service() {
 
     // Making POST request to the backend API
     fetch(`http://10.11.0.95:8002/CreateService/`,
-     {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        'Authorization': `Bearer ${token}`
-      },
-      body: JSON.stringify(newService),
-    })
+      {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${token}`
+        },
+        body: JSON.stringify(newService),
+      })
       .then(response => {
         if (!response.ok) throw new Error('Failed to add service');
         return response.json();
@@ -137,45 +137,32 @@ function Service() {
   };
 
   const handleLogout = () => {
-    
+
     localStorage.removeItem('token');
     localStorage.removeItem('username');
     localStorage.removeItem('email');
 
 
-    navigate('/'); 
-    };
+    navigate('/');
+  };
 
   return (
-    <div>
-      <Navbar expand="lg" className="bg-dark">
-        <Container fluid>
-          <Navbar.Brand href="#" className="text-light">On Demand</Navbar.Brand>
-          <Navbar.Toggle aria-controls="navbarScroll" />
-          <Navbar.Collapse id="navbarScroll">
-            <div className="ms-auto my-2 my-lg-0" style={{ maxHeight: '100px' }}>
-              <Link to={"/requestpage"}>
-                <Button variant="outline-success me-3" style={{fontWeight:"bold"}}>Requests</Button>
-              </Link>
-            </div>
-            <div className="ms-auto my-2 my-lg-0" style={{ maxHeight: '100px' }}>
-              <Link to="/list">
-                <Button variant="outline-success me-3" style={{fontWeight:"bold"}}>Services</Button>
-              </Link>
-            </div>
-            <div className="-auto my-2 my-lg-0" style={{ maxHeight: '100px' }}>
-              <Button variant="outline-success me-3" style={{fontWeight:"bold"}} onClick={handleShow}>Add</Button>
-            </div>
-            <div className="d-flex me-3">
-              <Button variant="outline-danger"  onClick={handleLogout}> <i className="fa-solid fa-power-off"></i> </Button>
-            </div>
-          </Navbar.Collapse>
-        </Container>
-      </Navbar>
-
-      <h1 className="d-flex justify-content-center align-items-center mt-5"></h1>
-      <div className="d-flex justify-content-center align-items-center" style={{ height: "85vh" }}>
-        <h1 className="d-flex justify-content-center align-items-center ">WELCOME  <span style={{ fontFamily: "sans-serif", color: "white" }}>  <br />SERVICE PROVIDER...</span> </h1>
+    <div className='px-5 pb-5'>
+      <div className="d-flex px-5 pb-5 w-100 justify-content-end">
+        <Link to="/requestpage">
+          <Button variant="outline-success me-3" style={{ fontWeight: "bold" }}>Requests</Button>
+        </Link>
+        <Link to="/list">
+          <Button variant="outline-success me-3" style={{ fontWeight: "bold" }}>Services</Button>
+        </Link>
+        <Button variant="outline-success me-3" onClick={handleShow} style={{ fontWeight: "bold" }}>Add</Button>
+        <Button variant="outline-danger" onClick={handleLogout}> <i className="fa-solid fa-power-off"></i> </Button>
+      </div>
+      
+      <div className='d-flex justify-content-center p-5'>
+        <div className='text-center'>
+          <h1 className='mb-5' style={{ fontFamily: "Protest Strike", fontSize: "50px",  color: "black" }}>Welcome Service Provider</h1>
+        </div>
       </div>
 
       <Alert show={showAlert} variant="success" onClose={() => setShowAlert(false)} dismissible style={{ position: 'absolute', top: '20px', left: '50%', transform: 'translateX(-50%)', fontWeight: "bold" }}>
@@ -197,15 +184,15 @@ function Service() {
                 {validationErrors.Description && <small className="text-danger">{validationErrors.Description}</small>}
               </div>
               <div className='mb-3 w-100'>
-              <Form.Group as={Col} controlId="formGridState">
-              <Form.Control as="select" value={Category} onChange={(e) => setCategory(e.target.value)} custom>
-                <option disabled value="">Select Category</option> 
-                      {categories.map(category => (
+                <Form.Group as={Col} controlId="formGridState">
+                  <Form.Control as="select" value={Category} onChange={(e) => setCategory(e.target.value)} custom>
+                    <option disabled value="">Select Category</option>
+                    {categories.map(category => (
                       <option key={category.id} value={category.id}>{category.name}</option>
-                      ))}
-              </Form.Control>
-                {validationErrors.Category && <small className="text-danger">{validationErrors.Category}</small>}
-              </Form.Group>
+                    ))}
+                  </Form.Control>
+                  {validationErrors.Category && <small className="text-danger">{validationErrors.Category}</small>}
+                </Form.Group>
 
               </div>
               <div className='mb-3 w-100'>
