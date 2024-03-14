@@ -3,11 +3,12 @@ import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import axios from 'axios';
 import './Registration.css';
+import { Col, Row } from 'react-bootstrap';
 
 const RegistrationPage = () => {
     // console.log(process.env.REACT_APP_API_URL);
     // const apiUrl = process.env.REACT_APP_API_URL
-    const apiUrl ="http://10.11.0.95:8002"
+    const apiUrl = "http://10.11.0.95:8002"
     // console.log(apiUrl)
     const [formData, setFormData] = useState({
         username: "",
@@ -16,14 +17,14 @@ const RegistrationPage = () => {
 
     });
     const [error, setError] = useState('');
-    console.log('form data' , formData);
+    console.log('form data', formData);
 
     const handleChange = (e) => {
         const { name, value } = e.target;
         setFormData(prevState => ({
             ...prevState,
             [name]: value
-                }));
+        }));
     };
 
     const handleSubmit = async (e) => {
@@ -62,29 +63,40 @@ const RegistrationPage = () => {
     };
 
     return (
-        <div className="registration-container">
-            <h2>REGISTRATION</h2>
-            <form onSubmit={handleSubmit}>
-                {/* Input fields */}
+        <div className='mx-5 px-5 mb-5'>
+            <Row className='px-4 rounded'>
+                <Col className='col-6'>
+                    <img src="https://sofster.com/wp-content/uploads/2022/03/software-development-services.svg" height="500px" width="100%" alt="" />
+                </Col>
+                <Col className='col-6'>
+                    <h2 style={{ fontFamily: "Protest Strike" }} className='text-center mt-5'>Create an account</h2>
+                    <div className="registration-container">
+                        <form onSubmit={handleSubmit}>
+                            {/* Input fields */}
 
 
-                <label htmlFor="Username">First Name:</label>
-                <input type="text" id="firstName" name="username" value={formData.username} onChange={handleChange} required /><br />
+                            <label htmlFor="username">First Name:</label>
+                            <input type="text" id="firstName" name="username" value={formData.username} onChange={handleChange} required /><br />
 
-                <label htmlFor="email">Email:</label>
-                <input className='reg-mail' type="email" id="email" name="email" value={formData.email} onChange={handleChange} required /><br />
-                <label htmlFor="password">Password:</label>
-                <input type="password" id="password" name="password" value={formData.password} onChange={handleChange} required /><br />
+                            <label htmlFor="email">Email:</label>
+                            <input className='reg-input' type="email" id="email" name="email" value={formData.email} onChange={handleChange} required /><br />
+                            <label htmlFor="password">Password:</label>
+                            <input type="password" id="password" name="password" value={formData.password} onChange={handleChange} required /><br />
 
 
 
-                <button className='login-submit' type="submit">Register</button>
+                            <button className='login-submit btn btn-success w-100 my-2' type="submit">Register</button>
 
-                {error && <div className="error-message">{error}</div>}
-            </form>
-            <div className="login-link">
-                <p>Already have an account? <Link to="/login">Login here</Link></p>
-            </div>
+                            {error && <div className="error-message">{error}</div>}
+                        </form>
+                        <div className="register-link">
+                            <p>Already have an account? <Link to="/login">Login here</Link></p>
+                        </div>
+                    </div>
+                </Col>
+                <p className='text-center'><Link to="/"><button className='btn btn-info'>Back to Home</button></Link></p>
+            </Row>
+
         </div>
     );
 };

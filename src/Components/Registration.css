@@ -1,21 +1,16 @@
 /* Registration.css */
 .registration-container {
-    width: 400px;
+    width: 350px;
     margin: 0 auto;
     margin-bottom: 10%;
     padding: 20px;
-    border: 1px solid #ccc;
-    border-radius: 10px;
-    background-color: #f9f9f9;
-    margin-top: 50px;
+    /* border: 1px solid #ccc; */
+    /* border-radius: 10px; */
+    /* background-color: #f9f9f9; */
+    margin-top: 20px;
     display: flex;
     flex-direction: column; /* Align children vertically */
     align-items: center; /* Center horizontally */
-}
-
-.registration-container h2 {
-    text-align: center;
-    margin-bottom: 20px;
 }
 
 .registration-container label {
@@ -23,12 +18,12 @@
     margin-bottom: 5px;
 }
 
-.reg-mail{
-    width: 340px;
+.reg-input{
+    width: 300px;
     padding: 8px;
     margin-bottom: 10px;
     border: 1px solid #ccc;
-    border-radius: 3px;
+    border-radius: 20px;
 
 }
 
@@ -36,11 +31,11 @@
 .registration-container input[type="password"]
 
 {
-    width: 340px;
+    width: 300px;
     padding: 8px;
     margin-bottom: 10px;
     border: 1px solid #ccc;
-    border-radius: 3px;
+    border-radius: 20px;
 }
 
 .registration-container .form-group {
@@ -64,6 +59,7 @@
 
 .register-link a {
     color: blue;
+    text-decoration: none;
 }
 
 .register-link a:hover {
