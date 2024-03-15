@@ -11,6 +11,8 @@ import CardList from './Components/Services';
 import RequestPage from './Components/RequestPage';
 import ServiceCard from './Components/SearchCards';
 import Header from './Components/Header';
+import Admin from './Components/Admin/Admin';
+import ServiceAprvPage from './Components/Service approval/ServiceAprvPage';
 
 
 function App() {
@@ -30,12 +32,10 @@ function App() {
           <Route path='/list' element={<CardList/>} />
           <Route path='/requestpage' element={<RequestPage/>} />
           <Route path='/results' element={<ServiceCard/>} />
-
-
-
+          <Route path='/admin' element={<Admin/>} />
+          <Route path='/serviceApprove' element={<ServiceAprvPage/>} />
 
         </Routes>
-
         <Footer/>
       </div>
     </Router>

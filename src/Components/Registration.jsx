@@ -75,7 +75,7 @@ const RegistrationPage = () => {
                             {/* Input fields */}
 
 
-                            <label htmlFor="username">First Name:</label>
+                            <label htmlFor="username">Username:</label>
                             <input type="text" id="firstName" name="username" value={formData.username} onChange={handleChange} required /><br />
 
                             <label htmlFor="email">Email:</label>
