@@ -20,14 +20,17 @@ function ServiceAprvPage() {
                         <div className='col-3 d-flex align-items-center'>
                             <p className='fw-bold mb-1 fs-4 w-100' style={{fontFamily:'Dosis'}}>Provider & Company</p>
                         </div>
-                        <div className='col-3 d-flex align-items-center'>
+                        <div className='col-2 d-flex align-items-center'>
                             <p className='fw-bold mb-1 fs-4 text-center w-100' style={{fontFamily:'Dosis'}}>Service</p>
                         </div>
-                        <div className='col-3 d-flex align-items-center'>
+                        <div className='col-2 d-flex align-items-center'>
                             <p className='fw-bold mb-1 fs-4 text-center w-100' style={{fontFamily:'Dosis'}}>Location</p>
                         </div>
                         <div className='col-3 d-flex align-items-center'>
-                            <p className='fw-bold mb-1 fs-4 text-center w-100' style={{fontFamily:'Dosis'}}>Actions</p>
+                            <p className='fw-bold mb-1 fs-4 text-center w-100' style={{fontFamily:'Dosis'}}>Description</p>
+                        </div>
+                        <div className='col-2 d-flex align-items-center'>
+                            {/* <p className='fw-bold mb-1 fs-4 text-center w-100' style={{fontFamily:'Dosis'}}>Actions</p> */}
                         </div>
                     </MDBListGroupItem>
 
@@ -39,13 +42,16 @@ function ServiceAprvPage() {
                                 <p className='text-muted mb-0' style={{fontFamily:'Dosis'}}>EcoFlow Plumbing</p>
                             </div>
                         </div>
-                        <div className='col-3 d-flex align-items-center'>
+                        <div className='col-2 d-flex align-items-center'>
                                 <p className='fw-bold mb-1 text-center w-100' style={{fontFamily:'Dosis'}}>Plumbing</p>
                         </div>
-                        <div className='col-3 d-flex align-items-center'>
+                        <div className='col-2 d-flex align-items-center'>
                                 <p className='fw-bold mb-1 text-center w-100' style={{fontFamily:'Dosis'}}>Kakkanad</p>
                         </div>
-                        <div className='col-3 d-flex align-items-center justify-content-center'>
+                        <div className='col-3 d-flex align-items-center'>
+                                <p className='fw-bold mb-1 text-center w-100' style={{fontFamily:'Dosis'}}>Good service.</p>
+                        </div>
+                        <div className='col-2 d-flex align-items-center justify-content-center'>
                             <div className='ms-3'>
                                 <button className='btn btn-success me-2'>Approve</button>
                                 <button className='btn btn-danger'>Decline</button>

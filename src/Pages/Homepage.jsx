@@ -52,7 +52,7 @@ function Homepage() {
       <div className="container-fluid">
 
         {/* Welcome Section */}
-        <div id='welcomeDiv' className="d-flex align-items-center justify-content-center" style={{ height: '70vh' }}>
+        <div id='welcomeDiv' className="d-flex align-items-center justify-content-center" style={{ height: '75vh' }}>
           <div>
             <h1 style={{ fontFamily: "Lilita One", fontSize: "50px", textShadow: "0 0 25px black", color: "rgba(255, 255, 255, 1)" }}>Welcome To <br /><span style={{ fontFamily: "Protest Strike", fontSize: "80px", color: "white" }}>On</span><span style={{ fontFamily: "Pacifico", fontSize: "80px", color: "white" }}>-Demand</span><br /> Service App</h1>
             <div className="mt-3 d-flex align-items-center justify-content-center">

@@ -5,20 +5,13 @@ import Button from 'react-bootstrap/Button';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faHome, faSync, faCheck, faTimes } from '@fortawesome/free-solid-svg-icons';
 
-function RequestPage({ id }) {
+function RequestPage() {
   const [requests, setRequests] = useState([]);
 
     const token = localStorage.getItem('token');
 
-
-  useEffect(() => {
-    if (id) {
-      fetchServiceRequests(id);
-    }
-  }, [id]);
-
-  const fetchServiceRequests = (id) => {
-    fetch(`http://10.11.0.95:8002/ListRequests/${id}/`, {
+  const fetchServiceRequests = () => {
+    fetch(`http://10.11.0.95:8002/ListRequests/13/`, {
       method: 'GET', 
       headers: {
         'Authorization': `Bearer ${token}`,
@@ -39,19 +32,21 @@ function RequestPage({ id }) {
       });
   };
 
-  const handleAccept = (id) => {
-    console.log(`Accepted request with ID: ${id}`);
+  const handleAccept = () => {
+    console.log(`Accepted request with ID:`);
   };
 
-  const handleDecline = (id) => {
-    console.log(`Declined request with ID: ${id}`);
+  const handleDecline = () => {
+    console.log(`Declined request with ID:`);
   };
 
   const refreshData = () => {
-    if (id) {
-      fetchServiceRequests(id);
-    }
+      fetchServiceRequests();
   };
+
+  useEffect(() => {
+      fetchServiceRequests();
+  }, []);
 
   return (
     <div className='container'>
