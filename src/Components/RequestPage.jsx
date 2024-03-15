@@ -1,27 +1,36 @@
 import React, { useState, useEffect } from 'react';
 import Table from 'react-bootstrap/Table';
 import { Link } from 'react-router-dom';
-
 import Button from 'react-bootstrap/Button';
-import { faHome, faSync } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faCheck, faTimes } from '@fortawesome/free-solid-svg-icons';
+import { faHome, faSync, faCheck, faTimes } from '@fortawesome/free-solid-svg-icons';
 
 function RequestPage({ id }) {
   const [requests, setRequests] = useState([]);
 
+    const token = localStorage.getItem('token');
+
+
   useEffect(() => {
-    
     if (id) {
       fetchServiceRequests(id);
     }
-  }, [id]); 
+  }, [id]);
 
-  // Function to fetch service requests from the API
   const fetchServiceRequests = (id) => {
-   
-    fetch(`http://10.11.0.95:8002/ListRequests/${id}/`)
-      .then(response => response.json())
+    fetch(`http://10.11.0.95:8002/ListRequests/${id}/`, {
+      method: 'GET', 
+      headers: {
+        'Authorization': `Bearer ${token}`,
+        'Content-Type': 'application/json',
+      },
+    })
+      .then(response => {
+        if (response.ok) {
+          return response.json();
+        }
+        throw new Error('Network response was not ok.');
+      })
       .then(data => {
         setRequests(data);
       })
@@ -30,26 +39,27 @@ function RequestPage({ id }) {
       });
   };
 
-  // Function to handle accepting a request
   const handleAccept = (id) => {
-    // Handle accepting the request (e.g., send a request to the server)
     console.log(`Accepted request with ID: ${id}`);
   };
 
-  // Function to handle declining a request
   const handleDecline = (id) => {
-    // Handle declining the request (e.g., send a request to the server)
     console.log(`Declined request with ID: ${id}`);
+  };
+
+  const refreshData = () => {
+    if (id) {
+      fetchServiceRequests(id);
+    }
   };
 
   return (
     <div className='container'>
-         <Link to="/service" style={{ textDecoration: 'none', color: 'black' }}>
+      <Link to="/service" style={{ textDecoration: 'none', color: 'black' }}>
         <FontAwesomeIcon icon={faHome} size="lg" style={{ margin: '10px' }} />
       </Link>
-      {/* Refresh button */}
-      <FontAwesomeIcon icon={faSync} size="lg" style={{ margin: '10px', cursor: 'pointer' }} onClick={() => window.location.reload()} />
-      <h1 style={{textAlign:"center"}}>Service Requests</h1><br /><br />
+      <FontAwesomeIcon icon={faSync} size="lg" style={{ margin: '10px', cursor: 'pointer' }} onClick={refreshData} />
+      <h1 style={{textAlign: "center"}}>Service Requests</h1><br /><br />
       <Table striped bordered hover>
         <thead>
           <tr>
@@ -61,22 +71,28 @@ function RequestPage({ id }) {
           </tr>
         </thead>
         <tbody>
-          {requests.map((request) => (
-            <tr key={request.id}>
-              <td>{request.user_name}</td>
-              <td>{request.description}</td>
-              <td>{request.datetime}</td>
-              <td>{request.location}</td>
-              <td>
-                <Button variant="success" onClick={() => handleAccept(request.id)}>
-                  <FontAwesomeIcon icon={faCheck} />
-                </Button>{' '}
-                <Button variant="danger" onClick={() => handleDecline(request.id)}>
-                  <FontAwesomeIcon icon={faTimes} />
-                </Button>
-              </td>
+          {requests.length > 0 ? (
+            requests.map((request) => (
+              <tr key={request.id}>
+                <td>{request.user_name}</td>
+                <td>{request.description}</td>
+                <td>{request.datetime}</td>
+                <td>{request.location}</td>
+                <td>
+                  <Button variant="success" onClick={() => handleAccept(request.id)} aria-label="Accept Request">
+                    <FontAwesomeIcon icon={faCheck} />
+                  </Button>{' '}
+                  <Button variant="danger" onClick={() => handleDecline(request.id)} aria-label="Decline Request">
+                    <FontAwesomeIcon icon={faTimes} />
+                  </Button>
+                </td>
+              </tr>
+            ))
+          ) : (
+            <tr>
+              <td colSpan="5" className="text-center">No requests found</td>
             </tr>
-          ))}
+          )}
         </tbody>
       </Table><br /><br />
     </div>
