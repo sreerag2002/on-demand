@@ -80,9 +80,9 @@ function Homepage() {
 
         {/* Contact Section */}
         <section id='contact' style={{ ...sectionStyle, backgroundColor: '#e9ecef' }}>
-          <h2>Contact Us</h2><br /><br />
+          <h2 className='w-75 text-center' style={{ fontFamily: "Protest Strike", fontSize: "50px" }}>Contact Us</h2><br /><br />
 
-          <p>Have questions or need to get in touch with our team? Reach out to us through the following channels:</p>
+          <p className='w-100 text-center' style={{ fontFamily: "Dosis" }}>Have questions or need to get in touch with our team? Reach out to us through the following channels:</p>
           <ul>
             <li>Email: contact@ondemandservice.com</li>
             <li>Phone: (123) 456-7890</li>
