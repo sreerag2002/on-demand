@@ -3,13 +3,14 @@ import { Link, useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import './Login.css';
 import { Col, Row } from 'react-bootstrap';
+import { apiUrl } from './baseUrl';
 
 const LoginPage = () => {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
   const [data, setData] = useState([]);
-  const apiUrl = "http://10.11.0.95:8002"
+  // const apiUrl = "http://10.11.0.95:8002"
 
 
   const navigate = useNavigate();
@@ -21,11 +22,11 @@ const LoginPage = () => {
 
 
     try {
-      const response = await axios.post(`${apiUrl}/Login/`, { username, password });
+      const response = await axios.post(`${apiUrl}/login/`, { username, password });
       console.log("Login successful:", response.data);
       localStorage.setItem('token', response.data.access)
       localStorage.setItem('username', username)
-      localStorage.setItem('email', response.data.email)
+      // localStorage.setItem('email', response.data.email)
       if (response.data.is_staff == true) {
         navigate('/service')
       } else {
@@ -33,7 +34,7 @@ const LoginPage = () => {
       }
       // Handle successful login, e.g., redirect to dashboard
     } catch (error) {
-      console.error("Login failed:", error);
+      console.error("Login failed:", error.message);
 
       // Handle login error
       if (error.response) {

@@ -7,12 +7,13 @@ import Navbar from 'react-bootstrap/Navbar';
 import Nav from 'react-bootstrap/Nav';
 import Dropdown from 'react-bootstrap/Dropdown';
 import axios from 'axios'
+import { apiUrl } from '../Components/baseUrl';
 
 function User() {
 
   const navigate = useNavigate()
   const username = localStorage.getItem('username');
-  const email = localStorage.getItem('email');
+  // const email = localStorage.getItem('email');
 
   const [show, setShow] = useState(false);
   const [show1, setShow1] = useState(false);
@@ -36,7 +37,6 @@ function User() {
   const handleShow = () => setShow(true);
   const handleClose1 = () => setShow1(false);
   const handleShow1 = () => setShow1(true);
-  const apiUrl = "http://10.11.0.95:8002"
   const [locations, setLoctions] = useState([])
   const [categories, setCategories] = useState([])
   const [selectedLoc, setSelectedLoc] = useState({})
@@ -145,12 +145,12 @@ function User() {
   };
 
   const handleLocations = async () => {
-    const { data } = await axios.get(`${apiUrl}/list_locations`)
+    const { data } = await axios.get(`${apiUrl}/list-locations/`)
     setLoctions(data)
   }
 
   const handleCategories = async () => {
-    const response = await fetch(`${apiUrl}/list_Category`)
+    const response = await fetch(`${apiUrl}/list-categories/`)
       .then(res => res.json())
       .then(data => setCategories(data))
   }
@@ -251,12 +251,12 @@ function User() {
                 <Dropdown.Menu>
                   {
                     locations.map(Item => (
-                      <Dropdown.Item onClick={() => setSelectedLoc(Item)}>{Item.location}</Dropdown.Item>
+                      <Dropdown.Item onClick={() => setSelectedLoc(Item)}>{Item.locationname}</Dropdown.Item>
                     ))
                   }
                 </Dropdown.Menu>
               </Dropdown>
-              <p className='text-center my-2'>{selectedLoc.location}</p>
+              <p className='text-center my-2'>{selectedLoc.locationname}</p>
             </div>
 
             <div>
@@ -267,12 +267,12 @@ function User() {
                 <Dropdown.Menu>
                   {
                     categories.map(item => (
-                      <Dropdown.Item onClick={() => setSelectedCat(item)}>{item.name}</Dropdown.Item>
+                      <Dropdown.Item onClick={() => setSelectedCat(item)}>{item.categoryname}</Dropdown.Item>
                     ))
                   }
                 </Dropdown.Menu>
               </Dropdown>
-              <p className='text-center my-2'>{selectedCat.name}</p>
+              <p className='text-center my-2'>{selectedCat.categoryname}</p>
             </div>
           </div>
         </Modal.Body>

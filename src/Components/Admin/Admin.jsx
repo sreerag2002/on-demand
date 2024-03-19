@@ -11,7 +11,7 @@ function Admin() {
         <div>
             <div className='d-flex justify-content-end px-5'>
                 <Dropdown>
-                    <Dropdown.Toggle variant="white" id="dropdown-basic" className='border border-0' style={{fontSize:'15px'}}>
+                    <Dropdown.Toggle variant="white" id="dropdown-basic" className='border border-0 fs-5'>
                         <b><FaCircleUser className='me-1' /> ArunMF</b>
                     </Dropdown.Toggle>
 
