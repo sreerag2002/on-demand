@@ -27,7 +27,7 @@ const LoginPage = () => {
       localStorage.setItem('token', response.data.access)
       localStorage.setItem('username', username)
       // localStorage.setItem('email', response.data.email)
-      if (response.data.is_staff == true) {
+      if (response.data.service_provider == true) {
         navigate('/service')
       } else {
         navigate('/user');

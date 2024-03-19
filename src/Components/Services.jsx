@@ -6,11 +6,16 @@ import { faHome, faSync } from '@fortawesome/free-solid-svg-icons';
 import { TiArrowBack } from "react-icons/ti";
 import { FaSyncAlt } from "react-icons/fa";
 import { Col, Row } from 'react-bootstrap';
+import { apiUrl } from '../Components/baseUrl';
+
 
 function Card({ data, categories, onEdit, onDelete }) {
-  const { place, Category, Shop_name, Description, id } = data;
+  const { locationname,category, categoryname, shop_name, description, id } = data;
+
+  
+  
   const [isEditing, setIsEditing] = useState(false);
-  const [editedData, setEditedData] = useState({ Shop_name, Description, Category });
+  const [editedData, setEditedData] = useState({ shop_name, description, category });
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
@@ -36,22 +41,22 @@ function Card({ data, categories, onEdit, onDelete }) {
   return (
     <div className="container card col-4 p-3 border border-0" style={{height:"400px"}}>
       <div className="card-body border shadow rounded p-4">
-        <h4 className='text-center m-3' style={{ fontFamily: "Protest Strike" }}>{place}</h4>
+        <h4 className='text-center m-3' style={{ fontFamily: "Protest Strike" }}>{locationname}</h4>
         {isEditing ? (
           <div>
-            <select name="Category" className='form-control' selected={editedData.Category} onChange={handleInputChange}>
-              {categories.map(category => (
-                <option key={category.id} value={category.id}>{category.name}</option>
+            <select name="category" className='form-control' selected={editedData.category} onChange={handleInputChange}>
+              {categories.map(categoryname => (
+                <option key={categoryname.id} value={categoryname.id}>{categoryname.categoryname}</option>
               ))}
             </select><br />
-            <input type="text" className='form-control' name="Shop_name" value={editedData.Shop_name} onChange={handleInputChange} /><br />
-            <textarea name="Description" className='form-control' value={editedData.Description} onChange={handleInputChange} /><br />
+            <input type="text" className='form-control' name="shop_name" value={editedData.shop_name} onChange={handleInputChange} /><br />
+            <textarea name="description" className='form-control' value={editedData.description} onChange={handleInputChange} /><br />
           </div>
         ) : (
           <div>
-            <p className="card-text text-center my-3" style={{ fontSize: "15px" }}>Shop Name:<br /><b style={{ fontSize: "25px" }}>{Shop_name}</b></p>
-            <p className="card-text text-center" style={{ fontSize: "20px" }}><strong>Category:</strong> {Category}</p>
-            <p className="card-text"><strong>Description:</strong> {Description}</p><br />
+            <p className="card-text text-center my-3" style={{ fontSize: "15px" }}>Shop Name:<br /><b style={{ fontSize: "25px" }}>{shop_name}</b></p>
+            <p className="card-text text-center" style={{ fontSize: "20px" }}><strong>Category:</strong> {categoryname}</p>
+            <p className="card-text"><strong>Description:</strong> {description}</p><br />
           </div>
         )}
         <div className='d-flex justify-content-center'>
@@ -71,35 +76,36 @@ function CardList() {
   const [cards, setCards] = useState([]);
   const [categories, setCategories] = useState([]);
   const token = localStorage.getItem('token');
+  const fetchServices = async () => {
+    try {
+      const response = await axios.get(`${apiUrl}/service-providers/`, {
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${token}`
+        }
+      });
+      setCards(response.data)
+      console.log(cards);
+    } catch (error) {
+      console.error("Error fetching services:", error);
+    }
+  };
 
+  const fetchCategories = async () => {
+    try {
+      const response = await axios.get(`${apiUrl}/list-categories/`, {
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${token}`
+        }
+      });
+      setCategories(response.data);
+    } catch (error) {
+      console.error("Error fetching categories:", error);
+    }
+  };
   useEffect(() => {
-    const fetchServices = async () => {
-      try {
-        const response = await axios.get(`http://10.11.0.95:8002/ListService/`, {
-          headers: {
-            'Content-Type': 'application/json',
-            'Authorization': `Bearer ${token}`
-          }
-        });
-        setCards(response.data);
-      } catch (error) {
-        console.error("Error fetching services:", error);
-      }
-    };
-
-    const fetchCategories = async () => {
-      try {
-        const response = await axios.get(`http://10.11.0.95:8002/list_Category/`, {
-          headers: {
-            'Content-Type': 'application/json',
-            'Authorization': `Bearer ${token}`
-          }
-        });
-        setCategories(response.data);
-      } catch (error) {
-        console.error("Error fetching categories:", error);
-      }
-    };
+   
 
     fetchServices();
     fetchCategories();
@@ -107,7 +113,7 @@ function CardList() {
 
   function editCard(id, editedData) {
 
-    axios.put(`http://10.11.0.95:8002/UpdateService/${id}/`, editedData,
+    axios.put(`${apiUrl}/UpdateService/${id}/`, editedData,
       {
         headers: {
           'Authorization': `Bearer ${token}`,
@@ -125,6 +131,7 @@ function CardList() {
             }
           });
         });
+        fetchCategories();
       })
 
       .catch(error => console.error("Failed to update service:", error));
@@ -132,19 +139,18 @@ function CardList() {
 
 
   function deleteCard(id) {
-    // DELETE request to backend to delete the service by ID
-    axios.delete(`http://10.11.0.95:8002/DeleteService/${id}`, {
+    console.log('Deleting card with id:', id); // Add this line to check the ID
+    axios.delete(`${apiUrl}/DeleteService/${id}`, {
       headers: {
         'Authorization': `Bearer ${token}`,
       },
     })
-      .then(() => {
-        // Remove the deleted card from state
-        setCards(prevCards => prevCards.filter(card => card.id !== id));
-      })
-      .catch(error => console.error("Failed to delete service:", error));
+    .then(() => {
+      setCards(prevCards => prevCards.filter(card => card.id !== id));
+    })
+    .catch(error => console.error("Failed to delete service:", error));
   }
-
+  
   return (
     <div className='container'>
       <div>

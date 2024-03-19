@@ -7,20 +7,22 @@ import Modal from 'react-bootstrap/Modal';
 import Form from 'react-bootstrap/Form';
 import Col from 'react-bootstrap/Col';
 import Alert from 'react-bootstrap/Alert';
+import { apiUrl } from '../Components/baseUrl';
+
 
 function Service() {
 
   const [show, setShow] = useState(false);
   const [Shop_name, setShopName] = useState('');
   const [Description, setDescription] = useState('');
-  const [Category, setCategory] = useState('');
-  const [Location, setLocation] = useState('');
+  const [categoryname, setCategory] = useState('');
+  const [locationname, setLocation] = useState('');
   const [username, setUsername] = useState('');
   const [validationErrors, setValidationErrors] = useState({
     Shop_name: '',
     Description: '',
-    Category: '',
-    Location: '',
+    categoryname: '',
+    locationname: '',
     username: ''
   });
   const [showAlert, setShowAlert] = useState(false);
@@ -31,7 +33,7 @@ function Service() {
 
   useEffect(() => {
     const fetchCategories = () => {
-      fetch(`http://10.11.0.95:8002/list_Category`)
+      fetch(`${apiUrl}/list-categories/`)
         .then(response => response.json())
         .then(data => {
           setCategories(data);
@@ -44,7 +46,7 @@ function Service() {
     fetchCategories();
 
     const fetchLocations = () => {
-      fetch(`http://10.11.0.95:8002/list_locations`)
+      fetch(`${apiUrl}/list-locations/`)
         .then(response => response.json())
         .then(data => {
           setLocations(data);
@@ -73,8 +75,8 @@ function Service() {
     setValidationErrors({
       Shop_name: '',
       Description: '',
-      Category: '',
-      Location: '',
+      categoryname: '',
+      locationname: '',
       username: ''
     });
   };
@@ -88,11 +90,11 @@ function Service() {
     if (!Description) {
       // errors.description = 'Description is required';
     }
-    if (!Category) {
-      errors.Category = 'Category is required';
+    if (!categoryname) {
+      errors.categoryname = 'Category is required';
     }
-    if (!Location) {
-      errors.Location = 'Location is required';
+    if (!locationname) {
+      errors.locationname = 'Location is required';
     }
     if (Object.keys(errors).length > 0) {
       setValidationErrors(errors);
@@ -101,15 +103,15 @@ function Service() {
     console.log(Description);
 
     const newService = {
-      Location,
-      Category,
+      locationname,
+      categoryname,
       Shop_name,
       Description
     };
     const token = localStorage.getItem('token');
 
     // Making POST request to the backend API
-    fetch(`http://10.11.0.95:8002/CreateService/`,
+    fetch(`${apiUrl}/CreateService/`,
       {
         method: 'POST',
         headers: {
@@ -185,25 +187,25 @@ function Service() {
               </div>
               <div className='mb-3 w-100'>
                 <Form.Group as={Col} controlId="formGridState">
-                  <Form.Control as="select" value={Category} onChange={(e) => setCategory(e.target.value)} custom>
+                  <Form.Control as="select" value={categoryname} onChange={(e) => setCategory(e.target.value)} custom>
                     <option disabled value="">Select Category</option>
-                    {categories.map(category => (
-                      <option key={category.id} value={category.id}>{category.name}</option>
+                    {categories.map(categoryname => (
+                      <option key={categoryname.id} value={categoryname.id}>{categoryname.categoryname}</option>
                     ))}
                   </Form.Control>
-                  {validationErrors.Category && <small className="text-danger">{validationErrors.Category}</small>}
+                  {validationErrors.categoryname && <small className="text-danger">{validationErrors.categoryname}</small>}
                 </Form.Group>
 
               </div>
               <div className='mb-3 w-100'>
                 <Form.Group as={Col} controlId="formGridState">
-                  <Form.Control as="select" value={Location} onChange={(e) => setLocation(e.target.value)} custom>
+                  <Form.Control as="select" value={locationname} onChange={(e) => setLocation(e.target.value)} custom>
                     <option disabled value="">Select Location</option>
-                    {locations.map(location => (
-                      <option key={location.id} value={location.id}>{location.location}</option>
+                    {locations.map(locationname => (
+                      <option key={locationname.id} value={locationname.id}>{locationname.locationname}</option>
                     ))}
                   </Form.Control>
-                  {validationErrors.Location && <small className="text-danger">{validationErrors.Location}</small>}
+                  {validationErrors.locationname && <small className="text-danger">{validationErrors.locationname}</small>}
                 </Form.Group>
               </div>
             </div>
