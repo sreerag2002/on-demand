@@ -4,14 +4,16 @@ import { Link } from 'react-router-dom';
 import Button from 'react-bootstrap/Button';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faHome, faSync, faCheck, faTimes } from '@fortawesome/free-solid-svg-icons';
+import { apiUrl } from './baseUrl';
 
 function RequestPage() {
   const [requests, setRequests] = useState([]);
 
     const token = localStorage.getItem('token');
+    const id = localStorage.getItem("id")
 
   const fetchServiceRequests = () => {
-    fetch(`http://10.11.0.95:8002/ListRequests/13/`, {
+    fetch(`${apiUrl}/ListRequests/${id}/`, {
       method: 'GET', 
       headers: {
         'Authorization': `Bearer ${token}`,
@@ -57,9 +59,11 @@ function RequestPage() {
       <h1 style={{textAlign: "center"}}>Service Requests</h1><br /><br />
       <Table striped bordered hover>
         <thead>
-          <tr>
+          <tr className='text-center'>
             <th>Username</th>
             <th>Description</th>
+            <th>Shop Name</th>
+            <th>Service</th>
             <th>Date and Time</th>
             <th>Location</th>
             <th>Action</th>
@@ -68,11 +72,13 @@ function RequestPage() {
         <tbody>
           {requests.length > 0 ? (
             requests.map((request) => (
-              <tr key={request.id}>
-                <td>{request.user_name}</td>
+              <tr key={request.id} className='text-center'>
+                <td>{request.username}</td>
                 <td>{request.description}</td>
-                <td>{request.datetime}</td>
-                <td>{request.location}</td>
+                <td>{request.shope}</td>
+                <td>{request.categoryname}</td>
+                <td><span className='mx-2'>Date: <b>{(request.datetime).slice(0,10)}</b></span>&<span className='mx-2'>Time: <b>{(request.datetime).slice(11,16)}</b></span></td>
+                <td>{request.locationname}</td>
                 <td>
                   <Button variant="success" onClick={() => handleAccept(request.id)} aria-label="Accept Request">
                     <FontAwesomeIcon icon={faCheck} />

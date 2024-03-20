@@ -8,6 +8,8 @@ import Nav from 'react-bootstrap/Nav';
 import Dropdown from 'react-bootstrap/Dropdown';
 import axios from 'axios'
 import { apiUrl } from '../Components/baseUrl';
+import { FaCircleUser } from "react-icons/fa6";
+import { FaPowerOff } from "react-icons/fa";
 
 function User() {
 
@@ -156,9 +158,7 @@ function User() {
   }
 
   const handleLogout = ()=>{
-    localStorage.removeItem('token')
-    localStorage.removeItem('username')
-    localStorage.removeItem('email')
+    localStorage.clear()
     navigate('/')
   }
 
@@ -175,7 +175,18 @@ function User() {
           <Button variant="outline-success me-3">My Requests</Button>
         </Link>
         <Button variant="outline-success me-3" onClick={handleShow}><i className="fa-solid fa-user"></i></Button>
-        <Button variant="outline-danger" onClick={handleLogout}> <i className="fa-solid fa-power-off"></i> </Button>
+        {/* <Button variant="outline-danger" onClick={handleLogout}> <i className="fa-solid fa-power-off"></i> </Button> */}
+        <div className='text-success'>
+                <Dropdown>
+                    <Dropdown.Toggle variant="white" id="dropdown-basic" className='border border-0 fs-6'>
+                        <b><FaCircleUser className='mb-1' /> {username}</b>
+                    </Dropdown.Toggle>
+
+                    <Dropdown.Menu className='border border-0 ms-3 mb-5 bg-light'>
+                        <Dropdown.Item onClick={handleLogout}><b><FaPowerOff className='me-1' /> Logout</b></Dropdown.Item>
+                    </Dropdown.Menu>
+                </Dropdown>
+            </div>
       </div>
       <Modal show={show} onHide={handleClose}>
         <Modal.Header closeButton>

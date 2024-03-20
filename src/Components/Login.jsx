@@ -25,9 +25,12 @@ const LoginPage = () => {
       const response = await axios.post(`${apiUrl}/login/`, { username, password });
       console.log("Login successful:", response.data);
       localStorage.setItem('token', response.data.access)
+      localStorage.setItem('id',response.data.id)
       localStorage.setItem('username', username)
       // localStorage.setItem('email', response.data.email)
-      if (response.data.is_staff == true) {
+      if (response.data.superuser == true) {
+        navigate('/admin')
+      } else if (response.data.service_provider == true) {
         navigate('/service')
       } else {
         navigate('/user');

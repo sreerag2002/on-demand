@@ -42,7 +42,7 @@ function ServiceCard() {
   const [allServices, setAllServices] = useState([]);
   const [bookedServices, setBookedServices] = useState([]);
   const [selectedItem,setSelectedItem] = useState({})
-  const [serviceDate,setServiceDate] = useState()
+  const [serviceDateTime,setServiceDateTime] = useState()
   const [serviceTime,setServiceTime] = useState()
   const [description,setDescription] = useState()
 
@@ -62,8 +62,8 @@ function ServiceCard() {
   }
 
   const handleBookNow = async(srId) => {
-    let dateandtime = `${serviceDate}T${serviceTime}Z`
-    const bookedService = { datetime:dateandtime, description:description }
+    const bookedService = { datetime:serviceDateTime, description:description }
+    console.log(bookedService);
     const response = await axios.post(`${apiUrl}/CreateRequest/${srId}/`,bookedService,
     {
       headers: {
@@ -71,14 +71,13 @@ function ServiceCard() {
       }
     })
     .then((result) => {
-      console.log(result);
+      // console.log(result);
       alert("Service booked successfully.");
       navigate('/user')
     }
     )
     .catch((error)=>{
       console.log(error);
-      alert("Error")
     })
   };
 
@@ -99,8 +98,8 @@ function ServiceCard() {
                 <MDBCard style={{ boxShadow: "2px 2px 10px gray" }} alignment='center' className='rounded'>
                   <MDBCardHeader><h4 style={{ fontFamily: "Protest Strike" }} className='mt-2'>{category.categoryname}</h4></MDBCardHeader>
                   <MDBCardBody>
-                    <MDBCardTitle style={{ fontSize: "15px" }}>Shop Name<br /> <b style={{ fontSize: "25px" }}>{service.Shop_name}</b></MDBCardTitle>
-                    <MDBCardText className='my-3'><b>Description</b> <br /><i>"{service.Description}"</i></MDBCardText>
+                    <MDBCardTitle style={{ fontSize: "15px" }}>Shop Name<br /> <b style={{ fontSize: "25px" }}>{service.shop_name}</b></MDBCardTitle>
+                    <MDBCardText className='my-3'><b>Description</b> <br /><i>"{service.description}"</i></MDBCardText>
                     <MDBCardTitle style={{ fontSize: "20px" }}>Location: {location.locationname}</MDBCardTitle>
                     <MDBBtn onClick={()=>{toggleOpen();setSelectedItem(service);}} className='mt-2'>Book Now</MDBBtn>
                   </MDBCardBody>
@@ -146,16 +145,16 @@ function ServiceCard() {
                 </div>
                 <div className='w-100 my-1'>
                   <label><b>Shop name</b></label>
-                  <MDBInput type='text' value={selectedItem.Shop_name} disabled />
+                  <MDBInput type='text' value={selectedItem.shop_name} disabled />
                 </div>
-                <div className='w-50 my-1'>
-                  <label><b>Date</b></label>
-                  <MDBInput type='date' onChange={(e)=> setServiceDate(e.target.value)} required />
+                <div className='w-100 my-1'>
+                  <label><b>Date & Time</b></label>
+                  <MDBInput type='datetime-local' onChange={(e)=> setServiceDateTime(e.target.value)} required />
                 </div>
-                <div className='w-50 my-1'>
+                {/* <div className='w-50 my-1'>
                   <label><b>Time</b></label>
                   <MDBInput type='time' onChange={(e)=> setServiceTime(e.target.value)} required />
-                </div>
+                </div> */}
                 <div className='w-100 my-1'>
                   <label><b>Description</b></label>
                   <textarea type='text' onChange={(e)=> setDescription(e.target.value)} required cols={84} rows={3} />
