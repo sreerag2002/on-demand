@@ -4,19 +4,29 @@ import { Button } from 'react-bootstrap'
 import { FaCircleUser } from "react-icons/fa6";
 import { FaPowerOff } from "react-icons/fa";
 import Dropdown from 'react-bootstrap/Dropdown';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 
 function Admin() {
+
+    const username = localStorage.getItem('username')
+
+    const navigate = useNavigate()
+
+    const handleLogout = ()=>{
+        localStorage.clear()
+        navigate('/')
+    }
+
     return (
         <div>
             <div className='d-flex justify-content-end px-5'>
                 <Dropdown>
                     <Dropdown.Toggle variant="white" id="dropdown-basic" className='border border-0 fs-5'>
-                        <b><FaCircleUser className='me-1' /> ArunMF</b>
+                        <b><FaCircleUser className='mb-1' /> {username}</b>
                     </Dropdown.Toggle>
 
                     <Dropdown.Menu className='border border-0'>
-                        <Dropdown.Item href="#/action-1"><b><FaPowerOff className='me-1' /> Logout</b></Dropdown.Item>
+                        <Dropdown.Item onClick={handleLogout}><b><FaPowerOff className='me-1' /> Logout</b></Dropdown.Item>
                     </Dropdown.Menu>
                 </Dropdown>
             </div>

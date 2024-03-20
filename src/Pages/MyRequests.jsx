@@ -1,23 +1,39 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { Link } from 'react-router-dom';
-import { Form, Button } from 'react-bootstrap';
+import { Form, Button, Row } from 'react-bootstrap';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import { TfiReload } from "react-icons/tfi";
 import { TiArrowBack } from "react-icons/ti";
 import { FaSyncAlt } from "react-icons/fa";
 import axios from 'axios';
+import { apiUrl } from '../Components/baseUrl';
+import {
+  MDBBtn,
+  MDBModal,
+  MDBModalDialog,
+  MDBModalContent,
+  MDBModalHeader,
+  MDBModalTitle,
+  MDBModalBody,
+  MDBModalFooter,
+  MDBInput
+} from 'mdb-react-ui-kit';
 
 function UserRequest() {
 
-  const apiUrl = "http://10.11.0.95:8002"
   const token = localStorage.getItem('token');
+  const username = localStorage.getItem('username');
 
   const [showForm, setShowForm] = useState(false);
   const [selectedRequest, setSelectedRequest] = useState(null);
   const [showAlert, setShowAlert] = useState(false);
   const [rating, setRating] = useState(0); // Rating state
   const [allRequests,setAllRequests] = useState([])
-  const payNowRef = useRef(null)
+
+  const [basicModal, setBasicModal] = useState(false);
+  const toggleOpen = () => setBasicModal(!basicModal);
+
+  const [editingReq,setEditingReq] = useState({})
 
   const userRequests = [
     { id: 1, username: 'John', serviceName: 'Plumbing', date: '2024-02-21', time: '10:00 AM', description: 'Leaky faucet', status: 'Pending', rate: 50 },
@@ -90,6 +106,7 @@ function UserRequest() {
       }
     })
     .then((result)=>{
+      console.log(result.data);
       setAllRequests(result.data);
     })
   }
@@ -109,9 +126,10 @@ function UserRequest() {
       <h1 style={{ textAlign: "center" }}>My Requests</h1>
       <table className="table" style={{ marginTop: "10vh", marginBottom: "80vh" }}>
         <thead>
-          <tr>
-            <th>Username</th>
+          <tr className='text-center'>
+            <th>Shop Name</th>
             <th>Service Name</th>
+            <th>Location</th>
             <th>Date</th>
             <th>Time</th>
             <th>Description</th>
@@ -121,18 +139,20 @@ function UserRequest() {
         </thead>
         <tbody>
           {allRequests.map(request => (
-            <tr key={request.id}>
-              <td>{request.username}</td>
-              <td>{request.service_name}</td>
+            <tr className='text-center' key={request.id}>
+              <td>{request.service_provider.shop_name}</td>
+              <td className='bg-light'>{request.category}</td>
+              <td className='bg-light'>{request.locationname}</td>
               <td>{(request.datetime).slice(0,10)}</td>
-              <td>{(request.datetime).slice(11,16)}</td>
+              <td className='bg-light'>{(request.datetime).slice(11,16)}</td>
               <td>{request.description}</td>
-              <td>{
+              <td className='bg-light'>{
                 request.pending ? 'Pending' : request.accept ? 'Accepted' : 'Declined'
                 }</td>
               <td>
                 {
-                request.accept==true ? <button className='btn btn-success' ref={payNowRef}>Pay now</button> : ''                 
+                request.accept===true ? <button className='btn btn-success'>Pay now</button> : 
+                request.pending===true ? <button className='btn btn-dark' onClick={()=>{toggleOpen();setEditingReq(request);}}>Edit Request</button> : ''             
                 }
                 
               </td>
@@ -140,6 +160,37 @@ function UserRequest() {
           ))}
         </tbody>
       </table>
+
+      {/* Edit request form */}
+      <MDBModal open={basicModal} setOpen={setBasicModal} tabIndex='-1'>
+        <MDBModalDialog>
+          <MDBModalContent>
+            <MDBModalHeader>
+              <MDBModalTitle><h4 style={{ fontFamily: "Protest Strike" }} className='mt-2'>Edit Request</h4></MDBModalTitle>
+              <MDBBtn className='btn-close' color='none' onClick={toggleOpen}></MDBBtn>
+            </MDBModalHeader>
+            <MDBModalBody className='px-5 py-3'>
+            <Row>
+                <div className='w-100 my-1'>
+                  <label><b>Name</b></label>
+                  <MDBInput type='datetime-local' value={editingReq.datetime} />
+                </div>
+                <div className='w-100 my-1'>
+                  <label><b>Service</b></label>
+                  <MDBInput type='text' value={editingReq.description} />
+                </div>
+                </Row>
+            </MDBModalBody>
+
+            <MDBModalFooter>
+              <MDBBtn color='secondary' onClick={toggleOpen}>
+                Close
+              </MDBBtn>
+              <MDBBtn>Save changes</MDBBtn>
+            </MDBModalFooter>
+          </MDBModalContent>
+        </MDBModalDialog>
+      </MDBModal>
 
       {/* Form */}
       {showForm && (

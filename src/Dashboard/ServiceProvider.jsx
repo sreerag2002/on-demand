@@ -7,10 +7,15 @@ import Modal from 'react-bootstrap/Modal';
 import Form from 'react-bootstrap/Form';
 import Col from 'react-bootstrap/Col';
 import Alert from 'react-bootstrap/Alert';
+import { FaCircleUser } from "react-icons/fa6";
+import { FaPowerOff } from "react-icons/fa";
+import Dropdown from 'react-bootstrap/Dropdown';
 import { apiUrl } from '../Components/baseUrl';
 
 
 function Service() {
+
+  const accname = localStorage.getItem("username")
 
   const [show, setShow] = useState(false);
   const [Shop_name, setShopName] = useState('');
@@ -140,17 +145,12 @@ function Service() {
   };
 
   const handleLogout = () => {
-
-    localStorage.removeItem('token');
-    localStorage.removeItem('username');
-    localStorage.removeItem('email');
-
-
+    localStorage.clear()
     navigate('/');
   };
 
   return (
-    <div className='px-5 pb-5'>
+    <div className='px-5 pb-5 mb-5'>
       <div className="d-flex px-5 pb-5 w-100 justify-content-end">
         <Link to="/requestpage">
           <Button variant="outline-success me-3" style={{ fontWeight: "bold" }}>Requests</Button>
@@ -159,7 +159,18 @@ function Service() {
           <Button variant="outline-success me-3" style={{ fontWeight: "bold" }}>Services</Button>
         </Link>
         <Button variant="outline-success me-3" onClick={handleShow} style={{ fontWeight: "bold" }}>Add</Button>
-        <Button variant="outline-danger" onClick={handleLogout}> <i className="fa-solid fa-power-off"></i> </Button>
+        {/* <Button variant="outline-danger" onClick={handleLogout}> <i className="fa-solid fa-power-off"></i> </Button> */}
+        <div className='text-success'>
+                <Dropdown>
+                    <Dropdown.Toggle variant="white" id="dropdown-basic" className='border border-0 fs-6'>
+                        <b><FaCircleUser className='mb-1' /> {accname}</b>
+                    </Dropdown.Toggle>
+
+                    <Dropdown.Menu className='border border-0 ms-3 mb-5 bg-light'>
+                        <Dropdown.Item onClick={handleLogout}><b><FaPowerOff className='me-1' /> Logout</b></Dropdown.Item>
+                    </Dropdown.Menu>
+                </Dropdown>
+            </div>
       </div>
       
       <div className='d-flex justify-content-center p-5'>
