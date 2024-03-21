@@ -262,7 +262,7 @@ function User() {
                 <Dropdown.Menu>
                   {
                     locations.map(Item => (
-                      <Dropdown.Item onClick={() => setSelectedLoc(Item)}>{Item.locationname}</Dropdown.Item>
+                      <Dropdown.Item key={Item.id} onClick={() => setSelectedLoc(Item)}>{Item.locationname}</Dropdown.Item>
                     ))
                   }
                 </Dropdown.Menu>
@@ -278,7 +278,7 @@ function User() {
                 <Dropdown.Menu>
                   {
                     categories.map(item => (
-                      <Dropdown.Item onClick={() => setSelectedCat(item)}>{item.categoryname}</Dropdown.Item>
+                      <Dropdown.Item key={item.id} onClick={() => setSelectedCat(item)}>{item.categoryname}</Dropdown.Item>
                     ))
                   }
                 </Dropdown.Menu>
