@@ -21,7 +21,7 @@ function RequestPage() {
       },
     })
       .then(response => {
-        if (response.ok) {
+        if (response.ok) {  
           return response.json();
         }
         throw new Error('Network response was not ok.');
@@ -79,6 +79,7 @@ function RequestPage() {
                 <td>{request.categoryname}</td>
                 <td><span className='mx-2'>Date: <b>{(request.datetime).slice(0,10)}</b></span>&<span className='mx-2'>Time: <b>{(request.datetime).slice(11,16)}</b></span></td>
                 <td>{request.locationname}</td>
+                <td>{request.id}</td>              
                 <td>
                   <Button variant="success" onClick={() => handleAccept(request.id)} aria-label="Accept Request">
                     <FontAwesomeIcon icon={faCheck} />
