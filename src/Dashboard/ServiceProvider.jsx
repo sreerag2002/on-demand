@@ -13,6 +13,8 @@ import Dropdown from 'react-bootstrap/Dropdown';
 import { apiUrl } from '../Components/baseUrl';
 
 
+
+
 function Service() {
 
   const accname = localStorage.getItem("username")
@@ -90,57 +92,58 @@ function Service() {
     event.preventDefault();
     const errors = {};
     if (!Shop_name) {
-      errors.Shop_name = 'Shop name is required';
+        errors.Shop_name = 'Shop name is required';
     }
     if (!Description) {
-      // errors.description = 'Description is required';
+        // Assuming you want to uncomment this to validate the description as well.
+        // errors.Description = 'Description is required';
     }
     if (!categoryname) {
-      errors.categoryname = 'Category is required';
+        errors.categoryname = 'Category is required';
     }
     if (!locationname) {
-      errors.locationname = 'Location is required';
+        errors.locationname = 'Location is required';
     }
     if (Object.keys(errors).length > 0) {
-      setValidationErrors(errors);
-      return;
+        setValidationErrors(errors);
+        return;
     }
+
     console.log(Description);
 
     const newService = {
-      locationname,
-      categoryname,
-      Shop_name,
-      Description
-    };
-    const token = localStorage.getItem('token');
+      category: categoryname, 
+      shop_name: Shop_name, 
+      description: Description, 
+      location: locationname, 
+  };
+  const token = localStorage.getItem('token');
 
-    // Making POST request to the backend API
-    fetch(`${apiUrl}/CreateService/`,
-      {
-        method: 'POST',
-        headers: {
+  // Making POST request to the backend API
+  fetch(`${apiUrl}/CreateService/`, {
+      method: 'POST',
+      headers: {
           'Content-Type': 'application/json',
           'Authorization': `Bearer ${token}`
-        },
-        body: JSON.stringify(newService),
-      })
-      .then(response => {
-        if (!response.ok) throw new Error('Failed to add service');
-        return response.json();
-      })
-      .then(data => {
-        console.log('Service added:', data);
-        setShowAlert(true);
-        setTimeout(() => setShowAlert(false), 5000);
-        resetForm();
-      })
-      .catch(error => {
-        console.error('Error adding service:', error);
+      },
+      body: JSON.stringify(newService),
+  })
+  .then(response => {
+      if (!response.ok) throw new Error('Failed to add service');
+      return response.json();
+  })
+  .then(data => {
+      console.log('Service added:', data);
+      setShowAlert(true);
+      setTimeout(() => setShowAlert(false), 5000);
+      resetForm();
+  })
+  .catch(error => {
+    console.error('Error adding service:', error);
         // Implement showing error to the user here
       });
 
-    handleClose();
+      handleClose();
   };
 
   const handleLogout = () => {
