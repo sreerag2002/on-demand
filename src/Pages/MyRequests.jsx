@@ -1,8 +1,6 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { Link } from 'react-router-dom';
-import { Form, Button, Row } from 'react-bootstrap';
 import 'bootstrap/dist/css/bootstrap.min.css';
-import { TfiReload } from "react-icons/tfi";
 import { TiArrowBack } from "react-icons/ti";
 import { FaSyncAlt } from "react-icons/fa";
 import axios from 'axios';
@@ -18,28 +16,25 @@ import {
   MDBModalFooter,
   MDBInput
 } from 'mdb-react-ui-kit';
+import { FaRegQuestionCircle } from "react-icons/fa";
+import { Row } from 'react-bootstrap';
+import { CiLocationOn } from "react-icons/ci";
+import { MdDateRange } from "react-icons/md";
+import { FaLocationDot } from "react-icons/fa6";
+import { IoMdTime } from "react-icons/io";
 
 function UserRequest() {
 
-  const token = localStorage.getItem('token');
-  const username = localStorage.getItem('username');
+  const [centredModal, setCentredModal] = useState(false);
 
-  const [showForm, setShowForm] = useState(false);
-  const [selectedRequest, setSelectedRequest] = useState(null);
-  const [showAlert, setShowAlert] = useState(false);
+  const toggleOpen = () => setCentredModal(!centredModal);
+
+  const token = localStorage.getItem('token')
+
   const [rating, setRating] = useState(0); // Rating state
   const [allRequests,setAllRequests] = useState([])
 
-  const [basicModal, setBasicModal] = useState(false);
-  const toggleOpen = () => setBasicModal(!basicModal);
-
-  const [editingReq,setEditingReq] = useState({})
-
-  const userRequests = [
-    { id: 1, username: 'John', serviceName: 'Plumbing', date: '2024-02-21', time: '10:00 AM', description: 'Leaky faucet', status: 'Pending', rate: 50 },
-    { id: 2, username: 'Alice', serviceName: 'Electrician', date: '2024-02-22', time: '2:00 PM', description: 'Power outage', status: 'Completed', rate: 80 },
-    { id: 3, username: 'Bob', serviceName: 'Cleaning', date: '2024-02-23', time: '11:30 AM', description: 'House cleaning', status: 'Accepted', rate: 60 }
-  ];
+  const [selectedReq,setSelectedReq] = useState({})
 
   const getStatusColor = (status) => {
     switch (status) {
@@ -56,28 +51,6 @@ function UserRequest() {
     }
   };
 
-  const handlePayNow = (request) => {
-    setSelectedRequest(request);
-    setShowForm(true);
-  };
-
-  const handleCloseForm = () => {
-    setShowForm(false);
-    setSelectedRequest(null);
-    setRating(0); // Reset rating
-  };
-
-  const handlePayment = () => {
-    // Here you would typically update the state of your requests or send the updatedRequest to your backend
-    console.log(`Payment for ${selectedRequest.username} with rating ${rating} processed`);
-    // Example: Updating the request status to 'Paid' and setting the rating
-    setSelectedRequest({ ...selectedRequest, status: 'Paid', rating: rating });
-    setShowAlert(true);
-    setTimeout(() => {
-      setShowAlert(false);
-      handleCloseForm();
-    }, 2000);
-  };
 
   // Assuming sortedUserRequests is derived from a state or comes from props, otherwise, you need to sort them as shown previously.
   // const sortedUserRequests = ...; // Your sorting logic here
@@ -140,8 +113,8 @@ function UserRequest() {
         <tbody>
           {allRequests.map(request => (
             <tr className='text-center' key={request.id}>
-              <td>{request.service_provider.shop_name}</td>
-              <td className='bg-light'>{request.category}</td>
+              <td className='bg-light'>{request.service_provider.shop_name}</td>
+              <td>{request.category}</td>
               <td className='bg-light'>{request.locationname}</td>
               <td>{(request.datetime).slice(0,10)}</td>
               <td className='bg-light'>{(request.datetime).slice(11,16)}</td>
@@ -151,8 +124,7 @@ function UserRequest() {
                 }</td>
               <td>
                 {
-                request.accept===true ? <button className='btn btn-success'>Pay now</button> : 
-                request.pending===true ? <button className='btn btn-dark' onClick={()=>{toggleOpen();setEditingReq(request);}}>Edit Request</button> : ''             
+                request.accept===true ? <button className='btn btn-success' onClick={toggleOpen}>Pay now</button> : ''             
                 }
                 
               </td>
@@ -161,64 +133,68 @@ function UserRequest() {
         </tbody>
       </table>
 
-      {/* Edit request form */}
-      <MDBModal open={basicModal} setOpen={setBasicModal} tabIndex='-1'>
-        <MDBModalDialog>
+      {/* <div>
+        <Row className='border px-4 pt-3 rounded'>
+          <div className='w-100'>
+          <h4>ABC Electricals</h4>
+          <p><span>Electrician</span><span style={{float:"right"}}>Accepted</span></p>
+          </div>
+          <p><b><i>"Voltage issue."</i></b></p>
+          <div className='w-100'>
+            <p>
+              <span className='me-5'><FaLocationDot /><b> Kakkanad</b></span>
+              <span className='me-5'><MdDateRange /><b> 2024-06-17</b></span>
+              <span><IoMdTime className='fs-5' /><b> 12:30</b></span>
+            </p>
+          </div>
+        </Row>
+      </div> */}
+
+      {/*Payment Form */}
+      
+      <MDBModal tabIndex='-1' open={centredModal} setOpen={setCentredModal}>
+        <MDBModalDialog centered>
           <MDBModalContent>
-            <MDBModalHeader>
-              <MDBModalTitle><h4 style={{ fontFamily: "Protest Strike" }} className='mt-2'>Edit Request</h4></MDBModalTitle>
-              <MDBBtn className='btn-close' color='none' onClick={toggleOpen}></MDBBtn>
-            </MDBModalHeader>
-            <MDBModalBody className='px-5 py-3'>
-            <Row>
+            <MDBModalBody>
+              <div className='p-3'>
+                <h3 className='text-center my-4'>Payment Receipt</h3>
                 <div className='w-100 my-1'>
                   <label><b>Name</b></label>
-                  <MDBInput type='datetime-local' value={editingReq.datetime} />
+                  <MDBInput type='text' disabled />
                 </div>
                 <div className='w-100 my-1'>
-                  <label><b>Service</b></label>
-                  <MDBInput type='text' value={editingReq.description} />
+                  <label><b>Shop name</b></label>
+                  <MDBInput type='text' disabled />
                 </div>
-                </Row>
+                <div className='d-flex'>
+                <div className='w-50 my-1 me-3'>
+                  <label><b>Service</b></label>
+                  <MDBInput type='text' disabled />
+                </div>
+                <div className='w-50 my-1'>
+                  <label><b>Location</b></label>
+                  <MDBInput type='text' disabled />
+                </div>
+                </div>
+               <p className='mt-4'>
+                <span>Payable amount</span>
+                <span style={{float:"right"}}><b>500.00</b></span>
+                </p>
+               <p><span>Tax <FaRegQuestionCircle className='ms-2' /></span><span style={{float:"right"}}><b>00.00</b></span></p>
+               <p className='pt-3'>
+                <span className='fs-4'><b>Total amount</b></span>
+                <span style={{float:"right"}}><b className='fs-4'>500.00</b><br /><p style={{fontSize:"10px"}}>including all taxes</p></span>
+               </p>
+              </div>
+              <div className='d-flex justify-content-end px-2'>
+              <button className='btn btn-light me-2' onClick={toggleOpen}>Close</button>
+              <button className='btn btn-info'>Pay Amount</button>
+              </div>
             </MDBModalBody>
-
-            <MDBModalFooter>
-              <MDBBtn color='secondary' onClick={toggleOpen}>
-                Close
-              </MDBBtn>
-              <MDBBtn>Save changes</MDBBtn>
-            </MDBModalFooter>
           </MDBModalContent>
         </MDBModalDialog>
       </MDBModal>
-
-      {/* Form */}
-      {showForm && (
-        <div className="container" style={{ position: 'fixed', top: '30%', left: '50%', transform: 'translate(-50%, -50%)', zIndex: 9999 }}>
-          <Form style={{ backgroundColor: 'white', padding: '20px', borderRadius: '10px', boxShadow: '0 0 10px rgba(0, 0, 0, 0.2)' }}>
-            <h2>Payment Form</h2>
-            <p><strong>Username:</strong> {selectedRequest && selectedRequest.username}</p>
-            <p><strong>Service Name:</strong> {selectedRequest && selectedRequest.serviceName}</p>
-            <p><strong>Rate:</strong> ${selectedRequest && selectedRequest.rate}</p>
-            {/* Star Rating */}
-            <div>
-              <label htmlFor="rating" className="form-label"><strong>Rating:</strong></label>
-              <div>
-                {renderStars()}
-              </div>
-            </div>
-            <Button variant="secondary" onClick={handleCloseForm}>Close</Button>
-            <Button variant="primary" className="ms-2" onClick={handlePayment}>Pay Now</Button>
-          </Form>
-        </div>
-      )}
-
-      {/* Alert for payment processing */}
-      {showAlert && (
-        <div className="alert alert-success" style={{ position: 'fixed', top: '20%', left: '50%', transform: 'translate(-50%, -50%)', zIndex: 9999 }}>
-          Payment Processed Successfully!
-        </div>
-      )}
+      
     </div>
   );
 }

@@ -56,7 +56,7 @@ function Card({ data, categories, onEdit, onDelete }) {
           <div>
             <p className="card-text text-center my-3" style={{ fontSize: "15px" }}>Shop Name:<br /><b style={{ fontSize: "25px" }}>{shop_name}</b></p>
             <p className="card-text text-center" style={{ fontSize: "20px" }}><strong>Category:</strong> {categoryname}</p>
-            <p className="card-text"><strong>Description:</strong> {description}</p><br />
+            <p className="card-text text-center"><strong>Description:</strong> {description}</p><br />
           </div>
         )}
         <div className='d-flex justify-content-center'>
