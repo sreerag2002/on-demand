@@ -102,7 +102,7 @@ function User() {
     // }
 
     try {
-      const response = await fetch(`${apiUrl}/createProfile/`, {
+      const response = await fetch(`${apiUrl}/ProfileView/`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -122,7 +122,7 @@ function User() {
       const data = await response.json();
       console.log('Profile creation successful:', data);
 
-      setUserProfileExists(true); // Set userProfileExists to true after creating/updating profile
+      setUserProfileExists(true); 
       setShowAlert(true);
       setTimeout(() => {
         setShowAlert(false);
