@@ -164,12 +164,17 @@ function Service() {
                     <Dropdown.Toggle variant="white" id="dropdown-basic" className='border border-0 fs-6'>
                         <b><FaCircleUser className='mb-1' /> {accname}</b>
                     </Dropdown.Toggle>
+                    
 
                     <Dropdown.Menu className='border border-0 ms-3 mb-5 bg-light'>
-                    <Dropdown.Item className='mb-1' onClick={()=>navigate('/requestpage')}><b> Requests</b></Dropdown.Item>
-                    <Dropdown.Item className='mb-1' onClick={()=>navigate('/list')}><b> Services</b></Dropdown.Item>
                     <Dropdown.Item className='mb-1' onClick={handleShow}><b> Add service</b></Dropdown.Item>
-                        <Dropdown.Item onClick={handleLogout}><b><FaPowerOff className='me-1' /> Logout</b></Dropdown.Item>
+                 
+                    <Dropdown.Item className='mb-1' onClick={()=>navigate('/list')}><b> Services</b></Dropdown.Item>
+
+                    <Dropdown.Item className='mb-1' onClick={()=>navigate('/requestpage')}><b> Requests</b></Dropdown.Item>
+                    
+                     <Dropdown.Item onClick={handleLogout}><b><FaPowerOff className='me-1' /> Logout</b></Dropdown.Item>
+                     
                     </Dropdown.Menu>
                 </Dropdown>
             </div>
