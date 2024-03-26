@@ -3,3 +3,12 @@
     font-size: 50px;
     color: black;
 }
+
+#adminDiv{
+    background-image: url('https://ak.jogurucdn.com/resources_version/ergobite/images/banner2.jpg');
+    background-repeat: no-repeat;
+    height: 450px;
+    background-size: 80% 100%;
+    background-position: center;
+    /* background-size: cover; */
+}

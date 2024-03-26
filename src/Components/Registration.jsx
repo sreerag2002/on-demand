@@ -13,8 +13,8 @@ const RegistrationPage = () => {
         username: "",
         email: "",
         password: "",
-        first_name:"",
-        last_name:""
+        first_name: "",
+        last_name: ""
     });
     const [error, setError] = useState('');
     console.log('form data', formData);
@@ -76,20 +76,26 @@ const RegistrationPage = () => {
 
 
                             <label htmlFor="username">Username:</label>
-                            <input type="text" id="username" name="username" value={formData.username} onChange={handleChange} required /><br />
+                            <input className='w-100' type="text" id="username" name="username" value={formData.username} onChange={handleChange} required /><br />
 
-                            <label htmlFor="first_name">Firstname:</label>
-                            <input type="text" id="first_name" name="first_name" value={formData.first_name} onChange={handleChange} required /><br />
+                            <div className='d-flex'> 
+                            <div className='pe-1'>
+                                <label htmlFor="first_name">Firstname:</label>
+                                <input type="text" id="first_name" name="first_name" value={formData.first_name} onChange={handleChange} required /><br />
+                            </div>
 
-                            <label htmlFor="last_name">Lastname:</label>
-                            <input type="text" id="last_name" name="last_name" value={formData.last_name} onChange={handleChange} required /><br />
+                            <div className='ps-1'>
+                                <label htmlFor="last_name">Lastname:</label>
+                                <input type="text" id="last_name" name="last_name" value={formData.last_name} onChange={handleChange} required /><br />
+                            </div>
+                            </div>
+                            
 
                             <label htmlFor="email">Email:</label>
-                            <input className='reg-input' type="email" id="email" name="email" value={formData.email} onChange={handleChange} required /><br />
+                            <input className='reg-input w-100' type="email" id="email" name="email" value={formData.email} onChange={handleChange} required /><br />
+
                             <label htmlFor="password">Password:</label>
-                            <input type="password" id="password" name="password" value={formData.password} onChange={handleChange} required /><br />
-
-
+                            <input className='w-100' type="password" id="password" name="password" value={formData.password} onChange={handleChange} required /><br />
 
                             <button className='login-submit btn btn-success w-100 my-2' type="submit">Register</button>
 

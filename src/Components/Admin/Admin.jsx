@@ -18,7 +18,7 @@ function Admin() {
     }
 
     return (
-        <div>
+        <div id='adminDiv'>
             <div className='d-flex justify-content-end px-5'>
                 <Dropdown>
                     <Dropdown.Toggle variant="white" id="dropdown-basic" className='border border-0 fs-5'>
@@ -30,9 +30,9 @@ function Admin() {
                     </Dropdown.Menu>
                 </Dropdown>
             </div>
-            <div className='d-flex justify-content-center p-5 my-5' id='welcome'>
-                <div className='text-center'>
-                    <h1 className='mb-5'>Welcome Admin</h1>
+            <div className='container d-flex justify-content-start p-5 my-5' id='welcome'>
+                <div className='text-center px-5'>
+                    <h1 className='mb-4'>Welcome Admin</h1>
                     <Link to='/serviceApprove'>
                     <Button className='btn btn-success'>Service Approvals</Button>
                     </Link>

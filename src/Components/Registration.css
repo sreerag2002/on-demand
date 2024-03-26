@@ -19,7 +19,7 @@
 }
 
 .reg-input{
-    width: 300px;
+    /* width: 300px; */
     padding: 8px;
     margin-bottom: 10px;
     border: 1px solid #ccc;
@@ -31,7 +31,7 @@
 .registration-container input[type="password"]
 
 {
-    width: 300px;
+    /* width: 300px; */
     padding: 8px;
     margin-bottom: 10px;
     border: 1px solid #ccc;

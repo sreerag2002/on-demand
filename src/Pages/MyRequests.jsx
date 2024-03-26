@@ -17,7 +17,7 @@ import {
   MDBInput
 } from 'mdb-react-ui-kit';
 import { FaRegQuestionCircle } from "react-icons/fa";
-import { Row } from 'react-bootstrap';
+import { Col, Row } from 'react-bootstrap';
 import { CiLocationOn } from "react-icons/ci";
 import { MdDateRange } from "react-icons/md";
 import { FaLocationDot } from "react-icons/fa6";
@@ -97,7 +97,38 @@ function UserRequest() {
       <button className='btn btn-white text-dark border-0 mt-3' style={{fontSize:"30px",float:"right"}} onClick={() => window.location.reload()}><FaSyncAlt /></button>
       </div>
       <h1 style={{ textAlign: "center" }}>My Requests</h1>
-      <table className="table" style={{ marginTop: "10vh", marginBottom: "80vh" }}>
+      <div style={{ marginTop: "5vh", marginBottom: "80vh" }}>
+      {
+        allRequests.map(request => (
+        <Row className='border px-4 py-3 my-3 rounded shadow' key={request.id} style={{fontFamily:"Dosis"}}>
+          <div className='w-100' >
+          <h4 className='mb-0'>{request.service_provider.shop_name}</h4>
+          <p className='mb-1'>
+            <span className='col-9 text-secondary'><b>{request.category}</b></span>
+            <span className='col-3 text-center' style={{float:"right"}}>
+            {
+                request.pending ? <span className='text-warning'>Pending</span> : request.accept ? <span className='text-success'>Accepted</span> : <span className='text-danger'>Declined</span>
+                }
+              </span></p>
+          </div>
+          <p className='mb-0 py-1' style={{fontFamily:"Dosis"}}>Description: <b><i>"{request.description}"</i></b></p>
+          <div className='d-flex'>
+            <div className='col-9 pt-2'>
+              <span style={{marginRight:"70px"}}><FaLocationDot className='text-danger' /> {request.locationname}</span>
+              <span style={{marginRight:"70px"}}><MdDateRange className='text-primary' /> {(request.datetime).slice(0,10)}</span>
+              <span><IoMdTime className='fs-5 text-info' /> {(request.datetime).slice(11,16)}</span>
+            </div>
+            <div className='col-3'>
+            {
+                request.accept===true ? <button className='btn btn-success w-100' onClick={toggleOpen}>Pay now</button> : ''
+            }
+              </div>
+          </div>
+        </Row>
+        ))}
+      </div>
+
+      {/* <table className="table" style={{ marginTop: "10vh", marginBottom: "80vh" }}>
         <thead>
           <tr className='text-center'>
             <th>Shop Name</th>
@@ -131,24 +162,7 @@ function UserRequest() {
             </tr>
           ))}
         </tbody>
-      </table>
-
-      {/* <div>
-        <Row className='border px-4 pt-3 rounded'>
-          <div className='w-100'>
-          <h4>ABC Electricals</h4>
-          <p><span>Electrician</span><span style={{float:"right"}}>Accepted</span></p>
-          </div>
-          <p><b><i>"Voltage issue."</i></b></p>
-          <div className='w-100'>
-            <p>
-              <span className='me-5'><FaLocationDot /><b> Kakkanad</b></span>
-              <span className='me-5'><MdDateRange /><b> 2024-06-17</b></span>
-              <span><IoMdTime className='fs-5' /><b> 12:30</b></span>
-            </p>
-          </div>
-        </Row>
-      </div> */}
+      </table> */}
 
       {/*Payment Form */}
       

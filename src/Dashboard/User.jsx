@@ -10,7 +10,7 @@ import axios from 'axios'
 import { apiUrl } from '../Components/baseUrl';
 import { FaCircleUser } from "react-icons/fa6";
 import { FaPowerOff } from "react-icons/fa";
-
+import './User.css'
 function User() {
 
   const navigate = useNavigate()
@@ -163,14 +163,14 @@ function User() {
   }
 
   useEffect(() => {
-    handleLocations()
-    handleCategories()
+    // handleLocations()
+    // handleCategories()
   }, [])
 
   return (
-    <div className='px-5 pb-5'>
+    <div className='px-5' id='welcomeUser'>
       {/* User Profile Modal */}
-      <div className="d-flex px-5 pb-5 w-100 justify-content-end">
+      <div className="d-flex px-5 pb-5 pt-2 w-100 justify-content-end">
         <Link to="/myrequest">
           <Button variant="outline-success me-3">My Requests</Button>
         </Link>
@@ -238,9 +238,9 @@ function User() {
         </div>
       )}
 
-      <div className='d-flex justify-content-center p-5'>
-        <div className='text-center'>
-          <h1 className='mb-5' style={{ fontFamily: "Protest Strike", fontSize: "50px",  color: "black" }}>Welcome {username}</h1>
+      <div className='d-flex justify-content-start p-5'>
+        <div className='text-center px-5'>
+          <h1 className='mb-4' style={{ fontFamily: "Protest Strike", fontSize: "50px",  color: "black" }}>Welcome {username}</h1>
           <Button onClick={handleShow1}>Explore More</Button>
         </div>
       </div>

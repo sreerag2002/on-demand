@@ -11,10 +11,7 @@ import { FaCircleUser } from "react-icons/fa6";
 import { FaPowerOff } from "react-icons/fa";
 import Dropdown from 'react-bootstrap/Dropdown';
 import { apiUrl } from '../Components/baseUrl';
-
-
-
-
+import './ServiceProvider.css'
 function Service() {
 
   const accname = localStorage.getItem("username")
@@ -152,7 +149,7 @@ function Service() {
   };
 
   return (
-    <div className='px-5 pb-5 mb-5'>
+    <div className='px-5'>
       <div className="d-flex px-5 pb-5 w-100 justify-content-end">
         <Link to="/requestpage">
           <Button variant="outline-success me-3" style={{ fontWeight: "bold" }}>Requests</Button>
@@ -175,9 +172,9 @@ function Service() {
             </div>
       </div>
       
-      <div className='d-flex justify-content-center p-5'>
-        <div className='text-center'>
-          <h1 className='mb-5' style={{ fontFamily: "Protest Strike", fontSize: "50px",  color: "black" }}>Welcome Service Provider</h1>
+      <div className='d-flex justify-content-start p-5' id='welcomServ'>
+        <div className='text-center px-5'>
+          <h1 className='mb-5' style={{ fontFamily: "Protest Strike", fontSize: "70px",  color: "black" }}>Welcome<br />Service Provider</h1>
         </div>
       </div>
 
