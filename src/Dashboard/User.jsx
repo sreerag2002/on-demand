@@ -171,9 +171,6 @@ function User() {
     <div className='px-5' id='welcomeUser'>
       {/* User Profile Modal */}
       <div className="d-flex px-5 pb-5 pt-2 w-100 justify-content-end">
-        <Link to="/myrequest">
-          <Button variant="outline-success me-3">My Requests</Button>
-        </Link>
         <Button variant="outline-success me-3" onClick={handleShow}><i className="fa-solid fa-user"></i></Button>
         {/* <Button variant="outline-danger" onClick={handleLogout}> <i className="fa-solid fa-power-off"></i> </Button> */}
         <div className='text-success'>
@@ -182,7 +179,8 @@ function User() {
                         <b><FaCircleUser className='mb-1' /> {username}</b>
                     </Dropdown.Toggle>
 
-                    <Dropdown.Menu className='border border-0 ms-3 mb-5 bg-light'>
+                    <Dropdown.Menu className='border border-0 mb-5 bg-light'>
+                        <Dropdown.Item className='mb-1' onClick={()=>navigate('/myrequest')}><b>My Requests</b></Dropdown.Item>
                         <Dropdown.Item onClick={handleLogout}><b><FaPowerOff className='me-1' /> Logout</b></Dropdown.Item>
                     </Dropdown.Menu>
                 </Dropdown>
@@ -239,7 +237,7 @@ function User() {
       )}
 
       <div className='d-flex justify-content-start p-5'>
-        <div className='text-center px-5'>
+        <div className='text-center px-5 pt-2'>
           <h1 className='mb-4' style={{ fontFamily: "Protest Strike", fontSize: "50px",  color: "black" }}>Welcome {username}</h1>
           <Button onClick={handleShow1}>Explore More</Button>
         </div>

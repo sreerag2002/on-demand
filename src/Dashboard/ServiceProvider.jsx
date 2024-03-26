@@ -151,13 +151,13 @@ function Service() {
   return (
     <div className='px-5'>
       <div className="d-flex px-5 pb-5 w-100 justify-content-end">
-        <Link to="/requestpage">
+        {/* <Link to="/requestpage">
           <Button variant="outline-success me-3" style={{ fontWeight: "bold" }}>Requests</Button>
         </Link>
         <Link to="/list">
           <Button variant="outline-success me-3" style={{ fontWeight: "bold" }}>Services</Button>
         </Link>
-        <Button variant="outline-success me-3" onClick={handleShow} style={{ fontWeight: "bold" }}>Add</Button>
+        <Button variant="outline-success me-3" onClick={handleShow} style={{ fontWeight: "bold" }}>Add</Button> */}
         {/* <Button variant="outline-danger" onClick={handleLogout}> <i className="fa-solid fa-power-off"></i> </Button> */}
         <div className='text-success'>
                 <Dropdown>
@@ -166,6 +166,9 @@ function Service() {
                     </Dropdown.Toggle>
 
                     <Dropdown.Menu className='border border-0 ms-3 mb-5 bg-light'>
+                    <Dropdown.Item className='mb-1' onClick={()=>navigate('/requestpage')}><b> Requests</b></Dropdown.Item>
+                    <Dropdown.Item className='mb-1' onClick={()=>navigate('/list')}><b> Services</b></Dropdown.Item>
+                    <Dropdown.Item className='mb-1' onClick={handleShow}><b> Add service</b></Dropdown.Item>
                         <Dropdown.Item onClick={handleLogout}><b><FaPowerOff className='me-1' /> Logout</b></Dropdown.Item>
                     </Dropdown.Menu>
                 </Dropdown>
