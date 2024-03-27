@@ -139,7 +139,7 @@ function CardList() {
 
 
   function deleteCard(id) {
-    console.log('Deleting card with id:', id); // Add this line to check the ID
+    console.log('Deleting card with id:', id); 
     axios.delete(`${apiUrl}/DeleteService/${id}`, {
       headers: {
         'Authorization': `Bearer ${token}`,

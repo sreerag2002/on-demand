@@ -2,7 +2,6 @@ import React, { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import Button from 'react-bootstrap/Button';
 import Container from 'react-bootstrap/Container';
-import Navbar from 'react-bootstrap/Navbar';
 import Modal from 'react-bootstrap/Modal';
 import Form from 'react-bootstrap/Form';
 import Col from 'react-bootstrap/Col';
@@ -120,7 +119,6 @@ function Service() {
   };
   const token = localStorage.getItem('token');
 
-  // Making POST request to the backend API
   fetch(`${apiUrl}/CreateService/`, {
       method: 'POST',
       headers: {
@@ -141,7 +139,6 @@ function Service() {
   })
   .catch(error => {
     console.error('Error adding service:', error);
-        // Implement showing error to the user here
       });
 
       handleClose();
@@ -160,6 +157,7 @@ function Service() {
                     <Dropdown.Toggle variant="white" id="dropdown-basic" className='border border-0 fs-6'>
                         <b><FaCircleUser className='mb-1' /> {accname}</b>
                     </Dropdown.Toggle>
+                    
 
                     <Dropdown.Menu className='border border-0 mb-5 bg-light'>
                     <Dropdown.Item className='mb-2' onClick={()=>navigate('/requestpage')}><b><MdRequestPage className='me-1' /> Requests</b></Dropdown.Item>
