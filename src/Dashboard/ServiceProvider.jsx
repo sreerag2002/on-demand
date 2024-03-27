@@ -12,6 +12,10 @@ import { FaPowerOff } from "react-icons/fa";
 import Dropdown from 'react-bootstrap/Dropdown';
 import { apiUrl } from '../Components/baseUrl';
 import './ServiceProvider.css'
+import { MdAddCard } from "react-icons/md";
+import { MdRequestPage } from "react-icons/md";
+import { MdElectricalServices } from "react-icons/md";
+
 function Service() {
 
   const accname = localStorage.getItem("username")
@@ -151,24 +155,16 @@ function Service() {
   return (
     <div className='px-5'>
       <div className="d-flex px-5 pb-5 w-100 justify-content-end">
-        {/* <Link to="/requestpage">
-          <Button variant="outline-success me-3" style={{ fontWeight: "bold" }}>Requests</Button>
-        </Link>
-        <Link to="/list">
-          <Button variant="outline-success me-3" style={{ fontWeight: "bold" }}>Services</Button>
-        </Link>
-        <Button variant="outline-success me-3" onClick={handleShow} style={{ fontWeight: "bold" }}>Add</Button> */}
-        {/* <Button variant="outline-danger" onClick={handleLogout}> <i className="fa-solid fa-power-off"></i> </Button> */}
         <div className='text-success'>
-                <Dropdown>
+                <Dropdown className='me-2'>
                     <Dropdown.Toggle variant="white" id="dropdown-basic" className='border border-0 fs-6'>
                         <b><FaCircleUser className='mb-1' /> {accname}</b>
                     </Dropdown.Toggle>
 
-                    <Dropdown.Menu className='border border-0 ms-3 mb-5 bg-light'>
-                    <Dropdown.Item className='mb-1' onClick={()=>navigate('/requestpage')}><b> Requests</b></Dropdown.Item>
-                    <Dropdown.Item className='mb-1' onClick={()=>navigate('/list')}><b> Services</b></Dropdown.Item>
-                    <Dropdown.Item className='mb-1' onClick={handleShow}><b> Add service</b></Dropdown.Item>
+                    <Dropdown.Menu className='border border-0 mb-5 bg-light'>
+                    <Dropdown.Item className='mb-2' onClick={()=>navigate('/requestpage')}><b><MdRequestPage className='me-1' /> Requests</b></Dropdown.Item>
+                    <Dropdown.Item className='mb-2' onClick={()=>navigate('/list')}><b><MdElectricalServices className='me-1' /> Services</b></Dropdown.Item>
+                    <Dropdown.Item className='mb-2' onClick={handleShow}><b><MdAddCard className='me-1' /> Add service</b></Dropdown.Item>
                         <Dropdown.Item onClick={handleLogout}><b><FaPowerOff className='me-1' /> Logout</b></Dropdown.Item>
                     </Dropdown.Menu>
                 </Dropdown>
@@ -177,7 +173,7 @@ function Service() {
       
       <div className='d-flex justify-content-start p-5' id='welcomServ'>
         <div className='text-center px-5'>
-          <h1 className='mb-5' style={{ fontFamily: "Protest Strike", fontSize: "70px",  color: "black" }}>Welcome<br />Service Provider</h1>
+          <h1 className='mb-5' style={{ fontFamily: "Protest Strike", fontSize: "65px",  color: "black" }}>Welcome<br />Service Provider</h1>
         </div>
       </div>
 

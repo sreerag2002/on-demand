@@ -85,7 +85,7 @@ function UserRequest() {
   }
 
   useEffect(()=>{
-    handleListMyReq()
+    // handleListMyReq()
   },[])
 
   return (

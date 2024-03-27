@@ -11,6 +11,8 @@ import { apiUrl } from '../Components/baseUrl';
 import { FaCircleUser } from "react-icons/fa6";
 import { FaPowerOff } from "react-icons/fa";
 import './User.css'
+import { MdRequestPage } from "react-icons/md";
+
 function User() {
 
   const navigate = useNavigate()
@@ -172,15 +174,14 @@ function User() {
       {/* User Profile Modal */}
       <div className="d-flex px-5 pb-5 pt-2 w-100 justify-content-end">
         <Button variant="outline-success me-3" onClick={handleShow}><i className="fa-solid fa-user"></i></Button>
-        {/* <Button variant="outline-danger" onClick={handleLogout}> <i className="fa-solid fa-power-off"></i> </Button> */}
         <div className='text-success'>
-                <Dropdown>
+                <Dropdown className='me-2'>
                     <Dropdown.Toggle variant="white" id="dropdown-basic" className='border border-0 fs-6'>
                         <b><FaCircleUser className='mb-1' /> {username}</b>
                     </Dropdown.Toggle>
 
                     <Dropdown.Menu className='border border-0 mb-5 bg-light'>
-                        <Dropdown.Item className='mb-1' onClick={()=>navigate('/myrequest')}><b>My Requests</b></Dropdown.Item>
+                        <Dropdown.Item className='mb-2' onClick={()=>navigate('/myrequest')}><b><MdRequestPage className='me-1' /> My Requests</b></Dropdown.Item>
                         <Dropdown.Item onClick={handleLogout}><b><FaPowerOff className='me-1' /> Logout</b></Dropdown.Item>
                     </Dropdown.Menu>
                 </Dropdown>
