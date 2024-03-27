@@ -2,7 +2,6 @@ import React, { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import Button from 'react-bootstrap/Button';
 import Container from 'react-bootstrap/Container';
-import Navbar from 'react-bootstrap/Navbar';
 import Modal from 'react-bootstrap/Modal';
 import Form from 'react-bootstrap/Form';
 import Col from 'react-bootstrap/Col';
@@ -116,7 +115,6 @@ function Service() {
   };
   const token = localStorage.getItem('token');
 
-  // Making POST request to the backend API
   fetch(`${apiUrl}/CreateService/`, {
       method: 'POST',
       headers: {
@@ -137,7 +135,6 @@ function Service() {
   })
   .catch(error => {
     console.error('Error adding service:', error);
-        // Implement showing error to the user here
       });
 
       handleClose();
@@ -156,8 +153,8 @@ function Service() {
         </Link>
         <Link to="/list">
           <Button variant="outline-success me-3" style={{ fontWeight: "bold" }}>Services</Button>
-        </Link>
-        <Button variant="outline-success me-3" onClick={handleShow} style={{ fontWeight: "bold" }}>Add</Button> */}
+        </Link>  
+        <Button variant="outline-success me-3" onClick={handleShow} style={{ fontWeight: "bold" }}>Add</Button> 
         {/* <Button variant="outline-danger" onClick={handleLogout}> <i className="fa-solid fa-power-off"></i> </Button> */}
         <div className='text-success'>
                 <Dropdown>
@@ -174,7 +171,7 @@ function Service() {
                     <Dropdown.Item className='mb-1' onClick={()=>navigate('/requestpage')}><b> Requests</b></Dropdown.Item>
                     
                      <Dropdown.Item onClick={handleLogout}><b><FaPowerOff className='me-1' /> Logout</b></Dropdown.Item>
-                     
+
                     </Dropdown.Menu>
                 </Dropdown>
             </div>
