@@ -9,6 +9,7 @@ import { apiUrl } from './baseUrl';
 import { Col, Row } from 'react-bootstrap';
 import { LuDot } from "react-icons/lu";
 import { IoIosChatboxes } from "react-icons/io";
+import Dropdown from 'react-bootstrap/Dropdown';
 
 function RequestPage() {
   const [requests, setRequests] = useState([]);
@@ -75,7 +76,16 @@ function RequestPage() {
       <div className='mb-3 mt-4 d-flex'>
         <h1 style={{ fontFamily: "Protest Strike" }}>Service Requests</h1>
         <div className='col-8 d-flex justify-content-end'>
-          <Link to="/service"><button className='btn btn-primary me-2'>Back to Home</button></Link>
+          <Dropdown>
+            <Dropdown.Toggle variant="success" id="dropdown-basic">
+              Select service
+            </Dropdown.Toggle>
+
+            <Dropdown.Menu>
+              <Dropdown.Item>Action</Dropdown.Item>
+            </Dropdown.Menu>
+          </Dropdown>
+          <Link to="/service"><button className='btn btn-primary mx-2'>Back to Home</button></Link>
           <FontAwesomeIcon icon={faSync} size="lg" className='m-2' style={{ cursor: 'pointer' }} onClick={fetchServiceRequests} />
         </div>
       </div>
@@ -96,7 +106,7 @@ function RequestPage() {
                 </td>
                */}
 
-{/* Service requests */}
+      {/* Service requests */}
       <div>
         <Row className='w-100 py-4 border-bottom border-top bg-light'>
           <Col className='col-2 fs-5 fw-6'><b>Username</b></Col>

@@ -85,7 +85,7 @@ function UserRequest() {
   }
 
   useEffect(()=>{
-    // handleListMyReq()
+    handleListMyReq()
   },[])
 
   return (
@@ -105,13 +105,14 @@ function UserRequest() {
           <h4 className='mb-0'>{request.service_provider.shop_name}</h4>
           <p className='mb-1'>
             <span className='col-9 text-secondary'><b>{request.category}</b></span>
-            <span className='col-3 text-center' style={{float:"right"}}>
+            {/* <span className='col-3 text-center' style={{float:"right"}}>
             {
                 request.pending ? <span className='text-warning'>Pending</span> : request.accept ? <span className='text-success'>Accepted</span> : <span className='text-danger'>Declined</span>
                 }
-              </span></p>
+              </span> */}
+              </p>
           </div>
-          <p className='mb-0 py-1' style={{fontFamily:"Dosis"}}>Description: <b><i>"{request.description}"</i></b></p>
+          {/* <p className='mb-0 py-1' style={{fontFamily:"Dosis"}}>Description: <b><i>"{request.description}"</i></b></p> */}
           <div className='d-flex'>
             <div className='col-9 pt-2'>
               <span style={{marginRight:"70px"}}><FaLocationDot className='text-danger' /> {request.locationname}</span>
@@ -119,9 +120,8 @@ function UserRequest() {
               <span><IoMdTime className='fs-5 text-info' /> {(request.datetime).slice(11,16)}</span>
             </div>
             <div className='col-3'>
-            {
-                request.accept===true ? <button className='btn btn-success w-100' onClick={toggleOpen}>Pay now</button> : ''
-            }
+            <button className='btn btn-danger me-1'>Cancel Request</button>
+            <button className='btn btn-dark'>Send feedback</button>
               </div>
           </div>
         </Row>
