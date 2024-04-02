@@ -13,6 +13,7 @@ import ServiceCard from './Components/SearchCards';
 import Header from './Components/Header';
 import Admin from './Components/Admin/Admin';
 import ServiceAprvPage from './Components/Service approval/ServiceAprvPage';
+import ServiceProviderForm from './Components/ServiceProviderForm'; 
 
 
 function App() {
@@ -34,6 +35,7 @@ function App() {
           <Route path='/results' element={<ServiceCard/>} />
           <Route path='/admin' element={<Admin/>} />
           <Route path='/serviceApprove' element={<ServiceAprvPage/>} />
+          <Route path="/service-provider-form" component={ServiceProviderForm} />
 
         </Routes>
         <Footer/>

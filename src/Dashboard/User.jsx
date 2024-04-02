@@ -98,10 +98,7 @@ function User() {
       }
     }
 
-    // If there are errors, do not proceed with the API call
-    // if (hasError) {
-    //   return;
-    // }
+  
 
     try {
       const response = await fetch(`${apiUrl}/ProfileView/`, {
@@ -165,8 +162,8 @@ function User() {
   }
 
   useEffect(() => {
-    // handleLocations()
-    // handleCategories()
+    handleLocations()
+    handleCategories()
   }, [])
 
   return (
