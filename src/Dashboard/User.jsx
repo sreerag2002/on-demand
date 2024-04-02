@@ -165,8 +165,8 @@ function User() {
   }
 
   useEffect(() => {
-    // handleLocations()
-    // handleCategories()
+    handleLocations()
+    handleCategories()
   }, [])
 
   return (
