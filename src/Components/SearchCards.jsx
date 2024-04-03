@@ -23,6 +23,8 @@ import {
 import { MDBInput } from 'mdb-react-ui-kit';
 import { Row } from 'react-bootstrap';
 import { apiUrl } from './baseUrl';
+import Button from 'react-bootstrap/Button';
+import Modal from 'react-bootstrap/Modal';
 
 function ServiceCard() {
 
@@ -41,14 +43,18 @@ function ServiceCard() {
 
   const [allServices, setAllServices] = useState([]);
   const [bookedServices, setBookedServices] = useState([]);
-  const [selectedItem,setSelectedItem] = useState({})
-  const [serviceDateTime,setServiceDateTime] = useState()
+  const [selectedItem, setSelectedItem] = useState({})
+  const [serviceDateTime, setServiceDateTime] = useState()
   // const [serviceTime,setServiceTime] = useState()
   // const [description,setDescription] = useState()
   const errorRef = useRef()
 
   const [staticModal, setStaticModal] = useState(false);
   const toggleOpen = () => setStaticModal(!staticModal);
+
+  const [show, setShow] = useState(false);
+  const handleClose = () => setShow(false);
+  const handleShow = () => setShow(true);
 
   const handleSearchResults = async () => {
     const response = await axios.get(`${apiUrl}/ListServiceProviders/${category.id}/${location.id}/`)
@@ -57,30 +63,30 @@ function ServiceCard() {
         setAllServices(result.data)
       }
       )
-      .catch((error)=>{
+      .catch((error) => {
         console.log(error);
       })
   }
 
-  const handleBookNow = async(srId) => {
-    const bookedService = { datetime:serviceDateTime }
+  const handleBookNow = async (srId) => {
+    const bookedService = { datetime: serviceDateTime }
     console.log(bookedService);
-    const response = await axios.post(`${apiUrl}/CreateRequest/${srId}/`,bookedService,
-    {
-      headers: {
-        'Authorization': `Bearer ${token}`
+    const response = await axios.post(`${apiUrl}/CreateRequest/${srId}/`, bookedService,
+      {
+        headers: {
+          'Authorization': `Bearer ${token}`
+        }
+      })
+      .then((result) => {
+        // console.log(result);
+        alert("Service booked successfully.");
+        navigate('/user')
       }
-    })
-    .then((result) => {
-      // console.log(result);
-      alert("Service booked successfully.");
-      navigate('/user')
-    }
-    )
-    .catch((error)=>{
-      console.log(error);
-      errorRef.current.innerHTML = error.response.data
-    })
+      )
+      .catch((error) => {
+        console.log(error);
+        errorRef.current.innerHTML = error.response.data
+      })
   };
 
   useEffect(() => {
@@ -103,10 +109,12 @@ function ServiceCard() {
                     <MDBCardTitle style={{ fontSize: "15px" }}>Shop Name<br /> <b style={{ fontSize: "25px" }}>{service.shop_name}</b></MDBCardTitle>
                     <MDBCardText className='my-3'><b>Description</b> <br /><i>"{service.description}"</i></MDBCardText>
                     <MDBCardTitle style={{ fontSize: "20px" }}>Location: {location.locationname}</MDBCardTitle>
-                    <button onClick={()=>{toggleOpen();setSelectedItem(service);}} className='mt-2 btn btn-info'>Book Now</button>
+                    <button onClick={() => { toggleOpen(); setSelectedItem(service); }} className='my-2 mx-1 btn btn-info'>Book Now</button><br />
+                    <button className='btn btn-danger' onClick={handleShow}>Report service</button>
                   </MDBCardBody>
                 </MDBCard>
               </div>
+
             ))
             :
             (<div className='my-5 py-5 text-center'>
@@ -151,9 +159,9 @@ function ServiceCard() {
                 </div>
                 <div className='w-100 my-4'>
                   <label><b>Select Date & Time</b></label>
-                  <MDBInput type='datetime-local' onChange={(e)=> setServiceDateTime(e.target.value)} required />
+                  <MDBInput type='datetime-local' onChange={(e) => setServiceDateTime(e.target.value)} required />
                 </div>
-                <p className='text-danger' style={{fontFamily:"Dosis"}} ref={errorRef}></p>
+                <p className='text-danger' style={{ fontFamily: "Dosis" }} ref={errorRef}></p>
                 {/* <div className='w-50 my-1'>
                   <label><b>Time</b></label>
                   <MDBInput type='time' onChange={(e)=> setServiceTime(e.target.value)} required />
@@ -162,17 +170,37 @@ function ServiceCard() {
                   <label><b>Description</b></label>
                   <textarea type='text' onChange={(e)=> setDescription(e.target.value)} required cols={84} rows={3} />
                 </div> */}
-              </Row> 
+              </Row>
             </MDBModalBody>
             <MDBModalFooter>
               <button className='btn btn-secondary' color='secondary' onClick={toggleOpen}>
                 Close
               </button>
-              <button className='btn btn-info' onClick={()=>handleBookNow(selectedItem.id)}>Book Now</button>
+              <button className='btn btn-info' onClick={() => handleBookNow(selectedItem.id)}>Book Now</button>
             </MDBModalFooter>
           </MDBModalContent>
         </MDBModalDialog>
       </MDBModal>
+
+      <Modal show={show} onHide={handleClose}>
+        <Modal.Header closeButton>
+          <Modal.Title>Report service</Modal.Title>
+        </Modal.Header>
+        <Modal.Body>
+          <div className='w-100 my-1'>
+            <label><b>Reason</b></label>
+            <textarea type='text' required cols={61} rows={3} />
+          </div>
+        </Modal.Body>
+        <Modal.Footer>
+          <Button variant="secondary" onClick={handleClose}>
+            Close
+          </Button>
+          <Button variant="primary" onClick={handleClose}>
+            Submit
+          </Button>
+        </Modal.Footer>
+      </Modal>
     </div>
   );
 }
