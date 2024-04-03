@@ -7,28 +7,36 @@ const ServiceProviderForm = ({ username, onClose }) => {
     const [formData, setFormData] = useState({
         username: username,
         document: null,
-        phoneNumber: ''
+        ph: '',
     });
     const [error, setError] = useState('');
+    console.log(FormData);
 
     const handleChange = (e) => {
         const { name, value } = e.target;
-        setFormData(prevState => ({
+        setFormData((prevState) => ({
             ...prevState,
-            [name]: value
+            [name]: value,
         }));
     };
 
     const handleFileChange = (e) => {
-        setFormData(prevState => ({
+        setFormData((prevState) => ({
             ...prevState,
-            document: e.target.files[0]
+            document: e.target.files[0],
         }));
     };
 
     const handleSubmit = async (e) => {
         e.preventDefault();
         try {
+            
+            const Rtoken = localStorage.getItem('Rtoken'); 
+            if (!Rtoken) {
+                setError('Authorization token is missing. Please log in again.');
+                return;
+            }
+
             const formDataToSend = new FormData();
             formDataToSend.append('username', formData.username);
             formDataToSend.append('document', formData.document);
@@ -36,9 +44,9 @@ const ServiceProviderForm = ({ username, onClose }) => {
 
             const response = await axios.post(`${apiUrl}/create/Serviceprovider/Profile/`, formDataToSend, {
                 headers: {
-                    'Authorization': formData.access,
+                    'Authorization': `Bearer ${Rtoken}`,
                     'Content-Type': 'multipart/form-data',
-                }
+                },
             });
 
             if (response.data) {
@@ -74,13 +82,12 @@ const ServiceProviderForm = ({ username, onClose }) => {
                     <label htmlFor="document">Upload Document:</label>
                     <input type="file" id="document" name="document" onChange={handleFileChange} required /><br /><br />
 
-                    <label htmlFor="phoneNumber">Phone Number:</label>
-                    <input className='w-100' type="text" id="phoneNumber" name="phoneNumber" value={formData.phoneNumber} onChange={handleChange} required /><br /><br />
+                    <label htmlFor="ph">Phone Number:</label>
+                    <input className='w-100' type="text" id="ph" name="ph" value={formData.ph} onChange={handleChange} required /><br /><br />
 
                     <button className='login-submit btn btn-success w-100 my-2' type="submit">Register as Service Provider</button>
 
                     {error && <div className="error-message text-center text-danger">{error}</div>}
-                   
                 </form>
             </div>
         </Col>
