@@ -30,10 +30,24 @@ const RegistrationPage = () => {
     const handleSubmit = async (e) => {
         e.preventDefault();
         try {
-            const response = await axios.post(`${apiUrl}/register/`, formData);
+            let postData = { ...formData };
+
+            // Conditionally set is_User and is_service based on role
+            if (postData.role === 'user') {
+                postData.is_User = true;
+                postData.is_service = false;
+            } else if (postData.role === 'service-provider') {
+                postData.is_User = false;
+                postData.is_service = true;
+            }
+
+            const response = await axios.post(`${apiUrl}/register/`, postData);
 
             if (response.data) {
                 console.log(response.data);
+                localStorage.setItem('Rtoken', response.data.access)
+                localStorage.setItem('username', response.data.username)
+
                 alert('Registered successfully');
                 if (formData.role === 'service-provider') {
                     setShowServiceProviderForm(true);
