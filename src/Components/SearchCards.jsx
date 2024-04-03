@@ -48,6 +48,7 @@ function ServiceCard() {
   // const [serviceTime,setServiceTime] = useState()
   // const [description,setDescription] = useState()
   const errorRef = useRef()
+  const [reportReason,setReason] = useState()
 
   const [staticModal, setStaticModal] = useState(false);
   const toggleOpen = () => setStaticModal(!staticModal);
@@ -55,6 +56,8 @@ function ServiceCard() {
   const [show, setShow] = useState(false);
   const handleClose = () => setShow(false);
   const handleShow = () => setShow(true);
+
+  console.log(selectedItem);
 
   const handleSearchResults = async () => {
     const response = await axios.get(`${apiUrl}/ListServiceProviders/${category.id}/${location.id}/`)
@@ -89,6 +92,18 @@ function ServiceCard() {
       })
   };
 
+  const handleSubReason = async(srvId) =>{
+    const response = axios.post(`${apiUrl}/report/service/${srvId}/`,{ reason:reportReason },
+    {
+      headers:{
+        'Authorization' : `Bearer ${token}`
+      }
+    }).then((result)=>{
+      alert('Report reason sent.')
+      console.log(result);
+    })
+  }
+
   useEffect(() => {
     handleSearchResults()
   }, [])
@@ -110,7 +125,7 @@ function ServiceCard() {
                     <MDBCardText className='my-3'><b>Description</b> <br /><i>"{service.description}"</i></MDBCardText>
                     <MDBCardTitle style={{ fontSize: "20px" }}>Location: {location.locationname}</MDBCardTitle>
                     <button onClick={() => { toggleOpen(); setSelectedItem(service); }} className='my-2 mx-1 btn btn-info'>Book Now</button><br />
-                    <button className='btn btn-danger' onClick={handleShow}>Report service</button>
+                    <button className='btn btn-danger' onClick={()=>{handleShow();setSelectedItem(service);}}>Report service</button>
                   </MDBCardBody>
                 </MDBCard>
               </div>
@@ -189,14 +204,14 @@ function ServiceCard() {
         <Modal.Body>
           <div className='w-100 my-1'>
             <label><b>Reason</b></label>
-            <textarea type='text' required cols={61} rows={3} />
+            <textarea type='text' onChange={(e)=>setReason(e.target.value)} required cols={61} rows={3} />
           </div>
         </Modal.Body>
         <Modal.Footer>
           <Button variant="secondary" onClick={handleClose}>
             Close
           </Button>
-          <Button variant="primary" onClick={handleClose}>
+          <Button variant="primary" onClick={()=>{handleSubReason(selectedItem.id);handleClose();}}>
             Submit
           </Button>
         </Modal.Footer>
