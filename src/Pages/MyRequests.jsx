@@ -22,6 +22,8 @@ import { CiLocationOn } from "react-icons/ci";
 import { MdDateRange } from "react-icons/md";
 import { FaLocationDot } from "react-icons/fa6";
 import { IoMdTime } from "react-icons/io";
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faHome, faSync } from '@fortawesome/free-solid-svg-icons';
 
 function UserRequest() {
 
@@ -90,14 +92,14 @@ function UserRequest() {
 
   return (
     <div className='container'>
-      <div>
-      <Link to="/user" style={{ textDecoration: 'none', color: 'black' }}>
-        <button className='btn btn-white border-0' style={{fontSize:"40px"}}><TiArrowBack/></button>
-      </Link>
-      <button className='btn btn-white text-dark border-0 mt-3' style={{fontSize:"30px",float:"right"}} onClick={() => window.location.reload()}><FaSyncAlt /></button>
+     <div className='mb-3 mt-4 d-flex'>
+        <h1 style={{ fontFamily: "Protest Strike" }}>My Requests</h1>
+        <div className='col-9 d-flex justify-content-end'>
+          <Link to="/service"><button className='btn btn-primary mx-2'>Back to Home</button></Link>
+          <FontAwesomeIcon icon={faSync} size="lg" className='m-2' style={{ cursor: 'pointer' }} onClick={handleListMyReq} />
+        </div>
       </div>
-      <h1 style={{ textAlign: "center" }}>My Requests</h1>
-      <div style={{ marginTop: "5vh", marginBottom: "80vh" }}>
+      <div style={{ marginBottom: "80vh" }}>
       {
         allRequests.map(request => (
         <Row className='border px-4 py-3 my-3 rounded shadow' key={request.id} style={{fontFamily:"Dosis"}}>
