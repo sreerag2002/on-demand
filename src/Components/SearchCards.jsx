@@ -121,7 +121,19 @@ function ServiceCard() {
       // Handle error
     }
   };
-  
+
+  const handleSubReason = async(srvId) =>{
+    const response = axios.post(`${apiUrl}/report/service/${srvId}/`,{ reason:reportReason },
+    {
+      headers:{
+        'Authorization' : `Bearer ${token}`
+      }
+    }).then((result)=>{
+      alert('Report reason sent.')
+      console.log(result);
+    })
+  }
+
   useEffect(() => {
     handleSearchResults();
   }, []);
