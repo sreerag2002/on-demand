@@ -4,7 +4,8 @@ import { Link } from 'react-router-dom';
 import { TiArrowBack } from "react-icons/ti";
 import { FaSyncAlt, FaStar } from "react-icons/fa";
 import { Row } from 'react-bootstrap';
-
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faSync } from '@fortawesome/free-solid-svg-icons';
 import { apiUrl } from '../Components/baseUrl';
 
 
