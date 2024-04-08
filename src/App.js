@@ -14,6 +14,7 @@ import Header from './Components/Header';
 import Admin from './Components/Admin/Admin';
 import ServiceAprvPage from './Components/Service approval/ServiceAprvPage';
 import ServiceProviderForm from './Components/ServiceProviderForm'; 
+import Feedback from './Components/Feedbackservice';
 
 
 function App() {
@@ -36,6 +37,7 @@ function App() {
           <Route path='/admin' element={<Admin/>} />
           <Route path='/serviceApprove' element={<ServiceAprvPage/>} />
           <Route path="/service-provider-form" component={ServiceProviderForm} />
+          <Route path='/ListFeedback' element={<Feedback/>} />
 
         </Routes>
         <Footer/>

@@ -14,6 +14,7 @@ import './ServiceProvider.css'
 import { MdAddCard } from "react-icons/md";
 import { MdRequestPage } from "react-icons/md";
 import { MdElectricalServices } from "react-icons/md";
+import { VscFeedback } from "react-icons/vsc";
 
 function Service() {
 
@@ -163,6 +164,8 @@ function Service() {
                     <Dropdown.Item className='mb-2' onClick={()=>navigate('/requestpage')}><b><MdRequestPage className='me-1' /> Requests</b></Dropdown.Item>
                     <Dropdown.Item className='mb-2' onClick={()=>navigate('/list')}><b><MdElectricalServices className='me-1' /> Services</b></Dropdown.Item>
                     <Dropdown.Item className='mb-2' onClick={handleShow}><b><MdAddCard className='me-1' /> Add service</b></Dropdown.Item>
+                    <Dropdown.Item className='mb-2' onClick={()=>navigate('/Listfeedback')}><b><VscFeedback className='me-1' /> Feedbacks</b></Dropdown.Item>
+
                         <Dropdown.Item onClick={handleLogout}><b><FaPowerOff className='me-1' /> Logout</b></Dropdown.Item>
                     </Dropdown.Menu>
                 </Dropdown>
