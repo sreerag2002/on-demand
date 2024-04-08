@@ -25,6 +25,7 @@ import { Row } from 'react-bootstrap';
 import { apiUrl } from './baseUrl';
 import Button from 'react-bootstrap/Button';
 import Modal from 'react-bootstrap/Modal';
+import Offcanvas from 'react-bootstrap/Offcanvas';
 
 function ServiceCard() {
   const navigate = useNavigate();
@@ -33,6 +34,7 @@ function ServiceCard() {
   const locationHook = useLocation();
   const { location } = locationHook.state;
   const { category } = locationHook.state;
+  const { balanceAmt } = locationHook.state;
 
   const [allServices, setAllServices] = useState([]);
   const [bookedServices, setBookedServices] = useState([]);
@@ -45,6 +47,12 @@ function ServiceCard() {
   const [staticModal, setStaticModal] = useState(false);
   const [showReportModal, setShowReportModal] = useState(false);
   const [showFeedbackModal, setShowFeedbackModal] = useState(false);
+  const msgRef = useRef()
+  const [allFeedbacks, setAllFeedbacks] = useState([])
+
+  const [show, setShow] = useState(false);
+  const handleClose1 = () => setShow(false);
+  const handleShow1 = () => setShow(true);
 
   const toggleOpen = () => setStaticModal(!staticModal);
   const handleClose = () => {
@@ -54,31 +62,36 @@ function ServiceCard() {
     setFeedback(''); // Clear feedback input
     setRating(0); // Reset rating
   };
-  const handleShow = (srId) => {
+  const handleShow = (item) => {
     setShowReportModal(true);
-    setSelectedItem(srId); // Set the selected service id
+    setSelectedItem(item); // Set the selected service id
   };
 
   const handleSearchResults = async () => {
     try {
       const response = await axios.get(`${apiUrl}/ListServiceProviders/${category.id}/${location.id}/`);
       setAllServices(response.data);
+      insuffBalance();
     } catch (error) {
       console.log(error);
     }
   };
 
   const handleBookNow = async (srId) => {
-    const bookedService = { datetime: serviceDateTime };
-    try {
-      await axios.post(`${apiUrl}/CreateRequest/${srId}/`, bookedService, {
-        headers: { 'Authorization': `Bearer ${token}` }
-      });
-      alert("Service booked successfully.");
-      navigate('/user');
-    } catch (error) {
-      console.log(error);
-      errorRef.current.innerHTML = error.response.data;
+    if (serviceDateTime == '') {
+      errorRef.current.innerHTML = 'Enter date and time';
+    } else {
+      const bookedService = { datetime: serviceDateTime };
+      try {
+        await axios.post(`${apiUrl}/CreateRequest/${srId}/`, bookedService, {
+          headers: { 'Authorization': `Bearer ${token}` }
+        });
+        alert("Service booked successfully.");
+        navigate('/user');
+      } catch (error) {
+        console.log(error);
+        errorRef.current.innerHTML = error.response.data;
+      }
     }
   };
 
@@ -122,16 +135,34 @@ function ServiceCard() {
     }
   };
 
-  const handleSubReason = async(srvId) =>{
-    const response = axios.post(`${apiUrl}/report/service/${srvId}/`,{ reason:reportReason },
-    {
-      headers:{
-        'Authorization' : `Bearer ${token}`
-      }
-    }).then((result)=>{
-      alert('Report reason sent.')
-      console.log(result);
-    })
+  const handleSubReason = async (srvId) => {
+    const response = axios.post(`${apiUrl}/report/service/${srvId}/`, { reason: reportReason },
+      {
+        headers: {
+          'Authorization': `Bearer ${token}`
+        }
+      }).then((result) => {
+        alert('Report reason sent.')
+        console.log(result);
+      })
+  }
+
+  function insuffBalance() {
+    if (balanceAmt < 100) {
+      msgRef.current.innerHTML = 'Insufficient balance to book service.';
+    } else {
+      msgRef.current.innerHTML = '';
+    }
+  }
+
+  const listFeedbacks = async (srId) => {
+    try {
+      const response = await axios.get(`${apiUrl}/ListFeedback/${srId}/`);
+      setAllFeedbacks(response.data)
+    }
+    catch (error) {
+      console.log(error);
+    }
   }
 
   useEffect(() => {
@@ -145,7 +176,7 @@ function ServiceCard() {
       <div className="row mx-5 mb-5">
         {allServices.length > 0 ?
           allServices.map(service => (
-            <div className='col-3 my-3'>
+            <div className='col-3 my-3' key={service.id}>
               <MDBCard style={{ boxShadow: "2px 2px 10px gray" }} alignment='center' className='rounded'>
                 <MDBCardHeader><h4 style={{ fontFamily: "Protest Strike" }} className='mt-2'>{category.categoryname}</h4></MDBCardHeader>
                 <MDBCardBody>
@@ -160,12 +191,13 @@ function ServiceCard() {
                   </div>
 
 
-                  <button onClick={() => { toggleOpen(); setSelectedItem(service.id); }} className='my-2 mx-1 btn btn-info'>Book Now</button><br />
+                  <button disabled={balanceAmt < 100} onClick={() => { toggleOpen(); setSelectedItem(service); }} className='w-100 my-2 mx-1 btn btn-info'>Book Now</button><br />
 
-                  <button className='my-2 mx-1 btn btn-success' onClick={() => { setShowFeedbackModal(true); setSelectedItem(service); }}>Feedback</button>
+                  <button className='w-100 my-1 mx-1 btn btn-success' onClick={() => { handleShow1(); setSelectedItem(service); listFeedbacks(service.id); }}>Feedbacks</button>
 
 
-                  <button className='my-2 mx-1 btn btn-danger' onClick={() => handleShow(service.id)}>Report </button>
+                  <button className='w-50 my-2 btn btn-danger' onClick={() => handleShow(service.id)}>Report </button>
+                  <p ref={msgRef} className='text-center text-danger' style={{ fontFamily: "Dosis" }}></p>
                 </MDBCardBody>
               </MDBCard>
             </div>
@@ -180,6 +212,7 @@ function ServiceCard() {
         }
       </div>
 
+      {/* Booking modal */}
       <MDBModal staticBackdrop tabIndex='-1' open={staticModal} setOpen={setStaticModal}>
         <MDBModalDialog size='lg'>
           <MDBModalContent>
@@ -209,6 +242,13 @@ function ServiceCard() {
                   <label><b>Select Date & Time</b></label>
                   <MDBInput type='datetime-local' onChange={(e) => setServiceDateTime(e.target.value)} required />
                 </div>
+                <div className='border-top pt-3'>
+                  <span className='fs-5'><b>Booking charge</b></span>
+                  <span className='mt-1' style={{ float: "right" }}>
+                    <p className='fs-5' style={{ fontFamily: "Dosis" }}><b>100.00</b></p>
+                    <p className='p-0' style={{ fontSize: "10px", fontFamily: "Dosis", marginTop: "-20px" }}>including all taxes</p>
+                  </span>
+                </div>
                 <p className='text-danger' style={{ fontFamily: "Dosis" }} ref={errorRef}></p>
               </Row>
             </MDBModalBody>
@@ -216,13 +256,14 @@ function ServiceCard() {
               <button className='btn btn-secondary' color='secondary' onClick={toggleOpen}>
                 Close
               </button>
-              <button className='btn btn-info' onClick={() => handleBookNow(selectedItem)}>Book Now</button>
+              <button className='btn btn-info' onClick={() => handleBookNow(selectedItem.id)}>Book Now</button>
 
             </MDBModalFooter>
           </MDBModalContent>
         </MDBModalDialog>
       </MDBModal>
 
+      {/* Report service modal */}
       <Modal show={showReportModal} onHide={handleClose}>
         <Modal.Header closeButton>
           <Modal.Title>Report service</Modal.Title>
@@ -232,7 +273,6 @@ function ServiceCard() {
             <label><b>Reason</b></label>
             <textarea type='text' required cols={61} rows={3} value={reportReason} onChange={(e) => setReportReason(e.target.value)} />
           </div>
-          
         </Modal.Body>
         <Modal.Footer>
           <Button variant="secondary" onClick={handleClose}>
@@ -244,6 +284,7 @@ function ServiceCard() {
         </Modal.Footer>
       </Modal>
 
+      {/* Send feedback modal */}
       <Modal show={showFeedbackModal} onHide={handleClose}>
         <Modal.Header closeButton>
           <Modal.Title>Feedback</Modal.Title>
@@ -267,6 +308,37 @@ function ServiceCard() {
           </Button>
         </Modal.Footer>
       </Modal>
+
+      {/* Feedbacks and send feedback  */}
+      <Offcanvas show={show} onHide={handleClose1} backdrop="static" placement='end'>
+        <Offcanvas.Header closeButton>
+          <Offcanvas.Title>Feedbacks</Offcanvas.Title>
+        </Offcanvas.Header>
+        <Offcanvas.Body>
+          <div>
+            {
+              allFeedbacks.map((fdback) => (
+                <Row className='my-1 p-2 border-bottom border-top rounded'>
+                  <span className='w-100 border-start' style={{ height: "auto" }}>
+                    <p className='fs-6 ms-1' style={{ fontFamily: "Dosis" }}><b>{fdback.username}</b></p>
+                    <p className='text-warning' style={{ marginTop: "-20px" }}><FaStar /><FaStar /><FaStar /><FaStar /><FaStar /></p>
+                    <p style={{ fontFamily: "Dosis", textAlign: "justify" }}><b>{fdback.feedback}</b></p>
+                  </span>
+                  <div className='d-flex justify-content-end'>
+                    <span className='bg-light border-start border-end px-2' style={{ height: "auto", width: "320px" }}>
+                      <p style={{ fontFamily: "Dosis" }}>Response from <b>AKK Electrical</b></p>
+                      <p style={{ fontFamily: "Dosis", textAlign: "justify" }}><b>Thankyou ❤</b></p>
+                    </span>
+                  </div>
+                </Row>
+              ))
+            }
+          </div>
+          <div style={{ position: "fixed", zIndex: "1", top: "580px" }}>
+            <button className='btn btn-success' style={{ width: "365px" }} onClick={() => setShowFeedbackModal(true)}>Send Feedback</button>
+          </div>
+        </Offcanvas.Body>
+      </Offcanvas>
     </div>
   );
 }

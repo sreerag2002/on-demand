@@ -16,7 +16,7 @@ import './User.css';
 
 function User() {
   const navigate = useNavigate();
-  const username = localStorage.getItem('username');
+  // const username = localStorage.getItem('username');
   const token = localStorage.getItem('token');
   const [showProfileModal, setShowProfileModal] = useState(false);
   const [showExploreModal, setShowExploreModal] = useState(false);
@@ -25,10 +25,11 @@ function User() {
   const [selectedLoc, setSelectedLoc] = useState({});
   const [selectedCat, setSelectedCat] = useState({});
   const [firstName, setFirstName] = useState('');
-
+  const [username,setUsername] = useState()
   const [lastName, setLastName] = useState('');
   const [email, setEmail] = useState('');
   const [profileImage, setProfileImage] = useState(null);
+  const [balanceAmt,setBalanceAmt] = useState()
 
   useEffect(() => {
     // Fetch profile data from the API
@@ -43,11 +44,14 @@ function User() {
           }
         });
 
+        console.log(response.data);
 
-        const { username, email, first_name, last_name } = response.data;
+        const { username, email, first_name, last_name, balance } = response.data;
+        setUsername(username)
         setFirstName(first_name);
         setLastName(last_name);
         setEmail(email);
+        setBalanceAmt(balance)
       } catch (error) {
         console.error('Error fetching profile data:', error);
       }
@@ -192,7 +196,7 @@ function User() {
           <Button variant="secondary" onClick={handleExploreModalClose}>
             Close
           </Button>
-          <Link to="/results" state={{ "location": selectedLoc, "category": selectedCat }}>
+          <Link to="/results" state={{ "location": selectedLoc, "category": selectedCat, "balanceAmt": balanceAmt }}>
             <Button variant="primary" onClick={handleExploreModalClose}>
               Show Results
             </Button>

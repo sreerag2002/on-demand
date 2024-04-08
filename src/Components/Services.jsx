@@ -4,7 +4,8 @@ import { Link } from 'react-router-dom';
 import { TiArrowBack } from "react-icons/ti";
 import { FaSyncAlt, FaStar } from "react-icons/fa";
 import { Row } from 'react-bootstrap';
-
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faSync } from '@fortawesome/free-solid-svg-icons';
 import { apiUrl } from '../Components/baseUrl';
 
 
@@ -112,6 +113,8 @@ function CardList() {
   };
 
   useEffect(() => {
+   
+
     fetchServices();
     fetchCategories();
   }, []);
@@ -140,43 +143,58 @@ function CardList() {
   }
 
   function deleteCard(id) {
+    console.log('Deleting card with id:', id); 
     axios.delete(`${apiUrl}/DeleteService/${id}`, {
       headers: {
         'Authorization': `Bearer ${token}`,
       },
     })
-    .then(() => {
-      setCards(prevCards => prevCards.filter(card => card.id !== id));
-    })
-    .catch(error => console.error("Failed to delete service:", error));
+      .then(() => {
+        setCards(prevCards => prevCards.filter(card => card.id !== id));
+      })
+      .catch(error => console.error("Failed to delete service:", error));
   }
-  
+
   return (
     <div className='container'>
-      <div>
+      {/* <div>
         <Link to="/service" style={{ textDecoration: 'none', color: 'black' }}>
           <button className='btn btn-white border-0' style={{ fontSize: "40px" }}><TiArrowBack /></button>
         </Link>
         <button className='btn btn-white text-dark border-0 mt-3' style={{ fontSize: "30px", float: "right" }} onClick={() => window.location.reload()}><FaSyncAlt /></button>
-      </div>
+      </div> */}
 
-      <h1 className='m-4' style={{ textAlign: 'center' }}>
-        {cards.length === 0 ? "No services to display" : "Services"}
-      </h1>
-      {cards.length > 0 && (
-        <Row>
-          {cards.map((card, index) => (
-            <Card
-              className='col-3 my-2'
-              key={card.id}
-              data={card}
-              categories={categories}
-              onEdit={(id, newData) => editCard(id, newData)}
-              onDelete={(id) => deleteCard(id)}
-            />
-          ))}
+      {/* <h1 className='m-4' style={{ textAlign: 'center' }}>
+        
+      </h1> */}
+      <div className='mb-3 mt-4 d-flex'>
+        <h1 style={{ fontFamily: "Protest Strike" }}>All Services</h1>
+        <div className='col-9 d-flex justify-content-end mt-3'>
+          <Link to="/service"><button className='btn btn-primary mx-2'>Back to Home</button></Link>
+          <FontAwesomeIcon icon={faSync} size="lg" className='m-2' style={{ cursor: 'pointer' }} />
+        </div>
+      </div>
+      <div>
+        {cards.length > 0 && (
+          <Row>
+            {cards.map((card, index) => (
+              <Card
+                className='col-3 my-2'
+                key={card.id}
+                data={card}
+                categories={categories}
+                onEdit={(id, newData) => editCard(id, newData)}
+                onDelete={(id) => deleteCard(id)}
+              />
+            ))}
+          </Row>
+        )}
+        <Row className='py-5 my-5'>
+          <p className='text-center text-danger fs-5' style={{fontFamily:"Dosis"}}>
+          <b>{cards.length === 0 ? "No services to display." : ""}</b>
+          </p>
         </Row>
-      )}
+      </div>
     </div>
   );
 }
