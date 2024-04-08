@@ -1,33 +1,24 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { Link } from 'react-router-dom';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faHome, faSync } from '@fortawesome/free-solid-svg-icons';
 import { TiArrowBack } from "react-icons/ti";
-import { FaSyncAlt } from "react-icons/fa";
-import { Col, Row } from 'react-bootstrap';
+import { FaSyncAlt, FaStar } from "react-icons/fa";
+import { Row } from 'react-bootstrap';
+
 import { apiUrl } from '../Components/baseUrl';
 
 
 function Card({ data, categories, onEdit, onDelete }) {
-  const { locationname, category, categoryname, shop_name, description, id } = data;
-
-
-
+  const { locationname, categoryname, shop_name, description, id, avg_rating } = data;
+  
   const [isEditing, setIsEditing] = useState(false);
-  const [editedData, setEditedData] = useState({ shop_name, description, category });
+  const [editedData, setEditedData] = useState({ shop_name, description, category: data.category });
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
     setEditedData({ ...editedData, [name]: value });
   };
 
-  // const hn=andleCategoryChange = (e) => {
-  //   const { name, value } = e.target;
-  //   setEditedData({ ...editedData, [name]: value });
-  // };
-
-  console.log(data);
   const handleEdit = () => {
     setIsEditing(true);
   };
@@ -35,7 +26,20 @@ function Card({ data, categories, onEdit, onDelete }) {
   const handleSaveChanges = () => {
     onEdit(id, editedData);
     setIsEditing(false);
+  };
 
+  // Function to generate star icons based on average rating
+  const renderStarRating = () => {
+    const stars = [];
+    const roundedRating = Math.round(avg_rating);
+    for (let i = 0; i < 5; i++) {
+      if (i < roundedRating) {
+        stars.push(<FaStar key={i} color="gold" />);
+      } else {
+        stars.push(<FaStar key={i} color="lightgray" />);
+      }
+    }
+    return stars;
   };
 
   return (
@@ -44,9 +48,9 @@ function Card({ data, categories, onEdit, onDelete }) {
         <h4 className='text-center m-3' style={{ fontFamily: "Protest Strike" }}>{locationname}</h4>
         {isEditing ? (
           <div>
-            <select name="category" className='form-control' selected={editedData.category} onChange={handleInputChange}>
-              {categories.map(categoryname => (
-                <option key={categoryname.id} value={categoryname.id}>{categoryname.categoryname}</option>
+            <select name="category" className='form-control' value={editedData.category} onChange={handleInputChange}>
+              {categories.map(category => (
+                <option key={category.id} value={category.id}>{category.categoryname}</option>
               ))}
             </select><br />
             <input type="text" className='form-control' name="shop_name" value={editedData.shop_name} onChange={handleInputChange} /><br />
@@ -56,7 +60,8 @@ function Card({ data, categories, onEdit, onDelete }) {
           <div>
             <p className="card-text text-center my-3" style={{ fontSize: "15px" }}>Shop Name:<br /><b style={{ fontSize: "25px" }}>{shop_name}</b></p>
             <p className="card-text text-center" style={{ fontSize: "20px" }}><strong>Category:</strong> {categoryname}</p>
-            <p className="card-text text-center"><strong>Description:</strong> {description}</p><br />
+            <p className="card-text text-center"><strong>Description:</strong> {description}</p>
+            <p className="card-text text-center"><strong>Average Rating:</strong> {renderStarRating()}</p><br />
           </div>
         )}
         <div className='d-flex justify-content-center'>
@@ -76,6 +81,7 @@ function CardList() {
   const [cards, setCards] = useState([]);
   const [categories, setCategories] = useState([]);
   const token = localStorage.getItem('token');
+
   const fetchServices = async () => {
     try {
       const response = await axios.get(`${apiUrl}/service-providers/`, {
@@ -84,8 +90,8 @@ function CardList() {
           'Authorization': `Bearer ${token}`
         }
       });
-      setCards(response.data)
-      console.log(cards);
+      const updatedCards = response.data.map(card => ({ ...card, avg_rating: card.avg_rating.toFixed(1) }));
+      setCards(updatedCards);
     } catch (error) {
       console.error("Error fetching services:", error);
     }
@@ -104,15 +110,15 @@ function CardList() {
       console.error("Error fetching categories:", error);
     }
   };
-  useEffect(() => {
 
+  useEffect(() => {
+   
 
     fetchServices();
     fetchCategories();
   }, []);
 
   function editCard(id, editedData) {
-
     axios.put(`${apiUrl}/UpdateService/${id}/`, editedData,
       {
         headers: {
@@ -121,7 +127,6 @@ function CardList() {
         },
       })
       .then(() => {
-
         setCards(prevCards => {
           return prevCards.map(card => {
             if (card.id === id) {
@@ -133,13 +138,11 @@ function CardList() {
         });
         fetchCategories();
       })
-
       .catch(error => console.error("Failed to update service:", error));
   }
 
-
   function deleteCard(id) {
-    console.log('Deleting card with id:', id);
+    console.log('Deleting card with id:', id); 
     axios.delete(`${apiUrl}/DeleteService/${id}`, {
       headers: {
         'Authorization': `Bearer ${token}`,
@@ -195,4 +198,4 @@ function CardList() {
   );
 }
 
-export default CardList;  
+export default CardList;
