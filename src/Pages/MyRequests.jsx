@@ -18,6 +18,7 @@ function UserRequest() {
   const [activeUser, setActiveUser] = useState(null);
   const [newMessage, setNewMessage] = useState('');
   const token = localStorage.getItem('token');
+  const username = localStorage.getItem('username')
 
   const handleListMyReq = async () => {
     try {
@@ -69,38 +70,38 @@ function UserRequest() {
 
   const sendMessage = async () => {
     if (!newMessage.trim()) return;
-  
+
     try {
       const response = await axios.post(`${apiUrl}/messages/${activeUser}/`, { message: newMessage }, {
         headers: {
           "Authorization": `Bearer ${token}`
         }
       });
-  
+
       // Format timestamp properly
       const timestamp = new Date(response.data.time_stamp).toLocaleString();
-  
+
       // Get username from localStorage
       const username = localStorage.getItem('username');
-  
+
       // Construct the message object
       const newMessageObject = {
         sender_username: username,
         message: response.data.message,
         timestamp: timestamp
       };
-  
+
       // Update the messages state
       const updatedMessages = [...messages, newMessageObject];
       setMessages(updatedMessages);
-  
+
       // Clear the input field after sending
       setNewMessage('');
     } catch (error) {
       console.error('Error sending message:', error);
     }
   };
-  
+
   return (
     <div className='container'>
       <div className='mb-3 mt-4 d-flex'>
@@ -139,32 +140,55 @@ function UserRequest() {
           <Offcanvas.Title>Messages</Offcanvas.Title>
         </Offcanvas.Header>
         <Offcanvas.Body>
-          {/* Message UI */}
-          {messages.map((msg, index) => (
-            <div key={index} style={{ marginBottom: "15px" }}>
-              <strong>{msg.sender_username}</strong>: {msg.message}
-              <br />
-              <small>{new Date(msg.timestamp).toLocaleString()}</small>
+          <div>
+            {
+              messages.map((msg, index) => (
+
+                <Row className='ps-3'>
+                  {msg.sender_username == username ?
+                    <div className='d-flex justify-content-end'>
+                      <p className='py-2 px-3 w-75 rounded' style={{backgroundColor:"#E7FFDB"}}>
+                        {/* <span><b>{username}</b></span><br /> */}
+                        <span><b>{msg.message}</b></span><br />
+                        {/* <span className='w-25' style={{float:"right"}}>12:30</span> */}
+                      </p>
+                    </div>
+                    :
+                    <p className='py-2 px-3 w-75 rounded' style={{backgroundColor:"rgb(235, 235, 235)"}}>
+                      <span className='text-success'><b>Akkarsh</b></span><br />
+                      <span><b>{msg.message}</b></span><br />
+                      {/* <span className='w-25' style={{float:"right"}}>12:30</span> */}
+                      
+                    </p>
+                  }
+                </Row>
+
+
+              ))
+            }
+
+
+          </div>
+
+            <div className='py-5'>
+            {messages.length === 0 && <p className='text-center' style={{fontFamily:"Dosis"}}>No messages to display</p>}
             </div>
-          ))}
-
-          {messages.length === 0 && <p>No messages to display</p>}
-
-
-          <div style={{ position: 'absolute', bottom: 10, left: 0, width: '100%', padding: '0 15px', boxSizing: 'border-box' }}>
+            <div className='p-3 bg-white' style={{ position: "fixed", zIndex: "1", top: "576px",width:"370px" }}>
             <div className="input-group">
-              <input 
-                type="text" 
-                className="form-control" 
-                placeholder="Type a message..." 
-                value={newMessage} 
-                onChange={(e) => setNewMessage(e.target.value)} 
+              <input
+                type="text"
+                className="form-control"
+                placeholder="Type a message..."
+                value={newMessage}
+                onChange={(e) => setNewMessage(e.target.value)}
               />
-              <button className="btn btn-outline-success" type="button" onClick={sendMessage}>
+              <button className="btn btn-success" type="button" onClick={sendMessage}>
                 <IoSend />
               </button>
             </div>
           </div>
+          {/* <div style={{ position: 'absolute', bottom: 10, left: 0, width: '100%', padding: '0 15px', boxSizing: 'border-box' }}>
+          </div> */}
         </Offcanvas.Body>
       </Offcanvas>
     </div>

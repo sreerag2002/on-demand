@@ -26,6 +26,8 @@ import { apiUrl } from './baseUrl';
 import Button from 'react-bootstrap/Button';
 import Modal from 'react-bootstrap/Modal';
 import Offcanvas from 'react-bootstrap/Offcanvas';
+import FDresponseCard from './FDresponseCard';
+import { MDBAccordion, MDBAccordionItem } from 'mdb-react-ui-kit';
 
 function ServiceCard() {
   const navigate = useNavigate();
@@ -49,6 +51,8 @@ function ServiceCard() {
   const [showFeedbackModal, setShowFeedbackModal] = useState(false);
   const msgRef = useRef()
   const [allFeedbacks, setAllFeedbacks] = useState([])
+  const responseRef = useRef()
+  const [response, setResponse] = useState([])
 
   const [show, setShow] = useState(false);
   const handleClose1 = () => setShow(false);
@@ -164,6 +168,8 @@ function ServiceCard() {
       console.log(error);
     }
   }
+
+  // console.log(response);
 
   useEffect(() => {
     handleSearchResults();
@@ -319,17 +325,16 @@ function ServiceCard() {
             {
               allFeedbacks.map((fdback) => (
                 <Row className='my-1 p-2 border-bottom border-top rounded'>
-                  <span className='w-100 border-start' style={{ height: "auto" }}>
+                  <span className='w-100 p-3 border rounded mb-2' style={{ height: "auto" }}>
                     <p className='fs-6 ms-1' style={{ fontFamily: "Dosis" }}><b>{fdback.username}</b></p>
-                    <p className='text-warning' style={{ marginTop: "-20px" }}><FaStar /><FaStar /><FaStar /><FaStar /><FaStar /></p>
-                    <p style={{ fontFamily: "Dosis", textAlign: "justify" }}><b>{fdback.feedback}</b></p>
+                    <p className='text-warning' style={{ marginTop: "-25px" }}><FaStar /><FaStar /><FaStar /><FaStar /><FaStar /></p>
+                    <p className='text-black' style={{ fontFamily: "Dosis", textAlign: "justify", marginTop: "-10px" }}>{fdback.feedback}</p>
+                    <MDBAccordion className='border-0'>
+                      <MDBAccordionItem className='border-0' collapseId={1} headerTitle='View response'>
+                        <FDresponseCard responseData={fdback.responses} />
+                      </MDBAccordionItem>
+                    </MDBAccordion>
                   </span>
-                  <div className='d-flex justify-content-end'>
-                    <span className='bg-light border-start border-end px-2' style={{ height: "auto", width: "320px" }}>
-                      <p style={{ fontFamily: "Dosis" }}>Response from <b>AKK Electrical</b></p>
-                      <p style={{ fontFamily: "Dosis", textAlign: "justify" }}><b>Thankyou ❤</b></p>
-                    </span>
-                  </div>
                 </Row>
               ))
             }
