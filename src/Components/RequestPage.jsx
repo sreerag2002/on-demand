@@ -1,12 +1,10 @@
 import React, { useState, useEffect } from 'react';
-import Table from 'react-bootstrap/Table';
 import { Link } from 'react-router-dom';
-import Button from 'react-bootstrap/Button';
 
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faHome, faSync } from '@fortawesome/free-solid-svg-icons';
 import { apiUrl } from './baseUrl';
-import { Col, Row } from 'react-bootstrap';
+import { Col, Row, Offcanvas } from 'react-bootstrap'; // Import Offcanvas from react-bootstrap
 import { LuDot } from "react-icons/lu";
 import { IoIosChatboxes } from "react-icons/io";
 import Dropdown from 'react-bootstrap/Dropdown';
@@ -14,10 +12,11 @@ import axios from 'axios';
 
 function RequestPage() {
   const [requests, setRequests] = useState([]);
+  const [showOffcanvas, setShowOffcanvas] = useState(false); // State to manage offcanvas visibility
   const token = localStorage.getItem('token');
   const id = localStorage.getItem("id");
-  const [allServices, setAllServices] = useState([])
-  const [serviceName,setServiceName] = useState('Select service')
+  const [allServices, setAllServices] = useState([]);
+  const [serviceName, setServiceName] = useState('Select service');
 
   const fetchServiceRequests = (serviceId) => {
     fetch(`${apiUrl}/ListRequests/${serviceId}/`, {
@@ -29,14 +28,12 @@ function RequestPage() {
     })
       .then(response => response.json())
       .then(data => {
-
         setRequests(data.map(request => ({ ...request, localStatus: request.accept ? 'Accepted' : request.decline ? 'Declined' : '' })));
       })
       .catch(error => {
         console.error('Error fetching service requests:', error);
       });
   };
-
 
   const updateRequestStatus = (requestId, accept) => {
     const updateData = {
@@ -45,29 +42,7 @@ function RequestPage() {
       decline: !accept,
     };
 
-    fetch(`${apiUrl}/UpdateRequest/${requestId}/`, {
-      method: 'PUT',
-      headers: {
-        'Authorization': `Bearer ${token}`,
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify(updateData)
-    })
-      .then(response => {
-        if (response.ok) {
-          setRequests(requests.map(request => {
-            if (request.id === requestId) {
-              return { ...request, localStatus: accept ? 'Accepted' : 'Declined' };
-            }
-            return request;
-          }));
-        } else {
-          throw new Error('Failed to update request status.');
-        }
-      })
-      .catch(error => {
-        console.error('Error updating request status:', error);
-      });
+   
   };
 
   const handleListServices = async () => {
@@ -78,13 +53,12 @@ function RequestPage() {
         }
       })
       .then((result) => {
-        // console.log(result.data);
-        setAllServices(result.data)
-      })
-  }
+        setAllServices(result.data);
+      });
+  };
 
   useEffect(() => {
-    handleListServices()
+    handleListServices();
   }, []);
 
   return (
@@ -98,11 +72,9 @@ function RequestPage() {
             </Dropdown.Toggle>
 
             <Dropdown.Menu>
-              {
-                allServices.map((item) => (
-                  <Dropdown.Item onClick={() =>{fetchServiceRequests(item.id);setServiceName(item.shop_name);}}>{item.shop_name}</Dropdown.Item>
-                ))
-              }
+              {allServices.map((item) => (
+                <Dropdown.Item onClick={() => { fetchServiceRequests(item.id); setServiceName(item.shop_name); }}>{item.shop_name}</Dropdown.Item>
+              ))}
             </Dropdown.Menu>
           </Dropdown>
           <Link to="/service"><button className='btn btn-primary mx-2'>Back to Home</button></Link>
@@ -129,16 +101,14 @@ function RequestPage() {
                 <p className='' style={{ fontFamily: "Dosis", fontSize: "15px" }}><b>{request.locationname}</b></p>
               </Col>
               <Col className='col-3 text-center border'>
-                {/* <p className='mb-0 pb-1 text-success' style={{ fontFamily: "Dosis" }}><b>{request.categoryname}</b></p> */}
                 <span className='d-flex pt-3  justify-content-center' style={{ fontFamily: "Dosis", fontSize: "15px" }}>
                   <p>Date: <b>{request.datetime.slice(0, 10)}</b></p><LuDot className='m-1' />
-                  <p>Time: <b>{(request.datetime.slice(11, 13))>=12? (`${request.datetime.slice(11, 13)-12==0? '12' : `${request.datetime.slice(11, 13)-12}`}:${request.datetime.slice(14, 16)} PM`) : (`${request.datetime.slice(11, 16)} AM`)}</b></p>
+                  <p>Time: <b>{(request.datetime.slice(11, 13)) >= 12 ? (`${request.datetime.slice(11, 13) - 12 == 0 ? '12' : `${request.datetime.slice(11, 13) - 12}`}:${request.datetime.slice(14, 16)} PM`) : (`${request.datetime.slice(11, 16)} AM`)}</b></p>
                 </span>
               </Col>
               <Col className='col-2 text-center text-success'><b>{request.categoryname}</b></Col>
               <Col className='col-3 text-center'>
-                <button className='btn btn-success me-1'><IoIosChatboxes /> Message</button>
-                <button className='btn btn-danger ms-1'>Decline</button>
+                <button className='btn btn-success me-1' onClick={() => setShowOffcanvas(true)}><IoIosChatboxes /> Message</button>
               </Col>
             </Row>
           ))
@@ -147,6 +117,19 @@ function RequestPage() {
             <p className='text-center text-danger my-2' style={{ fontFamily: "Dosis" }}><b>No request found!</b></p>
           </Row>
         )}
+
+        {/* Offcanvas */}
+        <Offcanvas show={showOffcanvas} onHide={() => setShowOffcanvas(false)}>
+          <Offcanvas.Header closeButton>
+            <Offcanvas.Title>Message</Offcanvas.Title>
+          </Offcanvas.Header>
+          <Offcanvas.Body>
+            {/* Add your message component here */}
+            {/* For example: */}
+            <textarea placeholder="Type your message here..." className="form-control"></textarea>
+            <button className="btn btn-primary mt-2">Send</button>
+          </Offcanvas.Body>
+        </Offcanvas>
       </div>
     </div>
   );
