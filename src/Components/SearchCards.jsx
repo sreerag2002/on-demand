@@ -139,18 +139,6 @@ function ServiceCard() {
     }
   };
 
-  const handleSubReason = async (srvId) => {
-    const response = axios.post(`${apiUrl}/report/service/${srvId}/`, { reason: reportReason },
-      {
-        headers: {
-          'Authorization': `Bearer ${token}`
-        }
-      }).then((result) => {
-        alert('Report reason sent.')
-        console.log(result);
-      })
-  }
-
   function insuffBalance() {
     if (balanceAmt < 100) {
       msgRef.current.innerHTML = 'Insufficient balance to book service.';
@@ -339,7 +327,7 @@ function ServiceCard() {
               ))
             }
           </div>
-          <div style={{ position: "fixed", zIndex: "1", top: "580px" }}>
+          <div style={{ position: "fixed", zIndex: "1", top: "88%" }}>
             <button className='btn btn-success' style={{ width: "365px" }} onClick={() => setShowFeedbackModal(true)}>Send Feedback</button>
           </div>
         </Offcanvas.Body>
