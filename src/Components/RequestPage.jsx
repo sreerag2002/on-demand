@@ -22,8 +22,7 @@ function RequestPage() {
   const id = localStorage.getItem("id");
   const [allServices, setAllServices] = useState([]);
   const [serviceName, setServiceName] = useState('Select service');
-  const username = localStorage.getItem('username');
-
+  const username = localStorage.getItem('username')
 
   const fetchServiceRequests = (serviceId) => {
     fetch(`${apiUrl}/ListRequests/${serviceId}/`, {
@@ -175,31 +174,53 @@ function RequestPage() {
           </Offcanvas.Header>
           <Offcanvas.Body>
             {/* Message UI */}
-            {messages.map((msg, index) => (
-              <div key={index} style={{ marginBottom: "15px" }}>
-                <strong>{msg.sender_username}</strong>: {msg.message}
-                <br />
-                <small>{new Date(msg.timestamp).toLocaleString()}</small>
-              </div>
-            ))}
+            <div>
+            {
+              messages.map((msg, index) => (
 
-            {messages.length === 0 && <p>No messages to display</p>}
+                <Row className='ps-3'>
+                  {msg.sender_username == username ?
+                    <div className='d-flex justify-content-end'>
+                      <p className='py-2 px-3 w-75 rounded' style={{backgroundColor:"#E7FFDB"}}>
+                        {/* <span><b>{username}</b></span><br /> */}
+                        <span><b>{msg.message}</b></span><br />
+                        {/* <span className='w-25' style={{float:"right"}}>12:30</span> */}
+                      </p>
+                    </div>
+                    :
+                    <p className='py-2 px-3 w-75 rounded' style={{backgroundColor:"rgb(235, 235, 235)"}}>
+                      <span className='text-success'><b>{msg.sender_username}</b></span><br />
+                      <span><b>{msg.message}</b></span><br />
+                      {/* <span className='w-25' style={{float:"right"}}>12:30</span> */}
+                      
+                    </p>
+                  }
+                </Row>
 
 
-            <div style={{ position: 'absolute', bottom: 10, left: 0, width: '100%', padding: '0 15px', boxSizing: 'border-box' }}>
-              <div className="input-group">
-                <input 
-                  type="text" 
-                  className="form-control" 
-                  placeholder="Type a message..." 
-                  value={newMessage} 
-                  onChange={(e) => setNewMessage(e.target.value)} 
-                />
-                <button className="btn btn-outline-success" type="button" onClick={sendMessage}>
-                  <IoSend />
-                </button>
-              </div>
+              ))
+            }
+
+
+          </div>
+
+            <div className='py-5'>
+            {messages.length === 0 && <p className='text-center' style={{fontFamily:"Dosis"}}>No messages to display</p>}
             </div>
+            <div className='p-3 bg-white' style={{ position: "fixed", zIndex: "1", top: "88%",width:"370px" }}>
+            <div className="input-group">
+              <input
+                type="text"
+                className="form-control"
+                placeholder="Type a message..."
+                value={newMessage}
+                onChange={(e) => setNewMessage(e.target.value)}
+              />
+              <button className="btn btn-success" type="button" onClick={sendMessage}>
+                <IoSend />
+              </button>
+            </div>
+          </div>
           </Offcanvas.Body>
         </Offcanvas>
       </div>
