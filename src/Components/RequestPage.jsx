@@ -8,11 +8,16 @@ import { Col, Row, Offcanvas } from 'react-bootstrap'; // Import Offcanvas from 
 import { LuDot } from "react-icons/lu";
 import { IoIosChatboxes } from "react-icons/io";
 import Dropdown from 'react-bootstrap/Dropdown';
+import { IoSend } from "react-icons/io5";
+
 import axios from 'axios';
 
 function RequestPage() {
   const [requests, setRequests] = useState([]);
   const [showOffcanvas, setShowOffcanvas] = useState(false); // State to manage offcanvas visibility
+  const [messages, setMessages] = useState([]); // State to store messages
+  const [newMessage, setNewMessage] = useState(''); // State to hold the new message
+  const [activeUser, setActiveUser] = useState(null); // State to store the active user
   const token = localStorage.getItem('token');
   const id = localStorage.getItem("id");
   const [allServices, setAllServices] = useState([]);
@@ -35,14 +40,20 @@ function RequestPage() {
       });
   };
 
-  const updateRequestStatus = (requestId, accept) => {
-    const updateData = {
-      pending: !accept,
-      accept: accept,
-      decline: !accept,
-    };
-
-   
+  const fetchMessages = (userId) => {
+    axios.get(`${apiUrl}/messages/${userId}/list/`, {
+      headers: {
+        'Authorization': `Bearer ${token}`
+      }
+    })
+      .then(response => {
+        // Sort the messages by timestamp in ascending order
+        const sortedMessages = response.data.sort((a, b) => new Date(a.timestamp) - new Date(b.timestamp));
+        setMessages(sortedMessages);
+      })
+      .catch(error => {
+        console.error('Error fetching messages:', error);
+      });
   };
 
   const handleListServices = async () => {
@@ -60,6 +71,44 @@ function RequestPage() {
   useEffect(() => {
     handleListServices();
   }, []);
+
+  // Function to send a message
+  const sendMessage = async () => {
+    if (!newMessage.trim() || !activeUser) return;
+  
+    try {
+      const response = await axios.post(`${apiUrl}/messages/${activeUser}/`, { message: newMessage }, {
+        headers: {
+          "Authorization": `Bearer ${token}`
+        }
+      });
+  
+      // Format timestamp properly
+      const timestamp = new Date(response.data.time_stamp).toLocaleString();
+  
+      // Get username from localStorage
+      const username = localStorage.getItem('username');
+  
+      // Construct the message object
+      const newMessageObject = {
+        sender_username: username,
+        message: response.data.message,
+        timestamp: timestamp
+      };
+  
+      // Update the messages state
+      const updatedMessages = [...messages, newMessageObject];
+      setMessages(updatedMessages);
+  
+      // Clear the input field after sending
+      setNewMessage('');
+    } catch (error) {
+      console.error('Error sending message:', error);
+    }
+  };
+ 
+  
+ 
 
   return (
     <div className='container pb-5'>
@@ -108,7 +157,7 @@ function RequestPage() {
               </Col>
               <Col className='col-2 text-center text-success'><b>{request.categoryname}</b></Col>
               <Col className='col-3 text-center'>
-                <button className='btn btn-success me-1' onClick={() => setShowOffcanvas(true)}><IoIosChatboxes /> Message</button>
+                <button className='btn btn-success me-1' onClick={() => { setShowOffcanvas(true); fetchMessages(request.user); setActiveUser(request.user); }}><IoIosChatboxes /> Message</button>
               </Col>
             </Row>
           ))
@@ -119,15 +168,37 @@ function RequestPage() {
         )}
 
         {/* Offcanvas */}
-        <Offcanvas show={showOffcanvas} onHide={() => setShowOffcanvas(false)}>
+        <Offcanvas show={showOffcanvas} onHide={() => setShowOffcanvas(false)} placement="end">
           <Offcanvas.Header closeButton>
-            <Offcanvas.Title>Message</Offcanvas.Title>
+            <Offcanvas.Title>Messages</Offcanvas.Title>
           </Offcanvas.Header>
           <Offcanvas.Body>
-            {/* Add your message component here */}
-            {/* For example: */}
-            <textarea placeholder="Type your message here..." className="form-control"></textarea>
-            <button className="btn btn-primary mt-2">Send</button>
+            {/* Message UI */}
+            {messages.map((msg, index) => (
+              <div key={index} style={{ marginBottom: "15px" }}>
+                <strong>{msg.sender_username}</strong>: {msg.message}
+                <br />
+                <small>{new Date(msg.timestamp).toLocaleString()}</small>
+              </div>
+            ))}
+
+            {messages.length === 0 && <p>No messages to display</p>}
+
+
+            <div style={{ position: 'absolute', bottom: 10, left: 0, width: '100%', padding: '0 15px', boxSizing: 'border-box' }}>
+              <div className="input-group">
+                <input 
+                  type="text" 
+                  className="form-control" 
+                  placeholder="Type a message..." 
+                  value={newMessage} 
+                  onChange={(e) => setNewMessage(e.target.value)} 
+                />
+                <button className="btn btn-outline-success" type="button" onClick={sendMessage}>
+                  <IoSend />
+                </button>
+              </div>
+            </div>
           </Offcanvas.Body>
         </Offcanvas>
       </div>
