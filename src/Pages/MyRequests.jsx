@@ -173,7 +173,7 @@ function UserRequest() {
             <div className='py-5'>
             {messages.length === 0 && <p className='text-center' style={{fontFamily:"Dosis"}}>No messages to display</p>}
             </div>
-            <div className='p-3 bg-white' style={{ position: "fixed", zIndex: "1", top: "576px",width:"370px" }}>
+            <div className='p-3 bg-white' style={{ position: "fixed", zIndex: "1", top: "88%",width:"370px" }}>
             <div className="input-group">
               <input
                 type="text"

@@ -22,6 +22,8 @@ function RequestPage() {
   const id = localStorage.getItem("id");
   const [allServices, setAllServices] = useState([]);
   const [serviceName, setServiceName] = useState('Select service');
+  const username = localStorage.getItem('username');
+
 
   const fetchServiceRequests = (serviceId) => {
     fetch(`${apiUrl}/ListRequests/${serviceId}/`, {
@@ -86,8 +88,7 @@ function RequestPage() {
       // Format timestamp properly
       const timestamp = new Date(response.data.time_stamp).toLocaleString();
   
-      // Get username from localStorage
-      const username = localStorage.getItem('username');
+     
   
       // Construct the message object
       const newMessageObject = {

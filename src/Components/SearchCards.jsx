@@ -327,7 +327,9 @@ function ServiceCard() {
                 <Row className='my-1 p-2 border-bottom border-top rounded'>
                   <span className='w-100 p-3 border rounded mb-2' style={{ height: "auto" }}>
                     <p className='fs-6 ms-1' style={{ fontFamily: "Dosis" }}><b>{fdback.username}</b></p>
-                    <p className='text-warning' style={{ marginTop: "-25px" }}><FaStar /><FaStar /><FaStar /><FaStar /><FaStar /></p>
+                    <p className='text-warning' style={{ marginTop: "-25px" }}>{[...Array(Math.floor(fdback.rating))].map((star, index) => {
+                      return <FaStar key={index} color='#ffc107' />;
+                    })}</p>
                     <p className='text-black' style={{ fontFamily: "Dosis", textAlign: "justify", marginTop: "-10px" }}>{fdback.feedback}</p>
                     <MDBAccordion className='border-0'>
                       <MDBAccordionItem className='border-0' collapseId={1} headerTitle='View response'>
