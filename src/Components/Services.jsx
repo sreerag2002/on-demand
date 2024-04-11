@@ -7,6 +7,13 @@ import { Row } from 'react-bootstrap';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faSync } from '@fortawesome/free-solid-svg-icons';
 import { apiUrl } from '../Components/baseUrl';
+import {
+  MDBCard,
+  MDBCardBody,
+  MDBCardTitle,
+  MDBCardText,
+  MDBBtn
+} from 'mdb-react-ui-kit';
 
 
 function Card({ data, categories, onEdit, onDelete }) {
@@ -157,16 +164,6 @@ function CardList() {
 
   return (
     <div className='container'>
-      {/* <div>
-        <Link to="/service" style={{ textDecoration: 'none', color: 'black' }}>
-          <button className='btn btn-white border-0' style={{ fontSize: "40px" }}><TiArrowBack /></button>
-        </Link>
-        <button className='btn btn-white text-dark border-0 mt-3' style={{ fontSize: "30px", float: "right" }} onClick={() => window.location.reload()}><FaSyncAlt /></button>
-      </div> */}
-
-      {/* <h1 className='m-4' style={{ textAlign: 'center' }}>
-        
-      </h1> */}
       <div className='mb-3 mt-4 d-flex'>
         <h1 style={{ fontFamily: "Protest Strike" }}>All Services</h1>
         <div className='col-9 d-flex justify-content-end mt-3'>
@@ -195,6 +192,17 @@ function CardList() {
           </p>
         </Row>
       </div>
+
+      <MDBCard>
+      <MDBCardBody>
+        <h1 className='border p-3 my-3'>S</h1>
+        <MDBCardTitle>Card title</MDBCardTitle>
+        <MDBCardText>
+          Some quick example text to build on the card title and make up the bulk of the card's content.
+        </MDBCardText>
+        <MDBBtn>Button</MDBBtn>
+      </MDBCardBody>
+    </MDBCard>
     </div>
   );
 }

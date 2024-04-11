@@ -19,6 +19,7 @@ function UserRequest() {
   const [newMessage, setNewMessage] = useState('');
   const token = localStorage.getItem('token');
   const username = localStorage.getItem('username')
+  const [serviceId,setServiceId] = useState()
 
   const handleListMyReq = async () => {
     try {
@@ -51,12 +52,12 @@ function UserRequest() {
     }
   };
 
-  const handleMessageClick = async (userId) => {
+  const handleMessageClick = async (userId,srId) => {
     setActiveUser(userId);
     setShowOffcanvas(true);
 
     try {
-      const response = await axios.get(`${apiUrl}/messages/${userId}/list/`, {
+      const response = await axios.get(`${apiUrl}/messages/${userId}/${srId}/list/`, {
         headers: {
           "Authorization": `Bearer ${token}`
         }
@@ -72,7 +73,7 @@ function UserRequest() {
     if (!newMessage.trim()) return;
 
     try {
-      const response = await axios.post(`${apiUrl}/messages/${activeUser}/`, { message: newMessage }, {
+      const response = await axios.post(`${apiUrl}/messages/${activeUser}/${serviceId}/`, { message: newMessage }, {
         headers: {
           "Authorization": `Bearer ${token}`
         }
@@ -128,7 +129,7 @@ function UserRequest() {
               </div>
               <div className='col-3'>
                 <button className='btn btn-danger me-1' onClick={() => handleCancelRequest(request.id)}>Cancel Request</button>
-                <button className='btn btn-success ms-1' onClick={() => handleMessageClick(request.service_provider.user)}><IoIosChatboxes /> Message</button>
+                <button className='btn btn-success ms-1' onClick={() => {handleMessageClick(request.service_provider.user,request.service_provider.id);setServiceId(request.service_provider.id)}}><IoIosChatboxes /> Message</button>
               </div>
             </div>
           </Row>

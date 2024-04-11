@@ -23,6 +23,7 @@ function RequestPage() {
   const [allServices, setAllServices] = useState([]);
   const [serviceName, setServiceName] = useState('Select service');
   const username = localStorage.getItem('username')
+  const [serviceId,setServiceId] = useState()
 
   const fetchServiceRequests = (serviceId) => {
     fetch(`${apiUrl}/ListRequests/${serviceId}/`, {
@@ -41,8 +42,8 @@ function RequestPage() {
       });
   };
 
-  const fetchMessages = (userId) => {
-    axios.get(`${apiUrl}/messages/${userId}/list/`, {
+  const fetchMessages = (userId,srId) => {
+    axios.get(`${apiUrl}/messages/${userId}/${srId}/list/`, {
       headers: {
         'Authorization': `Bearer ${token}`
       }
@@ -78,7 +79,7 @@ function RequestPage() {
     if (!newMessage.trim() || !activeUser) return;
   
     try {
-      const response = await axios.post(`${apiUrl}/messages/${activeUser}/`, { message: newMessage }, {
+      const response = await axios.post(`${apiUrl}/messages/${activeUser}/${serviceId}/`, { message: newMessage }, {
         headers: {
           "Authorization": `Bearer ${token}`
         }
@@ -138,7 +139,7 @@ function RequestPage() {
           <Col className='col-2 fs-5'><b>Shop & Location</b></Col>
           <Col className='col-3 text-center fs-5'><b>Date & Time</b></Col>
           <Col className='col-2 fs-5 text-center'><b>Service</b></Col>
-          <Col className='col-3 fs-5 text-center'><b>Status</b></Col>
+          <Col className='col-3 fs-5 text-center'></Col>
         </Row>
 
         {requests.length > 0 ? (
@@ -157,7 +158,7 @@ function RequestPage() {
               </Col>
               <Col className='col-2 text-center text-success'><b>{request.categoryname}</b></Col>
               <Col className='col-3 text-center'>
-                <button className='btn btn-success me-1' onClick={() => { setShowOffcanvas(true); fetchMessages(request.user); setActiveUser(request.user); }}><IoIosChatboxes /> Message</button>
+                <button className='btn btn-success me-1 w-100' onClick={() => { setShowOffcanvas(true); fetchMessages(request.user,request.service); setActiveUser(request.user);setServiceId(request.service) }}><IoIosChatboxes /> Message</button>
               </Col>
             </Row>
           ))
