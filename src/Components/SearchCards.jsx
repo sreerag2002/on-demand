@@ -28,6 +28,8 @@ import Modal from 'react-bootstrap/Modal';
 import Offcanvas from 'react-bootstrap/Offcanvas';
 import FDresponseCard from './FDresponseCard';
 import { MDBAccordion, MDBAccordionItem } from 'mdb-react-ui-kit';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faSync } from '@fortawesome/free-solid-svg-icons';
 
 function ServiceCard() {
   const navigate = useNavigate();
@@ -53,6 +55,8 @@ function ServiceCard() {
   const [allFeedbacks, setAllFeedbacks] = useState([])
   const responseRef = useRef()
   const [response, setResponse] = useState([])
+  const [insuffMsg,setInsuffMsg] = useState()
+  const [ratingMsg,setRatingMsg] = useState('')
 
   const [show, setShow] = useState(false);
   const handleClose1 = () => setShow(false);
@@ -141,9 +145,9 @@ function ServiceCard() {
 
   function insuffBalance() {
     if (balanceAmt < 100) {
-      msgRef.current.innerHTML = 'Insufficient balance to book service.';
+      setInsuffMsg('Insufficient balance to book service.')
     } else {
-      msgRef.current.innerHTML = '';
+      setInsuffMsg('');
     }
   }
 
@@ -157,6 +161,14 @@ function ServiceCard() {
     }
   }
 
+  function incrementRating(){
+      setRating(rating+1)
+  }
+
+  function decrementRating(){
+      setRating(rating-1)
+  }
+
   // console.log(response);
 
   useEffect(() => {
@@ -164,13 +176,19 @@ function ServiceCard() {
   }, []);
 
   return (
-    <div>
-      <h1 className='my-4' style={{ textAlign: "center" }}>Services</h1>
+    <div className='container'>
+      <div className='mb-3 mt-4 d-flex'>
+        <h1 className='col-3' style={{ fontFamily: "Protest Strike" }}>Search results</h1>
+        <div className='col-9 d-flex justify-content-end pt-2'>
+          <Link to="/user"><button className='btn btn-primary mx-2'>Back to Home</button></Link>
+          <FontAwesomeIcon icon={faSync} size="lg" className='m-2' style={{ cursor: 'pointer' }} onClick={handleSearchResults} />
+        </div>
+      </div>
 
-      <div className="row mx-5 mb-5">
+      <div className="row mx-5 my-5">
         {allServices.length > 0 ?
           allServices.map(service => (
-            <div className='col-3 my-3' key={service.id}>
+            <div className='col-4 my-3' key={service.id}>
               <MDBCard style={{ boxShadow: "2px 2px 10px gray" }} alignment='center' className='rounded'>
                 <MDBCardHeader><h4 style={{ fontFamily: "Protest Strike" }} className='mt-2'>{category.categoryname}</h4></MDBCardHeader>
                 <MDBCardBody>
@@ -191,7 +209,7 @@ function ServiceCard() {
 
 
                   <button className='w-50 my-2 btn btn-danger' onClick={() => handleShow(service.id)}>Report </button>
-                  <p ref={msgRef} className='text-center text-danger' style={{ fontFamily: "Dosis" }}></p>
+                  <p ref={msgRef} className='text-center text-danger' style={{ fontFamily: "Dosis" }}>{insuffMsg}</p>
                 </MDBCardBody>
               </MDBCard>
             </div>
@@ -288,9 +306,13 @@ function ServiceCard() {
             <label><b>Feedback</b></label>
             <textarea type='text' required cols={61} rows={3} value={feedback} onChange={(e) => setFeedback(e.target.value)} />
           </div>
-          <div className='w-100 my-1'>
-            <label><b>Rating</b></label><br />
-            <input type="number" min="1" max="5" value={rating} onChange={(e) => setRating(parseInt(e.target.value))} />
+          <div className='w-100 my-1 d-flex justify-content-start'>
+          <button disabled={rating==1} onClick={decrementRating} className='btn m-2 mt-4 btn-light'>-</button>
+          <div>
+          <label><b>Rating</b></label><br />
+            <input disabled type="number" min="1" max="5" value={rating} onChange={(e) => setRating(parseInt(e.target.value))} />
+          </div>
+            <button disabled={rating==5} onClick={incrementRating} className='btn m-2 mt-4 btn-light'>+</button>
           </div>
         </Modal.Body>
         <Modal.Footer>

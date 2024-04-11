@@ -10,6 +10,7 @@ import { IoIosChatboxes } from "react-icons/io";
 import { IoSend } from "react-icons/io5";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faSync } from '@fortawesome/free-solid-svg-icons';
+import Modal from 'react-bootstrap/Modal';
 
 function UserRequest() {
   const [allRequests, setAllRequests] = useState([]);
@@ -20,6 +21,9 @@ function UserRequest() {
   const token = localStorage.getItem('token');
   const username = localStorage.getItem('username')
   const [serviceId,setServiceId] = useState()
+  const [cancelId,setCancelId] = useState()
+
+  const [smShow, setSmShow] = useState(false);
 
   const handleListMyReq = async () => {
     try {
@@ -38,14 +42,14 @@ function UserRequest() {
     handleListMyReq();
   }, []);
 
-  const handleCancelRequest = async (requestId) => {
+  const handleCancelRequest = async (reqId) => {
     try {
-      await axios.delete(`${apiUrl}/DeleteRequest/${requestId}/`, {
+      await axios.delete(`${apiUrl}/DeleteRequest/${reqId}/`, {
         headers: {
           "Authorization": `Bearer ${token}`,
         },
       });
-      const updatedRequests = allRequests.filter(request => request.id !== requestId);
+      const updatedRequests = allRequests.filter(request => request.id !== reqId);
       setAllRequests(updatedRequests);
     } catch (error) {
       console.error('Failed to cancel request', error);
@@ -122,13 +126,13 @@ function UserRequest() {
               </p>
             </div>
             <div className='d-flex'>
-              <div className='col-9 pt-2'>
-                <span style={{ marginRight: "70px" }}><FaLocationDot className='text-danger' /> {request.locationname}</span>
-                <span style={{ marginRight: "70px" }}><MdDateRange className='text-primary' /> {request.datetime.slice(0, 10)}</span>
-                <span><IoMdTime className='fs-5 text-info' /> {request.datetime.slice(11, 16)}</span>
+              <div className='col-9 pt-2 d-flex'>
+                <div className='col-2' style={{ marginRight: "70px" }}><FaLocationDot className='text-danger' /><b> {request.locationname}</b></div>
+                <div className='col-2' style={{ marginRight: "70px" }}><MdDateRange className='text-primary' /><b> {request.datetime.slice(0, 10)}</b></div>
+                <div className='col-2'><IoMdTime className='fs-5 text-info' /><b> {(request.datetime.slice(11, 13)) >= 12 ? (`${request.datetime.slice(11, 13) - 12 == 0 ? '12' : `${request.datetime.slice(11, 13) - 12}`}:${request.datetime.slice(14, 16)} PM`) : (`${request.datetime.slice(11, 16)} AM`)}</b></div>
               </div>
               <div className='col-3'>
-                <button className='btn btn-danger me-1' onClick={() => handleCancelRequest(request.id)}>Cancel Request</button>
+                <button className='btn btn-danger me-1' onClick={() => {setSmShow(true);handleCancelRequest(request.id)}}>Cancel Request</button>
                 <button className='btn btn-success ms-1' onClick={() => {handleMessageClick(request.service_provider.user,request.service_provider.id);setServiceId(request.service_provider.id)}}><IoIosChatboxes /> Message</button>
               </div>
             </div>
@@ -156,7 +160,7 @@ function UserRequest() {
                     </div>
                     :
                     <p className='py-2 px-3 w-75 rounded' style={{backgroundColor:"rgb(235, 235, 235)"}}>
-                      <span className='text-success'><b>Akkarsh</b></span><br />
+                      <span className='text-success'><b>{msg.service}</b></span><br />
                       <span><b>{msg.message}</b></span><br />
                       {/* <span className='w-25' style={{float:"right"}}>12:30</span> */}
                       

@@ -11,6 +11,7 @@ import { apiUrl } from '../Components/baseUrl';
 import { FaCircleUser } from "react-icons/fa6";
 import { FaPowerOff } from "react-icons/fa";
 import { MdRequestPage } from "react-icons/md";
+import { FaUser } from "react-icons/fa";
 
 import './User.css';
 
@@ -105,47 +106,45 @@ function User() {
         <div className='text-success'>
           <Dropdown className='me-2'>
             {/* profile button */}
-            <Button variant="outline-success me-3" onClick={handleProfileModalShow}><i className="fa-solid fa-user"></i></Button>
+            {/* <Button variant="outline-success me-3" onClick={handleProfileModalShow}><i className="fa-solid fa-user"></i></Button> */}
             <Dropdown.Toggle variant="white" id="dropdown-basic" className='border border-0 fs-6'>
               <b><FaCircleUser className='mb-1' /> {username}</b>
             </Dropdown.Toggle>
             <Dropdown.Menu className='border border-0 mb-5 bg-light'>
               <Dropdown.Item className='mb-2' onClick={() => navigate('/myrequest')}><b><MdRequestPage className='me-1' /> My Requests</b></Dropdown.Item>
+              <Dropdown.Item className='mb-2' onClick={handleProfileModalShow}><b><FaUser className='me-1' /> Profile</b></Dropdown.Item>
               <Dropdown.Item onClick={handleLogout}><b><FaPowerOff className='me-1' /> Logout</b></Dropdown.Item>
             </Dropdown.Menu>
           </Dropdown>
         </div>
       </div>
-      <Modal show={showProfileModal} onHide={handleProfileModalClose}>
-        <Modal.Header closeButton>
-        <div>
+
+      <Modal show={showProfileModal} onHide={handleProfileModalClose} backdrop="static" centered>
+        <Modal.Header>
+        {/* <div>
               <img src={profileImage ? URL.createObjectURL(profileImage) : 'default-profile-image.jpg'} alt="Profile" className="rounded-circle me-3" style={{ width: '50%', height: '60%' }} onClick={() => document.getElementById('profileImageInput').click()} />
               <input type="file" id="profileImageInput" style={{ display: 'none' }} onChange={(e) => handleProfileImageChange(e.target.files[0])} />
-            </div>
-
+            </div> */}
           <h5 className="modal-title">User Profile</h5>
         </Modal.Header>
         <Modal.Body>
           <div className="mb-3">
-            
-            <label htmlFor="firstName" className="form-label">First Name</label>
-            <input type="text" className="form-control" id="firstName" value={firstName} disabled />
-          </div>
-          <div className="mb-3">
-            <label htmlFor="lastName" className="form-label">Last Name</label>
-            <input type="text" className="form-control" id="lastName" value={lastName} disabled />
-          </div>
-          <div className="mb-3">
-            <label htmlFor="email" className="form-label">Email address</label>
-            <input type="email" className="form-control" id="email" value={email} disabled />
+            <div className='d-flex justify-content-center'>
+              <h1 className='border text-center py-3 bg-primary text-white' style={{width:"90px",borderRadius:"50px"}}>{firstName.slice(0,1)}</h1>
+            </div>
+            <div className='text-center'>
+              <h4>{firstName} {lastName}</h4>
+              <p className='text-success' style={{fontFamily:"Dosis",marginTop:'-10px'}}>{email}</p>
+              <button onClick={handleProfileModalClose} className='btn btn-primary'>Go Back to Home</button>
+            </div>
           </div>
         </Modal.Body>
-        <Modal.Footer>
+        {/* <Modal.Footer>
           <Button variant="secondary" onClick={handleProfileModalClose}>
             Close
           </Button>
           
-        </Modal.Footer>
+        </Modal.Footer> */}
       </Modal>
       <div className='d-flex justify-content-start p-5'>
         <div className='text-center px-5 pt-2'>
