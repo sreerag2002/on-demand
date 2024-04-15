@@ -172,7 +172,7 @@ function User() {
                   }
                 </Dropdown.Menu>
               </Dropdown>
-              <p className='text-center my-2'>{selectedLoc.locationname}</p>
+              <p className='text-center my-3' style={{fontFamily:"Dosis"}}><b>{selectedLoc.locationname}</b></p>
             </div>
             <div>
               <Dropdown>
@@ -187,7 +187,7 @@ function User() {
                   }
                 </Dropdown.Menu>
               </Dropdown>
-              <p className='text-center my-2'>{selectedCat.categoryname}</p>
+              <p className='text-center my-3' style={{fontFamily:"Dosis"}}><b>{selectedCat.categoryname}</b></p>
             </div>
           </div>
         </Modal.Body>

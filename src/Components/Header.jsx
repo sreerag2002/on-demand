@@ -13,7 +13,7 @@ function Header() {
     <div className="container-fluid" style={{background:"none"}}>
         <div className="navbar" style={{ paddingBottom: '5vh' }}>
           <div className="container-fluid">
-            <h1 className='ps-4 pt-4' style={{fontSize:"70px"}}><span style={{fontFamily:"Protest Strike"}}>On</span><span style={{fontFamily:"Pacifico"}}>-Demand</span></h1>
+            <h1 className='ps-4 pt-4' style={{fontSize:"70px"}}><span style={{fontFamily:"Protest Strike",textShadow:"1px 1px #ffd79a"}}>On</span><span style={{fontFamily:"Pacifico",textShadow:"1px 1px #ffd79a"}}>-Demand</span></h1>
             <div className="navbar-links">
               <a href="#about" style={linkStyle}>About Us</a>
               <a href="#contact" style={linkStyle}>Contact </a>

@@ -98,7 +98,7 @@ function ServiceCard() {
         navigate('/user');
       } catch (error) {
         console.log(error);
-        errorRef.current.innerHTML = error.response.data;
+        errorRef.current.innerHTML = 'Currently service is not available!';
       }
     }
   };
@@ -177,7 +177,7 @@ function ServiceCard() {
 
   return (
     <div className='container'>
-      <div className='mb-3 mt-4 d-flex'>
+      <div className='mt-4 mb-3 d-flex'>
         <h1 className='col-3' style={{ fontFamily: "Protest Strike" }}>Search results</h1>
         <div className='col-9 d-flex justify-content-end pt-2'>
           <Link to="/user"><button className='btn btn-primary mx-2'>Back to Home</button></Link>
@@ -185,10 +185,10 @@ function ServiceCard() {
         </div>
       </div>
 
-      <div className="row mx-5 my-5">
+      <div className="row border-top">
         {allServices.length > 0 ?
           allServices.map(service => (
-            <div className='col-4 my-3' key={service.id}>
+            <div className='col-4 my-5' key={service.id}>
               <MDBCard style={{ boxShadow: "2px 2px 10px gray" }} alignment='center' className='rounded'>
                 <MDBCardHeader><h4 style={{ fontFamily: "Protest Strike" }} className='mt-2'>{category.categoryname}</h4></MDBCardHeader>
                 <MDBCardBody>
