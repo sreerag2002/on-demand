@@ -11,10 +11,9 @@ import CardList from './Components/Services';
 import RequestPage from './Components/RequestPage';
 import ServiceCard from './Components/SearchCards';
 import Header from './Components/Header';
-import Admin from './Components/Admin/Admin';
-import ServiceAprvPage from './Components/Service approval/ServiceAprvPage';
 import ServiceProviderForm from './Components/ServiceProviderForm'; 
 import Feedback from './Components/Feedbackservice';
+import CalendarSchedules from './Components/CalendarSchedules';
 
 
 function App() {
@@ -34,10 +33,9 @@ function App() {
           <Route path='/list' element={<CardList/>} />
           <Route path='/requestpage' element={<RequestPage/>} />
           <Route path='/results' element={<ServiceCard/>} />
-          <Route path='/admin' element={<Admin/>} />
-          <Route path='/serviceApprove' element={<ServiceAprvPage/>} />
           <Route path="/service-provider-form" component={ServiceProviderForm} />
           <Route path='/ListFeedback' element={<Feedback/>} />
+          <Route path='/ViewSchedules' element={<CalendarSchedules/>} />
 
         </Routes>
         <Footer/>

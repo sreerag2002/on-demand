@@ -4,9 +4,6 @@
     margin: 0 auto;
     margin-bottom: 10%;
     padding: 20px;
-    /* border: 1px solid #ccc; */
-    /* border-radius: 10px; */
-    /* background-color: #f9f9f9; */
     margin-top: 20px;
     display: flex;
     flex-direction: column; /* Align children vertically */
@@ -19,7 +16,6 @@
 }
 
 .reg-input{
-    /* width: 300px; */
     padding: 8px;
     margin-bottom: 10px;
     border: 1px solid #ccc;
@@ -31,7 +27,6 @@
 .registration-container input[type="password"]
 
 {
-    /* width: 300px; */
     padding: 8px;
     margin-bottom: 10px;
     border: 1px solid #ccc;
@@ -66,13 +61,4 @@
     text-decoration: underline;
 }
 
-/* .login-submit {
-    width: 335px;
-    margin: 10px;
-    padding: 10px 20px;
-    background-color: #007bff;
-    color: white;
-    border: none;
-    border-radius: 5px;
-    cursor: pointer;
-} */
+

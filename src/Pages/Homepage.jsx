@@ -74,7 +74,6 @@ function Homepage() {
             <img className='rounded border border-4' width="400px" height="270px" src="https://hometone.com/wp-content/uploads/2019/08/home-service-providers-2-800x534.jpg" alt="About Us" />
             <img className='rounded border border-4' style={{ marginLeft: "-70px", marginTop: "-40px" }} width="400px" height="260px" src="https://www.heymarket.com/wp-content/uploads/2019/09/iStock-1080176910.jpg" alt="About Us" />
             <img className='rounded border border-4' style={{ marginLeft: "300px", marginTop: "-450px" }} width="300px" height="230px" src="https://th.bing.com/th/id/OIP.7lCBzIgJaEoOejTEN4jpNQAAAA?rs=1&pid=ImgDetMain" alt="About Us" />
-            {/* <img className='rounded border border-4' style={{ marginLeft: "150px", marginTop: "-130px" }} width="400px" height="250px" src="https://www.heymarket.com/wp-content/uploads/2019/09/iStock-1080176910.jpg" alt="About Us" /> */}
           </div>
         </section>
 

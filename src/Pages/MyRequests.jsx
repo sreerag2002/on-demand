@@ -19,11 +19,34 @@ function UserRequest() {
   const [activeUser, setActiveUser] = useState(null);
   const [newMessage, setNewMessage] = useState('');
   const token = localStorage.getItem('token');
-  const username = localStorage.getItem('username')
-  const [serviceId,setServiceId] = useState()
-  const [cancelId,setCancelId] = useState()
+  const [username,setUsername] = useState()
+  const [serviceId, setServiceId] = useState()
+  const [cancelId, setCancelId] = useState()
 
-  const [smShow, setSmShow] = useState(false);
+  const [show, setShow] = useState(false);
+
+  const handleClose = () => setShow(false);
+  const handleShow = () => setShow(true);
+
+  const fetchProfileData = async () => {
+    try {
+      const response = await axios.get(`${apiUrl}/ProfileView/`, 
+
+      { method: 'GET',
+      headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${token}`
+        }
+      });
+
+      console.log(response.data);
+
+      const { username } = response.data;
+      setUsername(username)
+    } catch (error) {
+      console.error('Error fetching profile data:', error);
+    }
+  };
 
   const handleListMyReq = async () => {
     try {
@@ -40,23 +63,24 @@ function UserRequest() {
 
   useEffect(() => {
     handleListMyReq();
+    fetchProfileData();
   }, []);
 
-  const handleCancelRequest = async (reqId) => {
+  const handleCancelRequest = async () => {
     try {
-      await axios.delete(`${apiUrl}/DeleteRequest/${reqId}/`, {
+      await axios.delete(`${apiUrl}/DeleteRequest/${cancelId}/`, {
         headers: {
           "Authorization": `Bearer ${token}`,
         },
       });
-      const updatedRequests = allRequests.filter(request => request.id !== reqId);
+      const updatedRequests = allRequests.filter(request => request.id !== cancelId);
       setAllRequests(updatedRequests);
     } catch (error) {
       console.error('Failed to cancel request', error);
     }
   };
 
-  const handleMessageClick = async (userId,srId) => {
+  const handleMessageClick = async (userId, srId) => {
     setActiveUser(userId);
     setShowOffcanvas(true);
 
@@ -85,9 +109,6 @@ function UserRequest() {
 
       // Format timestamp properly
       const timestamp = new Date(response.data.time_stamp).toLocaleString();
-
-      // Get username from localStorage
-      const username = localStorage.getItem('username');
 
       // Construct the message object
       const newMessageObject = {
@@ -124,6 +145,12 @@ function UserRequest() {
               <p className='mb-1'>
                 <span className='col-9 text-secondary'><b>{request.category}</b></span>
               </p>
+              <p className='mt-1' style={{ fontFamily: "Dosis" }}>
+                Phone No.: <b>{request.phone}</b>
+              </p>
+              <p style={{ fontFamily: "Dosis", marginTop: "-10px" }}>
+                Address: <b>{request.address}</b>
+              </p>
             </div>
             <div className='d-flex'>
               <div className='col-9 pt-2 d-flex'>
@@ -132,8 +159,8 @@ function UserRequest() {
                 <div className='col-2'><IoMdTime className='fs-5 text-info' /><b> {(request.datetime.slice(11, 13)) >= 12 ? (`${request.datetime.slice(11, 13) - 12 == 0 ? '12' : `${request.datetime.slice(11, 13) - 12}`}:${request.datetime.slice(14, 16)} PM`) : (`${request.datetime.slice(11, 16)} AM`)}</b></div>
               </div>
               <div className='col-3'>
-                <button className='btn btn-danger me-1' onClick={() => {setSmShow(true);handleCancelRequest(request.id)}}>Cancel Request</button>
-                <button className='btn btn-success ms-1' onClick={() => {handleMessageClick(request.service_provider.user,request.service_provider.id);setServiceId(request.service_provider.id)}}><IoIosChatboxes /> Message</button>
+                <button className='btn btn-danger me-1' onClick={() => { handleShow(); setCancelId(request.id); }}>Cancel Request</button>
+                <button className='btn btn-success ms-1' onClick={() => { handleMessageClick(request.service_provider.user, request.service_provider.id); setServiceId(request.service_provider.id) }}><IoIosChatboxes /> Message</button>
               </div>
             </div>
           </Row>
@@ -152,33 +179,25 @@ function UserRequest() {
                 <Row className='ps-3'>
                   {msg.sender_username == username ?
                     <div className='d-flex justify-content-end'>
-                      <p className='py-2 px-3 w-75 rounded' style={{backgroundColor:"#E7FFDB"}}>
-                        {/* <span><b>{username}</b></span><br /> */}
+                      <p className='py-2 px-3 w-75 rounded' style={{ backgroundColor: "#E7FFDB" }}>
                         <span><b>{msg.message}</b></span><br />
-                        {/* <span className='w-25' style={{float:"right"}}>12:30</span> */}
                       </p>
                     </div>
                     :
-                    <p className='py-2 px-3 w-75 rounded' style={{backgroundColor:"rgb(235, 235, 235)"}}>
+                    <p className='py-2 px-3 w-75 rounded' style={{ backgroundColor: "rgb(235, 235, 235)" }}>
                       <span className='text-success'><b>{msg.service}</b></span><br />
                       <span><b>{msg.message}</b></span><br />
-                      {/* <span className='w-25' style={{float:"right"}}>12:30</span> */}
-                      
                     </p>
                   }
                 </Row>
-
-
               ))
             }
-
-
           </div>
 
-            <div className='py-5'>
-            {messages.length === 0 && <p className='text-center' style={{fontFamily:"Dosis"}}>No messages to display</p>}
-            </div>
-            <div className='p-3 bg-white' style={{ position: "fixed", zIndex: "1", top: "88%",width:"370px" }}>
+          <div className='py-5'>
+            {messages.length === 0 && <p className='text-center' style={{ fontFamily: "Dosis" }}>No messages to display</p>}
+          </div>
+          <div className='p-3 bg-white' style={{ position: "fixed", zIndex: "1", top: "88%", width: "370px" }}>
             <div className="input-group">
               <input
                 type="text"
@@ -192,10 +211,19 @@ function UserRequest() {
               </button>
             </div>
           </div>
-          {/* <div style={{ position: 'absolute', bottom: 10, left: 0, width: '100%', padding: '0 15px', boxSizing: 'border-box' }}>
-          </div> */}
         </Offcanvas.Body>
       </Offcanvas>
+
+      {/* Cancellation policy */}
+      <Modal show={show} onHide={handleClose} centered>
+        <Modal.Body className='text-center py-5'>
+          <h4>Cancellation and Refund Policy</h4>
+          <p className='mb-4' style={{ fontFamily: "Dosis" }}>The booking charge is 100.00 INR. After the successful<br />cancellation of service request, 85.00 INR will be refunded.</p>
+          <p className='fs-5' style={{ fontFamily: "Dosis" }}><b>Are you sure want to continue?</b></p>
+          <button className='btn btn-danger me-1 px-4' onClick={handleClose}>No</button>
+          <button className='btn btn-success px-4' onClick={() => { handleClose(); handleCancelRequest(); }}>Yes</button>
+        </Modal.Body>
+      </Modal>
     </div>
   );
 }

@@ -17,7 +17,6 @@ import './User.css';
 
 function User() {
   const navigate = useNavigate();
-  // const username = localStorage.getItem('username');
   const token = localStorage.getItem('token');
   const [showProfileModal, setShowProfileModal] = useState(false);
   const [showExploreModal, setShowExploreModal] = useState(false);
@@ -105,8 +104,6 @@ function User() {
       <div className="d-flex px-5 pb-5 pt-2 w-100 justify-content-end">
         <div className='text-success'>
           <Dropdown className='me-2'>
-            {/* profile button */}
-            {/* <Button variant="outline-success me-3" onClick={handleProfileModalShow}><i className="fa-solid fa-user"></i></Button> */}
             <Dropdown.Toggle variant="white" id="dropdown-basic" className='border border-0 fs-6'>
               <b><FaCircleUser className='mb-1' /> {username}</b>
             </Dropdown.Toggle>
@@ -121,10 +118,6 @@ function User() {
 
       <Modal show={showProfileModal} onHide={handleProfileModalClose} backdrop="static" centered>
         <Modal.Header>
-        {/* <div>
-              <img src={profileImage ? URL.createObjectURL(profileImage) : 'default-profile-image.jpg'} alt="Profile" className="rounded-circle me-3" style={{ width: '50%', height: '60%' }} onClick={() => document.getElementById('profileImageInput').click()} />
-              <input type="file" id="profileImageInput" style={{ display: 'none' }} onChange={(e) => handleProfileImageChange(e.target.files[0])} />
-            </div> */}
           <h5 className="modal-title">User Profile</h5>
         </Modal.Header>
         <Modal.Body>
@@ -135,6 +128,10 @@ function User() {
             <div className='text-center'>
               <h4>{firstName} {lastName}</h4>
               <p className='text-success' style={{fontFamily:"Dosis",marginTop:'-10px'}}>{email}</p>
+              <p style={{fontFamily:"Dosis",marginTop:'-10px'}}>Account balance: <b>{balanceAmt}.00</b></p>
+              <p className='text-danger' style={{fontFamily:"Dosis",marginTop:'-18px',fontSize:"13px"}}>{
+                balanceAmt<100 ? 'Insufficient balance to book a service.' : ''
+                }</p>
               <button onClick={handleProfileModalClose} className='btn btn-primary'>Go Back to Home</button>
             </div>
           </div>
@@ -195,7 +192,7 @@ function User() {
           <Button variant="secondary" onClick={handleExploreModalClose}>
             Close
           </Button>
-          <Link to="/results" state={{ "location": selectedLoc, "category": selectedCat, "balanceAmt": balanceAmt }}>
+          <Link to="/results" state={{ "location": selectedLoc, "category": selectedCat }}>
             <Button variant="primary" onClick={handleExploreModalClose}>
               Show Results
             </Button>

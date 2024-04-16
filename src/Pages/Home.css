@@ -1,7 +1,6 @@
 /* homepage.css */
 
 #welcomeDiv{
-  /* background-color: rgba(172, 170, 170, 0.8); Semi-transparent white background */
   backdrop-filter: blur(4px); 
   background-image: url('../assets/mainBg.jpg');
   background-repeat: no-repeat;
@@ -19,6 +18,5 @@
   .blurry-box h1 {
     font-size: 2rem;
     text-align: center;
-    /* background-color: rgba(255, 255, 255, 0); */
   }
   

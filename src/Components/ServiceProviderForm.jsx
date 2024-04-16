@@ -40,7 +40,7 @@ const ServiceProviderForm = ({ username, onClose }) => {
             const formDataToSend = new FormData();
             formDataToSend.append('username', formData.username);
             formDataToSend.append('document', formData.document);
-            formDataToSend.append('phoneNumber', formData.ph);
+            formDataToSend.append('ph', formData.ph);
 
             const response = await axios.post(`${apiUrl}/create/Serviceprovider/Profile/`, formDataToSend, {
                 headers: {

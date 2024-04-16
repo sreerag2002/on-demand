@@ -192,17 +192,6 @@ function CardList() {
           </p>
         </Row>
       </div>
-
-      <MDBCard>
-      <MDBCardBody>
-        <h1 className='border p-3 my-3'>S</h1>
-        <MDBCardTitle>Card title</MDBCardTitle>
-        <MDBCardText>
-          Some quick example text to build on the card title and make up the bulk of the card's content.
-        </MDBCardText>
-        <MDBBtn>Button</MDBBtn>
-      </MDBCardBody>
-    </MDBCard>
     </div>
   );
 }

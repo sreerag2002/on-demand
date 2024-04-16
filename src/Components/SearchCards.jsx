@@ -34,16 +34,17 @@ import { faSync } from '@fortawesome/free-solid-svg-icons';
 function ServiceCard() {
   const navigate = useNavigate();
   const token = localStorage.getItem('token');
-  const username = localStorage.getItem('username');
+  const [username,setUsername] = useState()
   const locationHook = useLocation();
   const { location } = locationHook.state;
   const { category } = locationHook.state;
-  const { balanceAmt } = locationHook.state;
 
   const [allServices, setAllServices] = useState([]);
   const [bookedServices, setBookedServices] = useState([]);
   const [selectedItem, setSelectedItem] = useState({});
   const [serviceDateTime, setServiceDateTime] = useState('');
+  const [serviceAddress,setServiceAddress] = useState('')
+  const [servicePhone,setServicePhone] = useState('')
   const [reportReason, setReportReason] = useState('');
   const [feedback, setFeedback] = useState('');
   const [rating, setRating] = useState(0);
@@ -53,10 +54,8 @@ function ServiceCard() {
   const [showFeedbackModal, setShowFeedbackModal] = useState(false);
   const msgRef = useRef()
   const [allFeedbacks, setAllFeedbacks] = useState([])
-  const responseRef = useRef()
-  const [response, setResponse] = useState([])
   const [insuffMsg,setInsuffMsg] = useState()
-  const [ratingMsg,setRatingMsg] = useState('')
+  const [balanceAmt,setBalanceAmt] = useState()
 
   const [show, setShow] = useState(false);
   const handleClose1 = () => setShow(false);
@@ -89,7 +88,7 @@ function ServiceCard() {
     if (serviceDateTime == '') {
       errorRef.current.innerHTML = 'Enter date and time';
     } else {
-      const bookedService = { datetime: serviceDateTime };
+      const bookedService = { datetime: serviceDateTime, address: serviceAddress, phone: servicePhone };
       try {
         await axios.post(`${apiUrl}/CreateRequest/${srId}/`, bookedService, {
           headers: { 'Authorization': `Bearer ${token}` }
@@ -98,7 +97,8 @@ function ServiceCard() {
         navigate('/user');
       } catch (error) {
         console.log(error);
-        errorRef.current.innerHTML = 'Currently service is not available!';
+        // errorRef.current.innerHTML = 'Currently service is not available!';
+        alert('Currently service is not available!')
       }
     }
   };
@@ -169,15 +169,40 @@ function ServiceCard() {
       setRating(rating-1)
   }
 
+  const fetchProfileData = async () => {
+    try {
+      const response = await axios.get(`${apiUrl}/ProfileView/`, 
+
+      { method: 'GET',
+      headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${token}`
+        }
+      });
+
+      console.log(response.data);
+
+      const { balance,username } = response.data;
+      setBalanceAmt(balance)
+      setUsername(username)
+    } catch (error) {
+      console.error('Error fetching profile data:', error);
+    }
+  };
+
   // console.log(response);
 
   useEffect(() => {
     handleSearchResults();
+    fetchProfileData();
   }, []);
 
   return (
     <div className='container'>
-      <div className='mt-4 mb-3 d-flex'>
+            <div>
+      <p className='me-3' style={{fontFamily:"Dosis", float:"right"}}>Account balance: <b>{balanceAmt}.00</b></p>
+      </div><br /><br />
+      <div className='mb-1 d-flex' style={{marginTop:"-10px"}}>
         <h1 className='col-3' style={{ fontFamily: "Protest Strike" }}>Search results</h1>
         <div className='col-9 d-flex justify-content-end pt-2'>
           <Link to="/user"><button className='btn btn-primary mx-2'>Back to Home</button></Link>
@@ -250,9 +275,17 @@ function ServiceCard() {
                   <label><b>Shop name</b></label>
                   <MDBInput type='text' value={selectedItem.shop_name} disabled />
                 </div>
-                <div className='w-100 my-4'>
+                <div className='w-100 my-3'>
                   <label><b>Select Date & Time</b></label>
                   <MDBInput type='datetime-local' onChange={(e) => setServiceDateTime(e.target.value)} required />
+                </div>
+                <div className='w-100 my-2'>
+                  <label><b>Address</b></label>
+                  <textarea type='text' required cols={94} rows={3} onChange={(e)=>setServiceAddress(e.target.value)} className='border border-secondary' />
+                </div>
+                <div className='w-100 mt-2 mb-3'>
+                  <label><b>Phone number</b></label>
+                  <MDBInput type='text' onChange={(e)=>setServicePhone(e.target.value)} required />
                 </div>
                 <div className='border-top pt-3'>
                   <span className='fs-5'><b>Booking charge</b></span>

@@ -9,7 +9,7 @@ import { LuDot } from "react-icons/lu";
 import { IoIosChatboxes } from "react-icons/io";
 import Dropdown from 'react-bootstrap/Dropdown';
 import { IoSend } from "react-icons/io5";
-
+import { formatDate } from 'date-fns';
 import axios from 'axios';
 
 function RequestPage() {
@@ -19,11 +19,30 @@ function RequestPage() {
   const [newMessage, setNewMessage] = useState(''); // State to hold the new message
   const [activeUser, setActiveUser] = useState(null); // State to store the active user
   const token = localStorage.getItem('token');
-  const id = localStorage.getItem("id");
   const [allServices, setAllServices] = useState([]);
   const [serviceName, setServiceName] = useState('Select service');
-  const username = localStorage.getItem('username')
+  const [username,setUsername] = useState()
   const [serviceId,setServiceId] = useState()
+
+  const fetchProfileData = async () => {
+    try {
+      const response = await axios.get(`${apiUrl}/ProfileView/`, 
+
+      { method: 'GET',
+      headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${token}`
+        }
+      });
+
+      console.log(response.data);
+
+      const { username } = response.data;
+      setUsername(username)
+    } catch (error) {
+      console.error('Error fetching profile data:', error);
+    }
+  };
 
   const fetchServiceRequests = (serviceId) => {
     fetch(`${apiUrl}/ListRequests/${serviceId}/`, {
@@ -72,6 +91,7 @@ function RequestPage() {
 
   useEffect(() => {
     handleListServices();
+    fetchProfileData();
   }, []);
 
   // Function to send a message
@@ -115,7 +135,7 @@ function RequestPage() {
     <div className='container pb-5'>
       <div className='mb-3 mt-4 d-flex'>
         <h1 style={{ fontFamily: "Protest Strike" }}>Service Requests</h1>
-        <div className='col-8 d-flex justify-content-end'>
+        <div className='col-8 d-flex justify-content-end mt-2'>
           <Dropdown>
             <Dropdown.Toggle variant="success" id="dropdown-basic">
               {serviceName}
@@ -137,9 +157,10 @@ function RequestPage() {
         <Row className='w-100 py-4 border-bottom border-top bg-light'>
           <Col className='col-2 fs-5 fw-6'><b>Username</b></Col>
           <Col className='col-2 fs-5'><b>Shop & Location</b></Col>
-          <Col className='col-3 text-center fs-5'><b>Date & Time</b></Col>
+          <Col className='col-2 text-center fs-5'><b>Date & Time</b></Col>
           <Col className='col-2 fs-5 text-center'><b>Service</b></Col>
-          <Col className='col-3 fs-5 text-center'></Col>
+          <Col className='col-2 text-center fs-5'><b>Address & Phone</b></Col>
+          <Col className='col-2 fs-5 text-center'></Col>
         </Row>
 
         {requests.length > 0 ? (
@@ -150,15 +171,21 @@ function RequestPage() {
                 <h6 className='text-primary'>{request.shope}</h6>
                 <p className='' style={{ fontFamily: "Dosis", fontSize: "15px" }}><b>{request.locationname}</b></p>
               </Col>
-              <Col className='col-3 text-center border'>
-                <span className='d-flex pt-3  justify-content-center' style={{ fontFamily: "Dosis", fontSize: "15px" }}>
-                  <p>Date: <b>{request.datetime.slice(0, 10)}</b></p><LuDot className='m-1' />
-                  <p>Time: <b>{(request.datetime.slice(11, 13)) >= 12 ? (`${request.datetime.slice(11, 13) - 12 == 0 ? '12' : `${request.datetime.slice(11, 13) - 12}`}:${request.datetime.slice(14, 16)} PM`) : (`${request.datetime.slice(11, 16)} AM`)}</b></p>
+              <Col className='col-2 text-center'>
+                <span className='px-3' style={{ fontFamily: "Dosis", fontSize: "15px" }}>
+                  <p className='mt-1'>Date: <b>{formatDate(request.datetime.slice(0, 10), 'dd-MM-yyyy')}</b></p>
+                  <p style={{marginTop:"-10px"}}>Time: <b>{(request.datetime.slice(11, 13)) >= 12 ? (`${request.datetime.slice(11, 13) - 12 == 0 ? '12' : `${request.datetime.slice(11, 13) - 12}`}:${request.datetime.slice(14, 16)} PM`) : (`${request.datetime.slice(11, 16)} AM`)}</b></p>
                 </span>
               </Col>
               <Col className='col-2 text-center text-success'><b>{request.categoryname}</b></Col>
-              <Col className='col-3 text-center'>
-                <button className='btn btn-success me-1 w-100' onClick={() => { setShowOffcanvas(true); fetchMessages(request.user,request.service); setActiveUser(request.user);setServiceId(request.service) }}><IoIosChatboxes /> Message</button>
+              <Col className='col-2 text-center border'>
+                <span className='px-3' style={{ fontFamily: "Dosis", fontSize: "15px" }}>
+                  <p className=''>Address: <b>{request.address}</b></p>
+                  <p>Phone: <b>{request.phone}</b></p>
+                </span>
+              </Col>
+              <Col className='col-2 text-center'>
+                <button className='btn btn-success me-1 w-100' onClick={() => { setShowOffcanvas(true); fetchMessages(request.user,request.service); setActiveUser(request.user);setServiceId(request.service) }}><IoIosChatboxes /> Chat</button>
               </Col>
             </Row>
           ))
@@ -183,26 +210,18 @@ function RequestPage() {
                   {msg.sender_username == username ?
                     <div className='d-flex justify-content-end'>
                       <p className='py-2 px-3 w-75 rounded' style={{backgroundColor:"#E7FFDB"}}>
-                        {/* <span><b>{username}</b></span><br /> */}
                         <span><b>{msg.message}</b></span><br />
-                        {/* <span className='w-25' style={{float:"right"}}>12:30</span> */}
                       </p>
                     </div>
                     :
                     <p className='py-2 px-3 w-75 rounded' style={{backgroundColor:"rgb(235, 235, 235)"}}>
                       <span className='text-success'><b>{msg.sender_username}</b></span><br />
                       <span><b>{msg.message}</b></span><br />
-                      {/* <span className='w-25' style={{float:"right"}}>12:30</span> */}
-                      
                     </p>
                   }
                 </Row>
-
-
               ))
             }
-
-
           </div>
 
             <div className='py-5'>

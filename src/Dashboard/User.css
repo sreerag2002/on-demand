@@ -1,6 +1,6 @@
 #welcomeUser{
     height: 500px;
-    background-image: url('https://images.squarespace-cdn.com/content/v1/62339f1ef5c4271f8a12d087/015ca04c-c24c-499b-9aea-3bdc35a10f4b/ada-protek_hero_final_3.png');
+    background-image: url('../assets/userBg.png');
     background-repeat: no-repeat;
     background-position: right;
     background-size: 90% 110%;

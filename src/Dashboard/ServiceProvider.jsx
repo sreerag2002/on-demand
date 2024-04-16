@@ -15,11 +15,12 @@ import { MdAddCard } from "react-icons/md";
 import { MdRequestPage } from "react-icons/md";
 import { MdElectricalServices } from "react-icons/md";
 import { VscFeedback } from "react-icons/vsc";
+import { FaCalendarAlt } from "react-icons/fa";
+import axios from 'axios';
 
 function Service() {
 
-  const accname = localStorage.getItem("username")
-
+  const token = localStorage.getItem('token');
   const [show, setShow] = useState(false);
   const [Shop_name, setShopName] = useState('');
   const [Description, setDescription] = useState('');
@@ -34,10 +35,29 @@ function Service() {
     username: ''
   });
   const [showAlert, setShowAlert] = useState(false);
-  const [serviceList, setServiceList] = useState([]);
   const [categories, setCategories] = useState([]);
   const [locations, setLocations] = useState([]);
   const navigate = useNavigate();
+
+  const fetchProfileData = async () => {
+    try {
+      const response = await axios.get(`${apiUrl}/ProfileView/`, 
+
+      { method: 'GET',
+      headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${token}`
+        }
+      });
+
+      console.log(response.data);
+
+      const { balance,username } = response.data;
+      setUsername(username)
+    } catch (error) {
+      console.error('Error fetching profile data:', error);
+    }
+  };
 
   useEffect(() => {
     const fetchCategories = () => {
@@ -65,6 +85,7 @@ function Service() {
     };
 
     fetchLocations();
+    fetchProfileData();
   }, []);
 
   const handleClose = () => {
@@ -156,12 +177,13 @@ function Service() {
         <div className='text-success'>
                 <Dropdown className='me-2'>
                     <Dropdown.Toggle variant="white" id="dropdown-basic" className='border border-0 fs-6'>
-                        <b><FaCircleUser className='mb-1' /> {accname}</b>
+                        <b><FaCircleUser className='mb-1' /> {username}</b>
                     </Dropdown.Toggle>
                     
 
                     <Dropdown.Menu className='border border-0 mb-5 bg-light'>
                     <Dropdown.Item className='mb-2' onClick={()=>navigate('/requestpage')}><b><MdRequestPage className='me-1' /> Requests</b></Dropdown.Item>
+                    <Dropdown.Item className='mb-2' onClick={()=>navigate('/ViewSchedules')}><b><FaCalendarAlt className='me-1' /> View schedules</b></Dropdown.Item>
                     <Dropdown.Item className='mb-2' onClick={()=>navigate('/list')}><b><MdElectricalServices className='me-1' /> Services</b></Dropdown.Item>
                     <Dropdown.Item className='mb-2' onClick={handleShow}><b><MdAddCard className='me-1' /> Add service</b></Dropdown.Item>
                     <Dropdown.Item className='mb-2' onClick={()=>navigate('/Listfeedback')}><b><VscFeedback className='me-1' /> Feedbacks</b></Dropdown.Item>
