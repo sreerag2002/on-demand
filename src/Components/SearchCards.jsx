@@ -96,9 +96,14 @@ function ServiceCard() {
         alert("Service booked successfully.");
         navigate('/user');
       } catch (error) {
-        console.log(error);
-        // errorRef.current.innerHTML = 'Currently service is not available!';
-        alert('Currently service is not available!')
+        // console.log(error.response.data.phone);
+        if (servicePhone.length < 9 || servicePhone.length > 15) {
+          // alert(error.response.data.phone)
+          errorRef.current.innerHTML = error.response.data.phone;
+        } else {
+          errorRef.current.innerHTML = '';
+          alert('Currently service is not available!')
+        }
       }
     }
   };

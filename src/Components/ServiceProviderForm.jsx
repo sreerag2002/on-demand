@@ -60,7 +60,7 @@ const ServiceProviderForm = ({ username, onClose }) => {
         } catch (error) {
             if (error.response) {
                 console.error('Registration error:', error.response.data);
-                setError(error.response.data.detail || 'Registration failed. Please try again.');
+                setError(error.response.data.ph);
             } else if (error.request) {
                 console.error('No response received:', error.request);
                 setError('Registration failed due to network issues.');

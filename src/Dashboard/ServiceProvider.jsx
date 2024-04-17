@@ -158,6 +158,7 @@ function Service() {
       setShowAlert(true);
       setTimeout(() => setShowAlert(false), 5000);
       resetForm();
+      fetchProfileData();
   })
   .catch(error => {
     console.error('Error adding service:', error);

@@ -94,10 +94,6 @@ function User() {
     console.log('Profile Image:', profileImage);
   };
 
-    const handleProfileImageChange = (file) => {
-    setProfileImage(file);
-  };
-
 
   return (
     <div className='px-5' id='welcomeUser'>
@@ -136,12 +132,8 @@ function User() {
             </div>
           </div>
         </Modal.Body>
-        {/* <Modal.Footer>
-          <Button variant="secondary" onClick={handleProfileModalClose}>
-            Close
-          </Button>
-          
-        </Modal.Footer> */}
+
+        
       </Modal>
       <div className='d-flex justify-content-start p-5'>
         <div className='text-center px-5 pt-2'>
