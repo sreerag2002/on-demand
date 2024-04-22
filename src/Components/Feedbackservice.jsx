@@ -92,7 +92,7 @@ function Feedback() {
       )}
 
       <div className='mb-3 mt-4 d-flex'>
-        <h1 style={{ fontFamily: "Protest Strike" }}>Feedbacks</h1>
+        <h1 className='col-4' style={{ fontFamily: "Protest Strike" }}>Feedbacks</h1>
         <div className='col-8 d-flex justify-content-end'>
           <Dropdown>
             <Dropdown.Toggle variant="success" id="dropdown-basic">

@@ -6,19 +6,10 @@ import { Col } from 'react-bootstrap';
 const ServiceProviderForm = ({ username, onClose }) => {
     const [formData, setFormData] = useState({
         username: username,
-        document: null,
-        ph: '',
+        document: null
     });
     const [error, setError] = useState('');
     console.log(FormData);
-
-    const handleChange = (e) => {
-        const { name, value } = e.target;
-        setFormData((prevState) => ({
-            ...prevState,
-            [name]: value,
-        }));
-    };
 
     const handleFileChange = (e) => {
         setFormData((prevState) => ({
@@ -40,7 +31,6 @@ const ServiceProviderForm = ({ username, onClose }) => {
             const formDataToSend = new FormData();
             formDataToSend.append('username', formData.username);
             formDataToSend.append('document', formData.document);
-            formDataToSend.append('ph', formData.ph);
 
             const response = await axios.post(`${apiUrl}/create/Serviceprovider/Profile/`, formDataToSend, {
                 headers: {
@@ -58,16 +48,7 @@ const ServiceProviderForm = ({ username, onClose }) => {
                 throw new Error('No data received from the server');
             }
         } catch (error) {
-            if (error.response) {
-                console.error('Registration error:', error.response.data);
-                setError(error.response.data.ph);
-            } else if (error.request) {
-                console.error('No response received:', error.request);
-                setError('Registration failed due to network issues.');
-            } else {
-                console.error('Error setting up request:', error.message);
-                setError('Registration failed due to an unexpected error.');
-            }
+            console.log(error);
         }
     };
 
@@ -81,9 +62,6 @@ const ServiceProviderForm = ({ username, onClose }) => {
 
                     <label htmlFor="document">Upload Document:</label>
                     <input type="file" id="document" name="document" onChange={handleFileChange} required /><br /><br />
-
-                    <label htmlFor="ph">Phone Number:</label>
-                    <input className='w-100' type="text" id="ph" name="ph" value={formData.ph} onChange={handleChange} required /><br /><br />
 
                     <button className='login-submit btn btn-success w-100 my-2' type="submit">Register as Service Provider</button>
 

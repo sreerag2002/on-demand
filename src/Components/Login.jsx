@@ -26,7 +26,7 @@ const LoginPage = () => {
       console.log("Login successful:", response.data);
       localStorage.setItem('token', response.data.access)
       if (response.data.superuser == true) {
-        navigate('/admin')
+        window.location.href = "http://127.0.0.1:8000/admin/";
       } else if (response.data.service_provider == true) {
         navigate('/service')
       } else {

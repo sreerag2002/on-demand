@@ -3,18 +3,19 @@ import { Link } from 'react-router-dom';
 import axios from 'axios';
 import './Registration.css';
 import { Col, Row } from 'react-bootstrap';
-import { apiUrl } from './baseUrl'; 
+import { apiUrl } from './baseUrl';
 import ServiceProviderForm from './ServiceProviderForm';
 
 const RegistrationPage = () => {
     const [formData, setFormData] = useState({
         username: "",
+        ph: "",
         email: "",
         password: "",
         access: "",
         first_name: "",
         last_name: "",
-        role: "" 
+        role: ""
     });
     const [error, setError] = useState('');
     const [showServiceProviderForm, setShowServiceProviderForm] = useState(false);
@@ -75,12 +76,12 @@ const RegistrationPage = () => {
         <div className='mx-5 px-5 mb-5'>
             <Row className='px-4 rounded'>
                 <Col className='col-6'>
-                <img src="https://sofster.com/wp-content/uploads/2022/03/software-development-services.svg" height="500px" width="100%" alt="" />
+                    <img src="https://sofster.com/wp-content/uploads/2022/03/software-development-services.svg" height="500px" width="100%" alt="" />
                 </Col>
                 {showServiceProviderForm ? (
-                    <ServiceProviderForm 
-                        username={formData.username} 
-                        onClose={() => setShowServiceProviderForm(false)} 
+                    <ServiceProviderForm
+                        username={formData.username}
+                        onClose={() => setShowServiceProviderForm(false)}
                     />
                 ) : (
                     <Col className='col-6'>
@@ -101,6 +102,9 @@ const RegistrationPage = () => {
                                         <input type="text" id="last_name" name="last_name" value={formData.last_name} onChange={handleChange} required /><br />
                                     </div>
                                 </div>
+
+                                <label htmlFor="ph">Phone:</label>
+                                <input className='reg-input w-100' type="number" id="ph" name="ph" value={formData.ph} onChange={handleChange} required /><br />
 
                                 <label htmlFor="email">Email:</label>
                                 <input className='reg-input w-100' type="email" id="email" name="email" value={formData.email} onChange={handleChange} required /><br />

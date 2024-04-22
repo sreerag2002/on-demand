@@ -34,7 +34,7 @@ import { faSync } from '@fortawesome/free-solid-svg-icons';
 function ServiceCard() {
   const navigate = useNavigate();
   const token = localStorage.getItem('token');
-  const [username,setUsername] = useState()
+  const [username, setUsername] = useState()
   const locationHook = useLocation();
   const { location } = locationHook.state;
   const { category } = locationHook.state;
@@ -43,19 +43,16 @@ function ServiceCard() {
   const [bookedServices, setBookedServices] = useState([]);
   const [selectedItem, setSelectedItem] = useState({});
   const [serviceDateTime, setServiceDateTime] = useState('');
-  const [serviceAddress,setServiceAddress] = useState('')
-  const [servicePhone,setServicePhone] = useState('')
+  const [serviceAddress, setServiceAddress] = useState('')
+  const [servicePhone, setServicePhone] = useState('')
   const [reportReason, setReportReason] = useState('');
-  const [feedback, setFeedback] = useState('');
-  const [rating, setRating] = useState(0);
   const errorRef = useRef();
   const [staticModal, setStaticModal] = useState(false);
   const [showReportModal, setShowReportModal] = useState(false);
-  const [showFeedbackModal, setShowFeedbackModal] = useState(false);
   const msgRef = useRef()
   const [allFeedbacks, setAllFeedbacks] = useState([])
-  const [insuffMsg,setInsuffMsg] = useState()
-  const [balanceAmt,setBalanceAmt] = useState()
+  const [insuffMsg, setInsuffMsg] = useState()
+  const [balanceAmt, setBalanceAmt] = useState()
 
   const [show, setShow] = useState(false);
   const handleClose1 = () => setShow(false);
@@ -64,10 +61,7 @@ function ServiceCard() {
   const toggleOpen = () => setStaticModal(!staticModal);
   const handleClose = () => {
     setShowReportModal(false);
-    setShowFeedbackModal(false);
     setReportReason(''); // Clear reason input
-    setFeedback(''); // Clear feedback input
-    setRating(0); // Reset rating
   };
   const handleShow = (item) => {
     setShowReportModal(true);
@@ -96,13 +90,11 @@ function ServiceCard() {
         alert("Service booked successfully.");
         navigate('/user');
       } catch (error) {
-        // console.log(error.response.data.phone);
         if (servicePhone.length < 9 || servicePhone.length > 15) {
-          // alert(error.response.data.phone)
           errorRef.current.innerHTML = error.response.data.phone;
         } else {
           errorRef.current.innerHTML = '';
-          alert('Currently service is not available!')
+          alert(error.response.data)
         }
       }
     }
@@ -128,25 +120,6 @@ function ServiceCard() {
     }
   };
 
-  const handleFeedback = async () => {
-    try {
-      await axios.post(
-        `${apiUrl}/Createfeedback/${selectedItem.id}/`,
-        { feedback, rating },
-        {
-          headers: {
-            'Authorization': `Bearer ${token}`,
-            'Content-Type': 'application/json'
-          }
-        }
-      );
-      alert("Feedback submitted successfully.");
-      handleClose();
-    } catch (error) {
-      console.log(error);
-      // Handle error
-    }
-  };
 
   function insuffBalance() {
     if (balanceAmt < 100) {
@@ -166,28 +139,22 @@ function ServiceCard() {
     }
   }
 
-  function incrementRating(){
-      setRating(rating+1)
-  }
-
-  function decrementRating(){
-      setRating(rating-1)
-  }
 
   const fetchProfileData = async () => {
     try {
-      const response = await axios.get(`${apiUrl}/ProfileView/`, 
+      const response = await axios.get(`${apiUrl}/ProfileView/`,
 
-      { method: 'GET',
-      headers: {
-          'Content-Type': 'application/json',
-          'Authorization': `Bearer ${token}`
-        }
-      });
+        {
+          method: 'GET',
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${token}`
+          }
+        });
 
       console.log(response.data);
 
-      const { balance,username } = response.data;
+      const { balance, username } = response.data;
       setBalanceAmt(balance)
       setUsername(username)
     } catch (error) {
@@ -204,12 +171,12 @@ function ServiceCard() {
 
   return (
     <div className='container'>
-            <div>
-      <p className='me-3' style={{fontFamily:"Dosis", float:"right"}}>Account balance: <b>{balanceAmt}.00</b></p>
+      <div>
+        <p className='me-3' style={{ fontFamily: "Dosis", float: "right" }}>Account balance: <b>{balanceAmt}.00</b></p>
       </div><br /><br />
-      <div className='mb-1 d-flex' style={{marginTop:"-10px"}}>
-        <h1 className='col-3' style={{ fontFamily: "Protest Strike" }}>Search results</h1>
-        <div className='col-9 d-flex justify-content-end pt-2'>
+      <div className='mb-1 d-flex' style={{ marginTop: "-10px" }}>
+        <h1 className='col-4' style={{ fontFamily: "Protest Strike" }}>Search results</h1>
+        <div className='col-8 d-flex justify-content-end pt-2'>
           <Link to="/user"><button className='btn btn-primary mx-2'>Back to Home</button></Link>
           <FontAwesomeIcon icon={faSync} size="lg" className='m-2' style={{ cursor: 'pointer' }} onClick={handleSearchResults} />
         </div>
@@ -233,12 +200,12 @@ function ServiceCard() {
                   </div>
 
 
-                  <button disabled={balanceAmt < 100} onClick={() => { toggleOpen(); setSelectedItem(service); }} className='w-100 my-2 mx-1 btn btn-info'>Book Now</button><br />
+                  <button disabled={balanceAmt < 100} onClick={() => { toggleOpen(); setSelectedItem(service); }} className='w-100 my-1 mx-1 btn btn-info'>Book Now</button><br />
 
                   <button className='w-100 my-1 mx-1 btn btn-success' onClick={() => { handleShow1(); setSelectedItem(service); listFeedbacks(service.id); }}>Feedbacks</button>
 
 
-                  <button className='w-50 my-2 btn btn-danger' onClick={() => handleShow(service.id)}>Report </button>
+                  <button className='w-100 my-1 mx-1 btn btn-danger' onClick={() => handleShow(service.id)}>Report Service</button>
                   <p ref={msgRef} className='text-center text-danger' style={{ fontFamily: "Dosis" }}>{insuffMsg}</p>
                 </MDBCardBody>
               </MDBCard>
@@ -286,11 +253,11 @@ function ServiceCard() {
                 </div>
                 <div className='w-100 my-2'>
                   <label><b>Address</b></label>
-                  <textarea type='text' required cols={94} rows={3} onChange={(e)=>setServiceAddress(e.target.value)} className='border border-secondary' />
+                  <textarea type='text' required cols={94} rows={3} onChange={(e) => setServiceAddress(e.target.value)} className='border border-secondary' />
                 </div>
                 <div className='w-100 mt-2 mb-3'>
                   <label><b>Phone number</b></label>
-                  <MDBInput type='text' onChange={(e)=>setServicePhone(e.target.value)} required />
+                  <MDBInput type='text' onChange={(e) => setServicePhone(e.target.value)} required />
                 </div>
                 <div className='border-top pt-3'>
                   <span className='fs-5'><b>Booking charge</b></span>
@@ -328,36 +295,7 @@ function ServiceCard() {
           <Button variant="secondary" onClick={handleClose}>
             Close
           </Button>
-          <Button variant="primary" onClick={() => handleReportService(selectedItem)}>
-            Submit
-          </Button>
-        </Modal.Footer>
-      </Modal>
-
-      {/* Send feedback modal */}
-      <Modal show={showFeedbackModal} onHide={handleClose}>
-        <Modal.Header closeButton>
-          <Modal.Title>Feedback</Modal.Title>
-        </Modal.Header>
-        <Modal.Body>
-          <div className='w-100 my-1'>
-            <label><b>Feedback</b></label>
-            <textarea type='text' required cols={61} rows={3} value={feedback} onChange={(e) => setFeedback(e.target.value)} />
-          </div>
-          <div className='w-100 my-1 d-flex justify-content-start'>
-          <button disabled={rating==1} onClick={decrementRating} className='btn m-2 mt-4 btn-light'>-</button>
-          <div>
-          <label><b>Rating</b></label><br />
-            <input disabled type="number" min="1" max="5" value={rating} onChange={(e) => setRating(parseInt(e.target.value))} />
-          </div>
-            <button disabled={rating==5} onClick={incrementRating} className='btn m-2 mt-4 btn-light'>+</button>
-          </div>
-        </Modal.Body>
-        <Modal.Footer>
-          <Button variant="secondary" onClick={handleClose}>
-            Close
-          </Button>
-          <Button variant="primary" onClick={() => handleFeedback(selectedItem)}>
+          <Button variant="primary" onClick={() => { handleReportService(selectedItem); handleClose(); }}>
             Submit
           </Button>
         </Modal.Footer>
@@ -388,9 +326,6 @@ function ServiceCard() {
                 </Row>
               ))
             }
-          </div>
-          <div style={{ position: "fixed", zIndex: "1", top: "88%" }}>
-            <button className='btn btn-success' style={{ width: "365px" }} onClick={() => setShowFeedbackModal(true)}>Send Feedback</button>
           </div>
         </Offcanvas.Body>
       </Offcanvas>

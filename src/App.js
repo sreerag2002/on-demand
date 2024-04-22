@@ -15,7 +15,6 @@ import ServiceProviderForm from './Components/ServiceProviderForm';
 import Feedback from './Components/Feedbackservice';
 import CalendarSchedules from './Components/CalendarSchedules';
 
-
 function App() {
   return (
     <Router>
@@ -36,7 +35,6 @@ function App() {
           <Route path="/service-provider-form" component={ServiceProviderForm} />
           <Route path='/ListFeedback' element={<Feedback/>} />
           <Route path='/ViewSchedules' element={<CalendarSchedules/>} />
-
         </Routes>
         <Footer/>
       </div>

@@ -43,7 +43,7 @@ function CalendarSchedules() {
         })
             .then(response => response.json())
             .then(data => {
-                setRequests(data.map(request => ({ ...request, localStatus: request.accept ? 'Accepted' : request.decline ? 'Declined' : '' })));
+                setRequests(data.filter(req=>req.complted == false));
             })
             .catch(error => {
                 console.error('Error fetching service requests:', error);
@@ -63,7 +63,7 @@ function CalendarSchedules() {
     return (
         <div className='container pb-5'>
             <div className='mb-3 mt-4 d-flex'>
-                <h1 style={{ fontFamily: "Protest Strike" }}>Service Schedules</h1>
+                <h1 className='col-4' style={{ fontFamily: "Protest Strike" }}>Service Schedules</h1>
                 <div className='col-8 d-flex justify-content-end mt-2'>
                     <Dropdown>
                         <Dropdown.Toggle variant="success" id="dropdown-basic">

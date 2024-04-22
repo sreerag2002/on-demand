@@ -246,7 +246,7 @@ function Service() {
           </div>
         </Modal.Body>
         <Modal.Footer>
-          <Button variant="secondary" onClick={handleClose}>
+          <Button variant="secondary" onClick={()=>{handleClose();fetchProfileData();}}>
             Cancel
           </Button>
           <Button variant="primary" onClick={handleAddService}>

@@ -11,6 +11,7 @@ import { IoSend } from "react-icons/io5";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faSync } from '@fortawesome/free-solid-svg-icons';
 import Modal from 'react-bootstrap/Modal';
+import { MdOutlinePendingActions } from "react-icons/md";
 
 function UserRequest() {
   const [allRequests, setAllRequests] = useState([]);
@@ -19,25 +20,32 @@ function UserRequest() {
   const [activeUser, setActiveUser] = useState(null);
   const [newMessage, setNewMessage] = useState('');
   const token = localStorage.getItem('token');
-  const [username,setUsername] = useState()
+  const [username, setUsername] = useState()
   const [serviceId, setServiceId] = useState()
   const [cancelId, setCancelId] = useState()
+  const [feedback, setFeedback] = useState('');
+  const [rating, setRating] = useState(1);
+  const [provId, setProvId] = useState()
 
   const [show, setShow] = useState(false);
-
   const handleClose = () => setShow(false);
   const handleShow = () => setShow(true);
 
+  const [show1, setShow1] = useState(false);
+  const handleClose1 = () => setShow1(false);
+  const handleShow1 = () => setShow1(true);
+
   const fetchProfileData = async () => {
     try {
-      const response = await axios.get(`${apiUrl}/ProfileView/`, 
+      const response = await axios.get(`${apiUrl}/ProfileView/`,
 
-      { method: 'GET',
-      headers: {
-          'Content-Type': 'application/json',
-          'Authorization': `Bearer ${token}`
-        }
-      });
+        {
+          method: 'GET',
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${token}`
+          }
+        });
 
       console.log(response.data);
 
@@ -128,11 +136,39 @@ function UserRequest() {
     }
   };
 
+  const handleFeedback = async () => {
+    try {
+      await axios.post(
+        `${apiUrl}/Createfeedback/${provId}/`,
+        { feedback, rating },
+        {
+          headers: {
+            'Authorization': `Bearer ${token}`,
+            'Content-Type': 'application/json'
+          }
+        }
+      );
+      alert("Feedback submitted successfully.");
+      handleClose();
+    } catch (error) {
+      console.log(error);
+      // Handle error
+    }
+  };
+
+  function incrementRating() {
+    setRating(rating + 1)
+  }
+
+  function decrementRating() {
+    setRating(rating - 1)
+  }
+
   return (
     <div className='container'>
       <div className='mb-3 mt-4 d-flex'>
-        <h1 style={{ fontFamily: "Protest Strike" }}>My Requests</h1>
-        <div className='col-9 d-flex justify-content-end'>
+        <h1 className='col-4' style={{ fontFamily: "Protest Strike" }}>My Requests</h1>
+        <div className='col-8 d-flex justify-content-end mt-3'>
           <Link to="/user"><button className='btn btn-primary mx-2'>Back to Home</button></Link>
           <FontAwesomeIcon icon={faSync} size="lg" className='m-2' style={{ cursor: 'pointer' }} onClick={handleListMyReq} />
         </div>
@@ -140,10 +176,10 @@ function UserRequest() {
       <div style={{ marginBottom: "80vh" }}>
         {allRequests.map(request => (
           <Row className='border px-4 py-3 my-3 rounded shadow' key={request.id} style={{ fontFamily: "Dosis" }}>
-            <div className='w-100'>
+            <div className='col-9'>
               <h4 className='mb-0'>{request.service_provider.shop_name}</h4>
-              <p className='mb-1'>
-                <span className='col-9 text-secondary'><b>{request.category}</b></span>
+              <p className='mb-3'>
+                <span className='col-9 text-secondary'><b>(Ph: {request.service_phone})<br/>{request.category}</b></span>
               </p>
               <p className='mt-1' style={{ fontFamily: "Dosis" }}>
                 Phone No.: <b>{request.phone}</b>
@@ -151,16 +187,22 @@ function UserRequest() {
               <p style={{ fontFamily: "Dosis", marginTop: "-10px" }}>
                 Address: <b>{request.address}</b>
               </p>
-            </div>
-            <div className='d-flex'>
-              <div className='col-9 pt-2 d-flex'>
+              <div className='pt-2 d-flex'>
                 <div className='col-2' style={{ marginRight: "70px" }}><FaLocationDot className='text-danger' /><b> {request.locationname}</b></div>
                 <div className='col-2' style={{ marginRight: "70px" }}><MdDateRange className='text-primary' /><b> {request.datetime.slice(0, 10)}</b></div>
                 <div className='col-2'><IoMdTime className='fs-5 text-info' /><b> {(request.datetime.slice(11, 13)) >= 12 ? (`${request.datetime.slice(11, 13) - 12 == 0 ? '12' : `${request.datetime.slice(11, 13) - 12}`}:${request.datetime.slice(14, 16)} PM`) : (`${request.datetime.slice(11, 16)} AM`)}</b></div>
               </div>
-              <div className='col-3'>
-                <button className='btn btn-danger me-1' onClick={() => { handleShow(); setCancelId(request.id); }}>Cancel Request</button>
-                <button className='btn btn-success ms-1' onClick={() => { handleMessageClick(request.service_provider.user, request.service_provider.id); setServiceId(request.service_provider.id) }}><IoIosChatboxes /> Message</button>
+            </div>
+
+            <div className='col-3 d-flex align-items-end'>
+              <div hidden={request.complted == false} className='w-100'>
+                <p className='text-center text-primary mb-5' style={{ fontFamily: "Dosis" }}><b>Work completed ✅</b></p>
+                <button className='btn btn-success w-100 mb-1' onClick={() => { handleShow1(); setProvId(request.service_provider.id) }}>Send Feedback</button>
+              </div>
+              <div hidden={request.complted == true}>
+              <p className='text-center text-warning mb-5' style={{ fontFamily: "Dosis" }}><b>Pending <MdOutlinePendingActions /></b></p>
+                <button className='btn btn-danger me-1 mb-1' onClick={() => { handleShow(); setCancelId(request.id); }}>Cancel Request</button>
+                <button className='btn btn-success mb-1' onClick={() => { handleMessageClick(request.service_provider.user, request.service_provider.id); setServiceId(request.service_provider.id) }}><IoIosChatboxes /> Message</button>
               </div>
             </div>
           </Row>
@@ -223,6 +265,32 @@ function UserRequest() {
           <button className='btn btn-danger me-1 px-4' onClick={handleClose}>No</button>
           <button className='btn btn-success px-4' onClick={() => { handleClose(); handleCancelRequest(); }}>Yes</button>
         </Modal.Body>
+      </Modal>
+
+      {/* Send feedback */}
+      <Modal show={show1} onHide={handleClose1}>
+        <Modal.Header closeButton>
+          <Modal.Title>Feedback</Modal.Title>
+        </Modal.Header>
+        <Modal.Body>
+          <div className='w-100 my-1'>
+            <label><b>Feedback</b></label>
+            <textarea type='text' required cols={61} rows={3} value={feedback} onChange={(e) => setFeedback(e.target.value)} />
+          </div>
+          <div className='w-100 my-1 d-flex justify-content-start'>
+            <button disabled={rating == 1} onClick={decrementRating} className='btn m-2 mt-4 btn-light'>-</button>
+            <div>
+              <label><b>Rating</b></label><br />
+              <input className='text-center ps-3' disabled type="number" min="1" max="5" value={rating} onChange={(e) => setRating(parseInt(e.target.value))} />
+            </div>
+            <button disabled={rating == 5} onClick={incrementRating} className='btn m-2 mt-4 btn-light'>+</button>
+          </div>
+        </Modal.Body>
+        <Modal.Footer>
+          <Button variant="primary" onClick={() => {handleFeedback(); handleClose1();}}>
+            Submit
+          </Button>
+        </Modal.Footer>
       </Modal>
     </div>
   );

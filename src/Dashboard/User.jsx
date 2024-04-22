@@ -84,17 +84,6 @@ function User() {
   const handleExploreModalClose = () => setShowExploreModal(false);
   const handleExploreModalShow = () => setShowExploreModal(true);
 
-  const handleSubmit = () => {
-    // Handle submission of user details
-    // You can send the data to backend or handle it as required
-    // For now, let's just log the values
-    console.log('First Name:', firstName);
-    console.log('Last Name:', lastName);
-    console.log('Email:', email);
-    console.log('Profile Image:', profileImage);
-  };
-
-
   return (
     <div className='px-5' id='welcomeUser'>
       <div className="d-flex px-5 pb-5 pt-2 w-100 justify-content-end">
@@ -128,7 +117,9 @@ function User() {
               <p className='text-danger' style={{fontFamily:"Dosis",marginTop:'-18px',fontSize:"13px"}}>{
                 balanceAmt<100 ? 'Insufficient balance to book a service.' : ''
                 }</p>
-              <button onClick={handleProfileModalClose} className='btn btn-primary'>Go Back to Home</button>
+            </div>
+            <div className='text-center mt-4'>
+            <button onClick={handleProfileModalClose} className='btn btn-primary'>Go Back to Home</button>
             </div>
           </div>
         </Modal.Body>

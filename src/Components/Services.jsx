@@ -165,8 +165,8 @@ function CardList() {
   return (
     <div className='container'>
       <div className='mb-3 mt-4 d-flex'>
-        <h1 style={{ fontFamily: "Protest Strike" }}>All Services</h1>
-        <div className='col-9 d-flex justify-content-end mt-3'>
+        <h1 className='col-4' style={{ fontFamily: "Protest Strike" }}>All Services</h1>
+        <div className='col-8 d-flex justify-content-end mt-3'>
           <Link to="/service"><button className='btn btn-primary mx-2'>Back to Home</button></Link>
           <FontAwesomeIcon icon={faSync} size="lg" className='m-2' style={{ cursor: 'pointer' }} />
         </div>

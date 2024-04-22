@@ -11,6 +11,8 @@ import Dropdown from 'react-bootstrap/Dropdown';
 import { IoSend } from "react-icons/io5";
 import { formatDate } from 'date-fns';
 import axios from 'axios';
+import Button from 'react-bootstrap/Button';
+import Modal from 'react-bootstrap/Modal';
 
 function RequestPage() {
   const [requests, setRequests] = useState([]);
@@ -21,19 +23,25 @@ function RequestPage() {
   const token = localStorage.getItem('token');
   const [allServices, setAllServices] = useState([]);
   const [serviceName, setServiceName] = useState('Select service');
-  const [username,setUsername] = useState()
-  const [serviceId,setServiceId] = useState()
+  const [username, setUsername] = useState()
+  const [serviceId, setServiceId] = useState()
+
+  const [show, setShow] = useState(false);
+
+  const handleClose = () => setShow(false);
+  const handleShow = () => setShow(true);
 
   const fetchProfileData = async () => {
     try {
-      const response = await axios.get(`${apiUrl}/ProfileView/`, 
+      const response = await axios.get(`${apiUrl}/ProfileView/`,
 
-      { method: 'GET',
-      headers: {
-          'Content-Type': 'application/json',
-          'Authorization': `Bearer ${token}`
-        }
-      });
+        {
+          method: 'GET',
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${token}`
+          }
+        });
 
       console.log(response.data);
 
@@ -54,14 +62,14 @@ function RequestPage() {
     })
       .then(response => response.json())
       .then(data => {
-        setRequests(data.map(request => ({ ...request, localStatus: request.accept ? 'Accepted' : request.decline ? 'Declined' : '' })));
+        setRequests(data.filter(req => req.complted == false));
       })
       .catch(error => {
         console.error('Error fetching service requests:', error);
       });
   };
 
-  const fetchMessages = (userId,srId) => {
+  const fetchMessages = (userId, srId) => {
     axios.get(`${apiUrl}/messages/${userId}/${srId}/list/`, {
       headers: {
         'Authorization': `Bearer ${token}`
@@ -97,44 +105,63 @@ function RequestPage() {
   // Function to send a message
   const sendMessage = async () => {
     if (!newMessage.trim() || !activeUser) return;
-  
+
     try {
       const response = await axios.post(`${apiUrl}/messages/${activeUser}/${serviceId}/`, { message: newMessage }, {
         headers: {
           "Authorization": `Bearer ${token}`
         }
       });
-  
+
       // Format timestamp properly
       const timestamp = new Date(response.data.time_stamp).toLocaleString();
-  
-     
-  
+
+
+
       // Construct the message object
       const newMessageObject = {
         sender_username: username,
         message: response.data.message,
         timestamp: timestamp
       };
-  
+
       // Update the messages state
       const updatedMessages = [...messages, newMessageObject];
       setMessages(updatedMessages);
-  
+
       // Clear the input field after sending
       setNewMessage('');
     } catch (error) {
       console.error('Error sending message:', error);
     }
   };
- 
-  
- 
+
+  const updateReq = async (reqId,srId) => {
+    const newStatus = { complted: "true" }
+    try {
+      const response = await axios.put(`${apiUrl}/update/request/${reqId}/`, newStatus, {
+        headers: {
+          "Authorization": `Bearer ${token}`
+        }
+      })
+      handleShow()
+      setTimeout(() => {
+        handleClose()
+        fetchServiceRequests(srId)
+      },3000)
+    }
+    catch (error) {
+      console.log(error);
+    }
+
+
+  }
+
 
   return (
     <div className='container pb-5'>
       <div className='mb-3 mt-4 d-flex'>
-        <h1 style={{ fontFamily: "Protest Strike" }}>Service Requests</h1>
+        <h1 className='col-4' style={{ fontFamily: "Protest Strike" }}>Service Requests</h1>
         <div className='col-8 d-flex justify-content-end mt-2'>
           <Dropdown>
             <Dropdown.Toggle variant="success" id="dropdown-basic">
@@ -174,7 +201,7 @@ function RequestPage() {
               <Col className='col-2 text-center'>
                 <span className='px-3' style={{ fontFamily: "Dosis", fontSize: "15px" }}>
                   <p className='mt-1'>Date: <b>{formatDate(request.datetime.slice(0, 10), 'dd-MM-yyyy')}</b></p>
-                  <p style={{marginTop:"-10px"}}>Time: <b>{(request.datetime.slice(11, 13)) >= 12 ? (`${request.datetime.slice(11, 13) - 12 == 0 ? '12' : `${request.datetime.slice(11, 13) - 12}`}:${request.datetime.slice(14, 16)} PM`) : (`${request.datetime.slice(11, 16)} AM`)}</b></p>
+                  <p style={{ marginTop: "-10px" }}>Time: <b>{(request.datetime.slice(11, 13)) >= 12 ? (`${request.datetime.slice(11, 13) - 12 == 0 ? '12' : `${request.datetime.slice(11, 13) - 12}`}:${request.datetime.slice(14, 16)} PM`) : (`${request.datetime.slice(11, 16)} AM`)}</b></p>
                 </span>
               </Col>
               <Col className='col-2 text-center text-success'><b>{request.categoryname}</b></Col>
@@ -185,7 +212,8 @@ function RequestPage() {
                 </span>
               </Col>
               <Col className='col-2 text-center'>
-                <button className='btn btn-success me-1 w-100' onClick={() => { setShowOffcanvas(true); fetchMessages(request.user,request.service); setActiveUser(request.user);setServiceId(request.service) }}><IoIosChatboxes /> Chat</button>
+                <button className='btn btn-success w-100 mb-2' onClick={() => { setShowOffcanvas(true); fetchMessages(request.user, request.service); setActiveUser(request.user); setServiceId(request.service) }}><IoIosChatboxes /> Message</button>
+                <button className='btn btn-primary w-100' onClick={() => updateReq(request.id,request.service)}>Work completed</button>
               </Col>
             </Row>
           ))
@@ -203,46 +231,56 @@ function RequestPage() {
           <Offcanvas.Body>
             {/* Message UI */}
             <div>
-            {
-              messages.map((msg, index) => (
+              {
+                messages.map((msg, index) => (
 
-                <Row className='ps-3'>
-                  {msg.sender_username == username ?
-                    <div className='d-flex justify-content-end'>
-                      <p className='py-2 px-3 w-75 rounded' style={{backgroundColor:"#E7FFDB"}}>
+                  <Row className='ps-3'>
+                    {msg.sender_username == username ?
+                      <div className='d-flex justify-content-end'>
+                        <p className='py-2 px-3 w-75 rounded' style={{ backgroundColor: "#E7FFDB" }}>
+                          <span><b>{msg.message}</b></span><br />
+                        </p>
+                      </div>
+                      :
+                      <p className='py-2 px-3 w-75 rounded' style={{ backgroundColor: "rgb(235, 235, 235)" }}>
+                        <span className='text-success'><b>{msg.sender_username}</b></span><br />
                         <span><b>{msg.message}</b></span><br />
                       </p>
-                    </div>
-                    :
-                    <p className='py-2 px-3 w-75 rounded' style={{backgroundColor:"rgb(235, 235, 235)"}}>
-                      <span className='text-success'><b>{msg.sender_username}</b></span><br />
-                      <span><b>{msg.message}</b></span><br />
-                    </p>
-                  }
-                </Row>
-              ))
-            }
-          </div>
+                    }
+                  </Row>
+                ))
+              }
+            </div>
 
             <div className='py-5'>
-            {messages.length === 0 && <p className='text-center' style={{fontFamily:"Dosis"}}>No messages to display</p>}
+              {messages.length === 0 && <p className='text-center' style={{ fontFamily: "Dosis" }}>No messages to display</p>}
             </div>
-            <div className='p-3 bg-white' style={{ position: "fixed", zIndex: "1", top: "88%",width:"370px" }}>
-            <div className="input-group">
-              <input
-                type="text"
-                className="form-control"
-                placeholder="Type a message..."
-                value={newMessage}
-                onChange={(e) => setNewMessage(e.target.value)}
-              />
-              <button className="btn btn-success" type="button" onClick={sendMessage}>
-                <IoSend />
-              </button>
+            <div className='p-3 bg-white' style={{ position: "fixed", zIndex: "1", top: "88%", width: "370px" }}>
+              <div className="input-group">
+                <input
+                  type="text"
+                  className="form-control"
+                  placeholder="Type a message..."
+                  value={newMessage}
+                  onChange={(e) => setNewMessage(e.target.value)}
+                />
+                <button className="btn btn-success" type="button" onClick={sendMessage}>
+                  <IoSend />
+                </button>
+              </div>
             </div>
-          </div>
           </Offcanvas.Body>
         </Offcanvas>
+
+        {/* Work completion modal */}
+        <Modal show={show} onHide={handleClose} backdrop="static" centered size='sm'>
+          <Modal.Body>
+            <div className='d-flex justify-content-center'>
+              <img src="https://cdn.dribbble.com/users/2185205/screenshots/7886140/02-lottie-tick-01-instant-2.gif" width="100%" alt="" />
+            </div>
+            <p style={{ fontFamily: "Dosis", marginTop: "-20px" }} className='text-center '><b>Work Completed successfully.</b></p>
+          </Modal.Body>
+        </Modal>
       </div>
     </div>
   );
